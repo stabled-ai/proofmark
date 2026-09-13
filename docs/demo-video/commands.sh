@@ -89,19 +89,30 @@ if want 2; then
   # -> "decision":"BLOCK"   "riskBand":5   "listId":"OFAC_SDN"   "entryId":"20157"
 fi
 
-# --- scene 3 — guided issuance on /verify --------------------------------------------------------
-# The disclosure the narration must speak: id and bank vendors are labelled demo adapters, screening
-# is real. If the on-camera issuance returned a hash, export SEPOLIA_TX and its receipt prints here.
+# --- scene 3 — hosted verification boundary -----------------------------------------------------
+# The v1 recording originally used labelled demo id and bank adapters with sandbox issuance. The
+# hosted product may instead expose the separate Sumsub Sandbox evidence-only flow. That flow must
+# remain test-only and must not claim that it issues a Proofmark credential.
 
 if want 3; then
   banner 3 "what the hosted deployment is configured to run"
   status_json="$(curl -fsS --max-time 30 "$DEMO_URL/api/kyc/status")"
   printf '%s\n' "$status_json" | tr ',' '\n' | grep -E '"demo"|"sandboxBits"|"vendor"|"live"|"configured"' | head -9
-  # -> "demo":true  "sandboxBits":true  "vendor":"demo:id"  "vendor":"demo:bank"  "live":false  "configured":true
-  printf '%s' "$status_json" | grep -q '"demo":true'                 || { echo 'FAIL: demo mode is off'; exit 1; }
-  printf '%s' "$status_json" | grep -q '"sandboxBits":true'          || { echo 'FAIL: sandbox bits are off'; exit 1; }
-  printf '%s' "$status_json" | grep -q '"issuer":{"configured":true' || { echo 'FAIL: no issuer key'; exit 1; }
-  echo 'ok: demo tier on, sandbox regime on, issuer key present'
+  if printf '%s' "$status_json" | grep -q '"demo":true'; then
+    # -> "demo":true  "sandboxBits":true  "vendor":"demo:id"  "vendor":"demo:bank"  "live":false  "configured":true
+    printf '%s' "$status_json" | grep -q '"sandboxBits":true'          || { echo 'FAIL: sandbox bits are off'; exit 1; }
+    printf '%s' "$status_json" | grep -q '"issuer":{"configured":true' || { echo 'FAIL: no issuer key'; exit 1; }
+    echo 'ok: demo tier on, sandbox regime on, issuer key present'
+  else
+    provider_json="$(curl -fsS --max-time 30 "$DEMO_URL/api/providers/sumsub/status")"
+    printf '%s\n' "$provider_json" | tr ',' '\n' | grep -E '"configured"|"environment"|"testOnly"|"mode"|"issuanceBridge"'
+    printf '%s' "$provider_json" | grep -q '"configured":true'                 || { echo 'FAIL: provider is not configured'; exit 1; }
+    printf '%s' "$provider_json" | grep -q '"environment":"sandbox"'         || { echo 'FAIL: provider is not in sandbox'; exit 1; }
+    printf '%s' "$provider_json" | grep -q '"testOnly":true'                  || { echo 'FAIL: provider does not enforce test-only disclosure'; exit 1; }
+    printf '%s' "$provider_json" | grep -q '"mode":"evidence-candidate-only"' || { echo 'FAIL: provider mode is not evidence-only'; exit 1; }
+    printf '%s' "$provider_json" | grep -q '"issuanceBridge":false'           || { echo 'FAIL: provider unexpectedly enables issuance'; exit 1; }
+    echo 'ok: Sumsub sandbox is test-only, evidence-only and disconnected from issuance'
+  fi
   echo "source contract on Sepolia: $SEPOLIA_EXPLORER/address/$SRC"
   if [ -n "$SEPOLIA_TX" ]; then
     echo "issuance: $SEPOLIA_EXPLORER/tx/$SEPOLIA_TX"

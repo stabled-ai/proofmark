@@ -45,6 +45,7 @@
     "test:synthetic-ui": "tsx --test script/test-synthetic-ui.ts",
     "test:training-ui": "tsx --test script/test-sanctions-training-ui.ts",
     "test:winning-ui": "node --test web/scripts/test-winning-ui.mjs",
+    "test:live-demo": "node web/scripts/test-live-demo.mjs",
     "supply-chain": "tsx script/supply-chain.ts",
     "economics": "tsx script/unit-economics.ts",
     "roster:bundle": "tsx script/roster-bundle.ts",

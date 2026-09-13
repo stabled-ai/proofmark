@@ -1,4 +1,4 @@
-# DoraHacks BUIDL page — copy to paste
+# DoraHacks BUIDL page: copy to paste
 
 Field-by-field text for the BUIDL CTC 2026 Fall submission form, in the order the form asks. Paste,
 do not rewrite at the deadline. Every claim below has a source in this repository; the ones that
@@ -12,145 +12,89 @@ Proofmark
 
 ## Tagline
 
-The compliance gateway for Creditcoin. Verified once on Ethereum, enforced by every Creditcoin asset, revoked everywhere in minutes.
+Verify once. Let every chain READ it. Let every asset enforce it.
+
+## Vision
+
+Proofmark turns KYC/AML into a chain-neutral READ primitive that every chain can reuse and every asset
+can enforce.
 
 ## Sector / track
 
 RWA
 
-## Project description
+## Details
 
-**Proofmark is a compliance gateway for Creditcoin.** A KYC/AML credential is issued on Ethereum,
-proven to Creditcoin through the Attestcoin Protocol, and enforced by a tokenised asset's own
-transfer check. No relayer key, no oracle operator, no admin on the hot path.
+Use the copy button on this plain-text block. It contains no Markdown tables, links, bullets or inline
+code that can break in the DoraHacks editor.
 
-### The problem
+```text
+Proofmark makes one KYC/AML state readable by every asset across every chain.
 
-Every tokenised asset carries the same obligation: know who holds it, at issuance and every day
-after. On chain that has three bad answers today. Per-app KYC rebuilds the vendor contract, the PII
-flow and the evidence retention for every asset and chain. A reusable "KYC passed" boolean hides
-what was checked, by whom, under which regime, how long ago, and whether it is still true. A
-cross-chain copy makes a relayer's signing key the compliance truth. And when a holder is revoked,
-the asset usually finds out never.
+Today, our public deployment proves Ethereum state into Creditcoin CC3. The product direction is chain-neutral: Creditcoin becomes the verification hub, while other chains consume the same verified registry through one standard READ interface as spoke support rolls out. Every chain should be able to ask the same question: is wallet X eligible under policy Y? The answer comes from proven source state, while transport workers hold no compliance authority.
 
-### What Proofmark does
+WHY THIS MATTERS
 
-- **Verify.** A guided flow runs wallet control (EIP-4361 signature bound to a consent version), an
-  ID document check, a bank account check (holder name + ₩1 transfer) and sanctions screening
-  against OFAC, UN and EU source lists. Only the checks that ran set a bit. Korean regulatory rails
-  are integrated in code (CODEF for Government24 document authenticity and OCR, KFTC Open Banking
-  for the bank account); the public sandbox runs labelled demo adapters for those two axes and says
-  so on the page, in the evidence, and in the mark's on-chain regime field.
-- **Prove.** The issuer emits `MarkIssued` on Ethereum Sepolia: a method bitmap, assurance level,
-  regime, jurisdiction and two 32-byte commitments. No name, birth date, document or account number.
-  Our Attestcoin Source Contract on Creditcoin CC3 verifies the inclusion proof for that exact source
-  transaction through the BlockProver precompile and materialises the mark.
-- **Enforce.** `ProofmarkRegistry.isVerified(wallet, policyId)` evaluates a frozen policy: required
-  methods, minimum assurance, maximum age, regime, jurisdiction, trusted issuer, optional roster
-  freshness. `GatedRwaNote`, a tokenised credit note, calls it on both sender and recipient in every
-  transfer and reverts with `RecipientNotVerified` or `SenderNotVerified`.
+Compliance is a read-heavy problem. A credential changes occasionally, but every asset transfer may need to check it. Rebuilding KYC on each chain multiplies vendor contracts, personal-data handling, evidence storage and rescreening operations. Copying a KYC passed flag across chains creates stale, inconsistent answers and turns the copying relayer into the authority.
 
-### What you can see running now
+Proofmark changes the unit of integration. One issuer and one rescreening pipeline can serve many assets and chains. A single revocation updates the state every reader consumes. Applications read policy-relevant facts and commitments, while names, birth dates, document numbers and bank-account numbers stay off chain.
 
-- The same mark, two frozen policies, two answers: Korea's production policy returns `false`
-  because the mark honestly says sandbox; the pilot policy returns `true`.
-- 40 KPCN moved between two verified wallets on CC3; a transfer to an unissued wallet reverts.
-- A revocation sent on Ethereum tombstones the mark on Creditcoin, after which the same holder can
-  no longer send or receive the note. Nobody touches Creditcoin to make that happen.
-- Epoch roster mode: the whole active set as one Merkle root, published on Sepolia and accepted on
-  CC3 8 minutes later, with inclusion and non-inclusion proofs answered by the registry.
-- Observed end-to-end propagation across three runs: 7m 55s to 10m 48s. The demo video labels
-  the wait; it never claims instant.
+THE IDEA
 
-Live: [attest-kyc.stabled.ai](https://attest-kyc.stabled.ai) · on-chain state at `/onchain` ·
-guided flow at `/verify`. Every verdict in the video is reproducible read-only with
-`bash docs/demo-video/commands.sh`.
+A Proofmark credential carries evidence instead of a universal verdict. It records the issuer, checks performed, assurance, regime, jurisdiction, timestamps and cryptographic commitments. Each asset owns a frozen policy that defines what it accepts. The same credential can pass a sandbox product and fail a production RWA because the assets ask different questions of the same facts.
 
-### Security depth
+HOW IT WORKS
 
-We attacked the state machine, not just the happy path: same-address-wrong-chain, stale-proof
-resurrection, sanctions denial downgrades across all 24 delivery orders, policy mutation under a
-live asset, forged roster non-membership, API replay and worker crash recovery. 118 Solidity and
-583 TypeScript tests. While integrating we found two high-severity gaps in Attestcoin's `ASCBase`
-(the handler cannot see the source chain key or the source ordering), fixed them in our fork
-`ASCBaseX` with mutation tests, and documented them for the protocol team
-(`docs/09-ascbase-security-findings.md`). Our own September review found two v1 defects in the
-deployed contracts (denial ordering, roster non-membership); both are fixed and regression-tested in
-the repository, and the v2 redeploy is the first funded milestone.
+Verify: The user signs an EIP-4361 message bound to the consent version. The flow runs configured identity, bank-account and sanctions checks. Only completed checks set method bits, and demo checks remain labelled as sandbox.
 
-### Why Creditcoin
+Prove: ComplianceSource emits the credential on Ethereum Sepolia. A worker fetches the Attestcoin proof and submits it to ProofmarkASC on Creditcoin CC3.
 
-Every RWA, lending and stablecoin launch on Creditcoin repeats the same holder-eligibility work.
-Proofmark replaces it with one frozen policy and one read, and gives existing credential issuers
-one Creditcoin integration that reaches every application. Reads stay free and permissionless;
-revenue attaches to issuer SLAs, issuance and rescreening, evidence operations and adapters.
+Read: Attestcoin's BlockProver verifies the Ethereum receipt. ProofmarkRegistry exposes one call, isVerified(wallet, policyId), that evaluates the proven state against an asset-owned policy.
 
-### Team · Validator Inc.
+Enforce: GatedRwaNote calls that READ for both sender and recipient inside every transfer. A proven revocation or sanctions denial blocks the holder wherever the policy is used.
 
-- **Ash Han, CEO.** Founded and ran GDAC, a Korean digital-asset exchange, through VASP
-  registration, ISMS certification and FinCEN MSB. Interchain ecosystem background.
-- **Youree Lee, Ph.D, Chief Compliance Officer.** Wrote the AML/KYC policy and handled supervisory
-  examinations at GDAC's operator. Prior banking roles.
-- **Yongku Lee, CTO.** Exchange core, wallet, custody and security systems at production scale.
-- **Incheol Yang, Product / protocol.** Exchange core and non-face-to-face KYC integration;
-  Solidity across DEX protocols. Proofmark implementation lead.
+The ASC accepts state only from the pinned source chain and contract. Proven source ordering prevents an old issuance from resurrecting a revoked credential. For larger holder sets, Proofmark publishes one Merkle root and verifies inclusion or non-inclusion against a fresh roster epoch.
 
-This team has already done regulated KYC/AML in Korea's non-face-to-face regime: written the
-policy, passed the examinations, run the exchange. Proofmark is that operating knowledge encoded as
-contracts. The operating history belongs to the prior company and the individuals; Validator Inc.
-does not claim those licences.
+WHY PROOFMARK IS A NATIVE ATTESTCOIN USE CASE
 
-### What we are not claiming
+Attestcoin is strongest when an application needs to trust a fact from another chain without trusting the operator who carried it. Proofmark needs exactly that guarantee. Compliance state is high-value, slow-changing and read many times, so authenticity, ordering and revocation matter more than millisecond latency or asset custody.
 
-Not production-ready, not audited, not anonymous (wallet-linked metadata and commitments are
-pseudonymous and linkable), no statistical latency SLA, no live institutional vendor contract in the
-public sandbox, no revenue or awarded funding. The next 12 weeks are for exactly those proofs.
+Attestcoin supplies the trust model. Once a source block is attested, BlockProver verifies the credential inside Creditcoin execution. The worker can disappear or be replaced because it only transports public proof material. One verification supports every later READ, which matches the economics of cross-chain compliance.
+
+As Attestcoin adds supported chains, Proofmark can accept credentials from more origins without rebuilding the compliance product. As Proofmark adds spoke readers, assets on other chains can consume the same verified root and policy semantics. The result is a shared compliance state instead of another chain-specific KYC silo.
+
+WHAT EXISTS TODAY
+
+The live product at https://attest-kyc.stabled.ai proves issuance and revocation from Ethereum Sepolia to Creditcoin CC3 through Attestcoin. A policy-gated credit note accepts eligible holders and rejects unissued or revoked wallets. Direct credentials and Merkle-roster mode are both implemented, with recorded propagation between 7m 55s and 10m 48s. Contracts, transactions and read-only reproduction commands are public.
+
+TEAM
+
+Proofmark is built by Validator Inc., a Korean blockchain financial-infrastructure company focused on stablecoin issuance, distribution and compliance. The core team previously built and operated GDAC, a regulated Korean digital-asset exchange. We know the cost of duplicating KYC, the operational weight of rescreening and the risk of stale eligibility because we have handled them as operators.
+
+CURRENT SCOPE
+
+The public deployment verifies the Ethereum-to-Creditcoin READ path. Production spoke readers on additional chains remain the next deployment step. The public build uses labelled demo adapters for institutional identity and bank rails, and the contracts have not received a production audit.
+```
 
 ---
 
-## Attestcoin Protocol integration summary
+## Attestcoin Protocol Integration Summary
 
-Proofmark issues KYC/AML marks on Ethereum Sepolia and makes Creditcoin CC3 the chain of record for
-them. **Remove Attestcoin and what is left is a relayer we operate**, which is exactly the trust the
-product exists to remove. The protocol is what makes an off-chain compliance decision checkable on
-another chain without trusting us.
+Use the copy button on this plain-text block.
 
-| Without Attestcoin | With Attestcoin |
-|---|---|
-| A Proofmark-run signer copies marks to Creditcoin; that key is the compliance truth | `ProofmarkASC` verifies the Sepolia transaction's inclusion and continuity through BlockProver; the source event is the truth |
-| Revocation depends on our operator noticing and signing | Anyone can submit the proof of a `MarkRevoked` event; the ASC tombstones the subject on its own |
-| Policy consumers trust an allowlist admin | Policy consumers read `isVerified` against state that only a proven source event can change |
+```text
+Proofmark uses Attestcoin as the trust layer for cross-chain compliance READs.
 
-Where the protocol is used:
+ComplianceSource issues KYC/AML credentials on Ethereum Sepolia. Our worker waits until the source block is attested, fetches its inclusion proof and submits that proof to ProofmarkASC on Creditcoin CC3. Attestcoin's BlockProver verifies the Ethereum receipt inside Creditcoin execution. ProofmarkASC then materialises issuance, revocation, sanctions-denial and roster events into ProofmarkRegistry.
 
-1. **`ProofmarkASC` on CC3** (`0x3C6Fe016645CA52952E29C66E435bDa7F611b242`) extends our fork
-   `ASCBaseX`. `execute()` verifies the proof through `VERIFIER.verifyAndEmit`, then the handler pins
-   `expectedChainKey = 1` (Sepolia) and `sourceContract`, decodes the receipt with `EvmV1Decoder`,
-   filters logs by signature, and applies `MarkIssued`, `MarkRevoked`, `SanctionDenied` and
-   `RosterEpochPublished` under a per-subject `(blockHeight, txIndex)` cursor. All events of one source
-   transaction apply in one Creditcoin block.
-2. **The worker** (`worker/`) scans `ComplianceSource` on Sepolia, waits for attested height, fetches
-   the inclusion proof, and submits it. Jobs are persisted atomically and requeued on every poll, so a
-   crash cannot strand a revocation. The worker holds no compliance authority; a second worker, or a
-   judge, can submit the same proof.
-3. **Deploy-time preflight** reads chain keys from the ChainInfo precompile rather than hardcoding
-   them: Sepolia is chainKey 1, not chainId 11155111. `configureSource` is one-time; the ASC rejects
-   every proof before it is set.
-4. **Batching.** `ComplianceSource.issueBatch` and `revokeBatch` put N events in one source
-   transaction, so one `execute()` applies all N. Epoch rosters put the whole active set behind one
-   proven root, with inclusion and non-inclusion answered on chain.
+The worker has no compliance authority. Anyone can submit the same public proof, while the ASC accepts state only from the pinned source chain and contract. Proven source ordering prevents a stale issuance from overwriting a later revocation. We also added these missing chain and ordering inputs to our minimal ASCBaseX fork and regression-tested wrong-chain and stale-proof attacks.
 
-Two protocol findings came out of the integration. Upstream `ASCBase.execute()` receives `chainKey`
-and `blockHeight` and forwards neither to `_processAndEmitEvent`, so a derived contract can neither
-pin its source chain nor order what it applies; a same-address contract on a second attested chain
-passes as the trusted emitter, and a stale issuance proof resurrects a revoked mark. `ASCBaseX`
-widens that one internal signature and changes nothing else; mutation tests pin both guards. The
-report is `docs/09-ascbase-security-findings.md`, offered to the protocol team under MIT.
+Creditcoin assets consume the verified state through one call: isVerified(wallet, policyId). Each asset owns a frozen policy covering required checks, issuer, regime, jurisdiction and freshness. Our reference RWA calls this READ for both sender and recipient inside every transfer. A revocation proven once from Ethereum changes the answer for every asset using that policy.
 
-Reads are free on Attestcoin, and we claim no ATC demand from them. Testnet evidence: Sepolia
-`issueBatch` `0x29049802…8d69f1`, CC3 `execute()` `0x50c30b31…567d8`, epoch 1 accepted in
-`0xb011cd6e…532f`. Setup and reproduction: README, `docs/submission/integration-summary.md`,
-`npm run verify:submission`.
+This is a strong fit for Attestcoin because compliance is high-value, slow-changing and read many times. It needs proof, source authenticity and lifecycle ordering more than millisecond latency or asset movement. One attested credential can serve many policies and assets without copying personal data or trusting a relayer.
+
+The public deployment proves the Ethereum-to-Creditcoin path today. The product direction is chain-neutral. As Attestcoin expands source-chain support, Proofmark can accept credentials from more origins. Spoke readers will let assets on additional chains consume the same verified root and policy semantics. The core model is to verify once, READ everywhere and enforce locally.
+```
 
 ---
 
@@ -163,9 +107,9 @@ Reads are free on Attestcoin, and we claim no ATC demand from them. Testnet evid
 | Demo video URL | not recorded yet — kit in `docs/demo-video/` | record, upload unlisted, validate with `internal/validate-video-url.sh` |
 | Live product | https://attest-kyc.stabled.ai | live |
 | On-chain state | https://attest-kyc.stabled.ai/onchain | live |
-| Logo (optional) | export the seal-ring mark from `web/components/ui/Logo.tsx` as PNG | optional |
+| Logo (optional) | `docs/submission/proofmark-dorahacks-profile.png` | ready |
 
 ## Team fields, per member
 
-Name · email · short bio (use the four bios above) · role · country of residence · country of
-citizenship. Each person confirms their own row; the repository does not establish any of it.
+Each member enters their own name, email, role, country of residence and citizenship. Do not copy
+personal biographies from the company deck into the public Details field.
