@@ -17,7 +17,8 @@ export class StatusFixture {
     const abi = to.toLowerCase() === this.asc ? this.ascAbi : this.regAbi;
     const f = abi.getFunction(data.slice(0, 10))!; const args = abi.decodeFunctionData(f, data);
     this.reads.push({ method: f.name, blockTag });
-    if (f.name === this.failMethod || (this.legacy && f.name.endsWith('_VERSION'))) throw new Error('synthetic RPC failure');
+    if (f.name === this.failMethod || (this.legacy && (f.name.endsWith('_VERSION')
+      || ['isMarkIssuerUsable', 'markIssuerKeyEpoch'].includes(f.name)))) throw new Error('synthetic RPC failure');
     const versions: Record<string, number> = { ROSTER_FORMAT_VERSION: 2, EPOCH_SCHEMA_VERSION: 2, ROSTER_AUTH_VERSION: 1, ISSUER_KEY_PROVENANCE_VERSION: 1,
       ROSTER_WITNESS_VERSION: 1, ATTRS_SCHEMA_VERSION: 0, POLICY_SCHEMA_VERSION: 2, TRANSACTION_PROCESSING_VERSION: 2 };
     let value: unknown[];

@@ -55,7 +55,7 @@ export async function readOnchainState(provider: ethers.Provider, config: { asc:
   const ascNames = ['EPOCH_SCHEMA_VERSION', 'ROSTER_AUTH_VERSION', 'ISSUER_KEY_PROVENANCE_VERSION', 'ATTRS_SCHEMA_VERSION', 'TRANSACTION_PROCESSING_VERSION'] as const;
   const [boundAsc, chainKey, source, tomb, rawMark, directIssuerUsable, directKeyEpoch, epoch, validUntil, fresh, code, versions, ascVersions, rawPolicies] = await Promise.all([
     reg.ASC(at) as Promise<string>, asc.expectedChainKey(at), asc.sourceContract(at), asc.tombstone(config.subject, at), asc.getMark(config.subject, at),
-    asc.isMarkIssuerUsable(config.subject, at), asc.markIssuerKeyEpoch(config.subject, at),
+    optional(() => asc.isMarkIssuerUsable(config.subject, at)), optional(() => asc.markIssuerKeyEpoch(config.subject, at)),
     asc.latestEpoch(at), asc.epochValidUntil(at), asc.isRosterFresh(at), provider.getCode(config.registry, block.number),
     Promise.all(versionNames.map(name => optional(() => reg[name](at)))),
     Promise.all(ascNames.map(name => optional(() => asc[name](at)))),
@@ -68,7 +68,8 @@ export async function readOnchainState(provider: ethers.Provider, config: { asc:
   ]);
   if (!same(boundAsc, config.asc) || Number(chainKey) !== 1) throw new Error('registry/ASC source binding mismatch');
   const [format, epochSchema, auth, keyProvenance, witnessVersion, attrsSchema, policySchema] = versions;
-  const compatible = format === 2 && epochSchema === 2 && auth === 1 && keyProvenance === 1 && attrsSchema === 0 && policySchema === 2
+  const compatible = directIssuerUsable !== null && directKeyEpoch !== null
+    && format === 2 && epochSchema === 2 && auth === 1 && keyProvenance === 1 && attrsSchema === 0 && policySchema === 2
     && ascVersions[0] === 2 && ascVersions[1] === 1 && ascVersions[2] === 1 && ascVersions[3] === 0 && ascVersions[4] === 2;
   const m = directMark(rawMark);
   const latestEpoch = Number(epoch);

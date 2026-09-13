@@ -25,6 +25,7 @@ test('legacy boolean remains a raw chain response, never a current-schema safety
   const f = new StatusFixture(); f.legacy = true;
   const result = await readOnchainState(f.provider(), f.config());
   assert.equal(result.policies[0].verified, true); assert.equal(result.registry.proofMode, false);
+  assert.equal(result.mark.issuerKeyUsable, false); assert.equal(result.mark.issuerKeyEpoch, 0);
   assert.equal(result.policies[0].diagnosis, 'unavailable'); assert.equal(result.witness, null);
   assert.deepEqual(result.policies[0].reasonCodes, ['LEGACY_OR_UNCONFIRMED_SCHEMA']);
 });
