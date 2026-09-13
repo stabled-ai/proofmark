@@ -61,15 +61,21 @@ const output = (name: string, value: string | number | boolean) => {
   if (path) appendFileSync(path, `${name}=${String(value)}\n`);
 };
 
-async function command(file: string, args: string[], env: NodeJS.ProcessEnv = process.env): Promise<void> {
+async function command(
+  file: string,
+  args: string[],
+  env: NodeJS.ProcessEnv = process.env,
+  acceptedExitCodes: readonly number[] = [0],
+): Promise<number> {
   await new Promise<void>((accept, reject) => {
     const child = spawn(file, args, { cwd: resolve('.'), env, stdio: 'inherit' });
     child.once('error', reject);
     child.once('exit', (code, signal) => {
-      if (code === 0) accept();
+      if (code !== null && acceptedExitCodes.includes(code)) accept();
       else reject(new Error(`${file} ${args.join(' ')} failed (${signal ?? `exit ${code}`})`));
     });
   });
+  return 0;
 }
 
 interface EpochRecord {
@@ -132,6 +138,32 @@ async function cacheWitnesses(
   return transactions;
 }
 
+async function refreshLists() {
+  await command('npx', ['tsx', 'aml/fetch-lists.ts']);
+  return (await loadLists('data/raw', 'epoch')).provenance;
+}
+
+async function waitForHubEpoch(asc: ethers.Contract, provider: ethers.JsonRpcProvider, expectedEpoch: number): Promise<void> {
+  const pollMs = positiveInteger('EPOCH_POLL_SECONDS', 15, 300) * 1000;
+  const timeoutMs = positiveInteger('EPOCH_TIMEOUT_MINUTES', 45, 360) * 60_000;
+  const confirmations = positiveInteger('EPOCH_HUB_CONFIRMATIONS', 6, 100);
+  const deadline = Date.now() + timeoutMs;
+  let firstObservedBlock: number | undefined;
+  while (Date.now() < deadline) {
+    const block = await provider.getBlock('latest');
+    if (!block) throw new Error('CC3 head is unavailable while recovering publication');
+    const latest = Number(await asc.latestEpoch({ blockTag: block.number }));
+    if (latest > expectedEpoch) throw new Error('pending epoch was superseded before recovery');
+    if (latest === expectedEpoch) {
+      firstObservedBlock ??= block.number;
+      if (block.number >= firstObservedBlock + confirmations - 1) return;
+    }
+    console.log(`waiting for CC3 epoch ${expectedEpoch}: latest ${latest}, block ${block.number}`);
+    await new Promise(resolve => setTimeout(resolve, pollMs));
+  }
+  throw new Error(`CC3 did not materialize epoch ${expectedEpoch} within the configured timeout`);
+}
+
 async function main() {
   const force = process.argv.slice(2).includes('--force') || process.env.FORCE_EPOCH_RENEWAL === '1';
   if (process.argv.slice(2).some(value => value !== '--force')) throw new Error('usage: renew-demo-epoch [--force]');
@@ -160,7 +192,20 @@ async function main() {
 
     if (sourceEpoch < hubEpoch) throw new Error('hub epoch is ahead of the source epoch');
     if (sourceEpoch > hubEpoch) {
-      throw new Error('a source epoch is still awaiting CC3 materialization; refusing to publish another epoch');
+      console.log(`recovering source-confirmed epoch ${sourceEpoch}; no new epoch will be published`);
+      await command('npx', ['tsx', 'script/publish-epoch.ts', '--resume-publication'], process.env, [0, 2]);
+      await waitForHubEpoch(asc, hub, sourceEpoch);
+      const recoveredBlock = await hub.getBlock('latest');
+      if (!recoveredBlock) throw new Error('recovered CC3 block is unavailable');
+      hubEpoch = Number(await asc.latestEpoch({ blockTag: recoveredBlock.number }));
+      const recoveredRoot = await asc.epochRoots(hubEpoch, { blockTag: recoveredBlock.number });
+      const record = loadRecord(recordPath(recordDirectory, sourceAddress, ascAddress, hubEpoch), hubEpoch, recoveredRoot);
+      const witnessTransactions = await cacheWitnesses(hub, registryAddress, witnessSigner, record);
+      const provenance = await refreshLists();
+      console.log(`recovered epoch ${hubEpoch}; snapshot ${provenance.snapshotId}; witnesses ${record.entries.length}`);
+      output('renewed', true); output('state_changed', true); output('epoch', hubEpoch);
+      output('snapshot_id', provenance.snapshotId); output('witness_transactions', witnessTransactions.length);
+      return;
     }
 
     const currentRoot = hubEpoch > 0 ? await asc.epochRoots(hubEpoch, { blockTag: hubBlock.number }) : ethers.ZeroHash;
@@ -181,8 +226,7 @@ async function main() {
       return;
     }
 
-    await command('npx', ['tsx', 'aml/fetch-lists.ts']);
-    const { provenance } = await loadLists('data/raw', 'epoch');
+    const provenance = await refreshLists();
     temporary = mkdtempSync(join(tmpdir(), 'proofmark-epoch-renewal-'));
     const plan = join(temporary, 'approval-plan.json');
     const approvals = join(temporary, 'approvals.json');
