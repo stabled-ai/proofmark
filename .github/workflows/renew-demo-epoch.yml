@@ -1,0 +1,138 @@
+name: Renew demo epoch
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Publish a new epoch even when the current one has more than six hours left
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: proofmark-demo-epoch-renewal
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      SOURCE_CHAIN_RPC_URL: https://ethereum-sepolia-rpc.publicnode.com
+      SOURCE_HEADER_RPC_URL: https://rpc.sepolia.org
+      CREDITCOIN_RPC_URL: https://rpc.cc3-testnet.creditcoin.network
+      SOURCE_CONTRACT_ADDRESS: '0xfb46D722CD70F1ed399616a9B4745E60B9220609'
+      ASC_CONTRACT_ADDRESS: '0x8c29A966a30d9083B760451245aECEbBE1E2d2F4'
+      REGISTRY_CONTRACT_ADDRESS: '0x5752897b1edaD4fe50908B38c4ddA5f376a43110'
+      SOURCE_DEPLOYMENT_TX: '0x1eb9cfb389f42294c68812a7377aaed4e4506231ea51b6e4781a1a06a059e34a'
+      EPOCH_PUBLISHER_ADDRESS: '0xA177c22AaC30b847374dC462aC2538336C157d3d'
+      WITNESS_SIGNER_ADDRESS: '0x15B298E839F6fe85D9305d125db3373D8B933A89'
+      DEMO_EXPECTED_ISSUER: '0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8'
+      DEMO_SOURCE_CODEHASH: '0xdc89731efb953a3221ac1cdf56dc9e80274632b0a3af0396dfc1b2221fe2b58f'
+      DEMO_ASC_CODEHASH: '0xbb050e54df8659016e5d7601e867246c3c49395bb9d07c0956cd1cff3ba0aa7b'
+      DEMO_REGISTRY_CODEHASH: '0xfdce0cf90663141196349cb16656d9569bca7adf4155abe383dbac5e4e7f4d84'
+      EPOCH_VALID_HOURS: '24'
+      EPOCH_RENEW_BEFORE_SECONDS: '21600'
+      EPOCH_TIMEOUT_MINUTES: '45'
+      EPOCH_POLL_SECONDS: '15'
+      EPOCH_HUB_CONFIRMATIONS: '6'
+      SOURCE_CONFIRMATIONS: '12'
+      SOURCE_SCAN_CHUNK: '100'
+      SOURCE_RECEIPT_CONCURRENCY: '6'
+      SOURCE_RECEIPT_RETRIES: '3'
+      SOURCE_SNAPSHOT_MAX_BLOCKS: '20000'
+      SOURCE_SNAPSHOT_MAX_RECEIPTS: '200000'
+      WITNESS_CONFIRMATIONS: '2'
+      EPOCH_MAX_WITNESSES: '100'
+      EPOCH_BUNDLE_DISCLOSURE_ACK: wallet-linkable-roster-approved
+      FORCE_EPOCH_RENEWAL: ${{ inputs.force == true && '1' || '0' }}
+      EPOCH_PUBLISHER_PRIVATE_KEY: ${{ secrets.EPOCH_PUBLISHER_PRIVATE_KEY }}
+      ISSUER_PRIVATE_KEY: ${{ secrets.EPOCH_ISSUER_PRIVATE_KEY }}
+      WITNESS_PRIVATE_KEY: ${{ secrets.EPOCH_WITNESS_PRIVATE_KEY }}
+      EPOCH_PUBLICATION_JOURNAL_KEY: ${{ secrets.EPOCH_PUBLICATION_JOURNAL_KEY }}
+      SOURCE_SNAPSHOT_CHECKPOINT_KEY: ${{ secrets.EPOCH_SOURCE_SNAPSHOT_CHECKPOINT_KEY }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.15.0
+          cache: npm
+
+      - name: Restore encrypted renewal state
+        id: state
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .epoch-automation
+          key: epoch-automation-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            epoch-automation-
+
+      - name: Configure persistent paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          state_dir="$GITHUB_WORKSPACE/.epoch-automation"
+          mkdir -p "$state_dir/records" "$state_dir/replica-a" "$state_dir/replica-b"
+          chmod 700 "$state_dir" "$state_dir/records" "$state_dir/replica-a" "$state_dir/replica-b"
+          {
+            echo "EPOCH_PUBLICATION_JOURNAL_PATH=$state_dir/publication.journal"
+            echo "SOURCE_SNAPSHOT_CHECKPOINT_PATH=$state_dir/source.checkpoint"
+            echo "EPOCH_RECORD_DIR=$state_dir/records"
+            echo "EPOCH_BUNDLE_REPLICA_DIRS=[\"$state_dir/replica-a\",\"$state_dir/replica-b\"]"
+          } >> "$GITHUB_ENV"
+
+      - run: npm ci
+
+      - name: Renew epoch and cache current witnesses
+        id: renew
+        run: npx tsx script/renew-demo-epoch.ts
+
+      - name: Build and publish the refreshed hosted screening snapshot
+        if: steps.renew.outputs.renewed == 'true'
+        env:
+          EXPECTED_SNAPSHOT: ${{ steps.renew.outputs.snapshot_id }}
+          EXPECTED_EPOCH: ${{ steps.renew.outputs.epoch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx tsx aml/build-index.ts
+          git config user.name 'proofmark-epoch-bot'
+          git config user.email 'proofmark-epoch-bot@users.noreply.github.com'
+          git add web/data/sanctions-index.json.gz
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh hosted sanctions snapshot"
+            git push origin HEAD:main
+          fi
+          npx tsx script/wait-hosted-demo.ts https://attest-kyc.stabled.ai "$EXPECTED_SNAPSHOT" "$EXPECTED_EPOCH"
+
+      - name: Save encrypted renewal state
+        if: always() && (steps.renew.outcome == 'failure' || steps.renew.outputs.state_changed == 'true')
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .epoch-automation
+          key: epoch-automation-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Record renewal result
+        if: always()
+        env:
+          RENEWED: ${{ steps.renew.outputs.renewed }}
+          EPOCH: ${{ steps.renew.outputs.epoch }}
+          SNAPSHOT: ${{ steps.renew.outputs.snapshot_id }}
+        shell: bash
+        run: |
+          {
+            echo '### Demo epoch renewal'
+            echo "- Renewed: ${RENEWED:-false}"
+            echo "- Epoch: ${EPOCH:-unavailable}"
+            echo "- Snapshot: ${SNAPSHOT:-unchanged}"
+          } >> "$GITHUB_STEP_SUMMARY"
