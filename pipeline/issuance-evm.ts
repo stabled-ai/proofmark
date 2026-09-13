@@ -37,7 +37,10 @@ export function validateSignedIssuance(entry: IssuanceEntry, signed: SignedIssua
 }
 
 export function issuanceProvider(url: string): ethers.JsonRpcProvider {
-  const connection = new ethers.FetchRequest(url); connection.timeout = 5000;
+  // Public testnet RPCs can exceed five seconds while CC3 or Sepolia is under load. Issuance is
+  // already journaled and resumable, so allow one bounded request enough time to finish instead
+  // of persistently holding the signer gate after a premature transport timeout.
+  const connection = new ethers.FetchRequest(url); connection.timeout = 15_000;
   return new ethers.JsonRpcProvider(connection, undefined, { batchMaxCount: 1, cacheTimeout: -1 });
 }
 

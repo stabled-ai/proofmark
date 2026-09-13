@@ -239,7 +239,7 @@ try {
     await page.getByRole('heading', { name: 'Credential on file', exact: true }).waitFor();
     await page.getByRole('link', { name: /Unverified wallet/ }).click();
     await page.getByRole('heading', { name: 'No credential found', exact: true }).waitFor();
-    assert.equal(await page.locator('[data-result="UNCONFIRMED"]').count(), 2);
+    assert.equal(await page.locator('[data-result="FAIL"]').count(), 2);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
     assert.deepEqual(errors, []);
     await context.close();
@@ -336,13 +336,22 @@ try {
         issueResponse = await resumeReply;
         issueBody = await issueResponse.json();
       }
+      for (let attempt = 0; attempt < 12 && issueResponse.status() === 200
+        && issueBody.issuance?.phase === 'submitted'; attempt++) {
+        await page.waitForTimeout(10_000);
+        const resumeReply = page.waitForResponse(result => result.request().method() === 'POST'
+          && new URL(result.url()).pathname === '/api/kyc/issue', { timeout: 120_000 });
+        await page.getByRole('button', { name: 'Resume original request', exact: true }).click();
+        issueResponse = await resumeReply;
+        issueBody = await issueResponse.json();
+      }
       assert.equal(issueResponse.status(), 200,
         `issuance HTTP ${issueResponse.status()}; code=${issueBody.code ?? issueBody.error ?? 'none'}; resumable=${String(issueBody.resumable)}`);
       assert.match(issueBody.requestId, /^0x[0-9a-f]{64}$/i);
       assert.match(issueBody.onchain?.txHash, /^0x[0-9a-f]{64}$/i,
         `issuance phase=${issueBody.issuance?.phase ?? 'missing'}; status=${issueBody.status ?? 'missing'}; sent=${String(issueBody.onchain?.sent)}; error=${issueBody.reason ?? issueBody.issuance?.lastError ?? 'none'}`);
       assert.equal(issueBody.onchain?.sent, true);
-      assert.ok(['submitted', 'source-confirmed', 'materialized'].includes(issueBody.issuance?.phase));
+      assert.ok(['source-confirmed', 'materialized'].includes(issueBody.issuance?.phase));
       assert.deepEqual(errors, []);
       return `${issueBody.issuance.phase}; Sepolia transaction ${issueBody.onchain.txHash}`;
     } finally { await context.close(); }
