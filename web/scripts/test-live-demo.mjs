@@ -188,6 +188,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => { Object.defineProperty(window, 'ethereum', { get() { throw new Error('wallet-free demo accessed a wallet'); } }); });
     await page.goto(`${BASE}/demo`, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
     assert.equal(calls.length, 0, 'the initial page made an API call');
     await page.getByRole('button', { name: 'Start demo', exact: true }).click();
     await page.locator('[data-demo-chain="loaded"]').waitFor();
