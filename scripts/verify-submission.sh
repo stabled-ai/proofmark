@@ -55,7 +55,7 @@ if [ "$generation" = v2 ]; then
   export DEMO_SOURCE_CONFIRMATIONS="$(manifest_value '.demo.primaryIssuance.sourceConfirmations')"
   epoch_record="$(find deployments/epoch-v2 -maxdepth 1 -type f -name '*.json' | sort -V | tail -1)"
   RECORD=0 DEMO_URL="$demo_url" CC3="$cc3" SCENES="2 3 4 6 7 8" bash docs/demo-video/commands-v2.sh
-  npx tsx script/check-demo-freshness.ts
+  MIN_FRESH_HOURS="${MIN_FRESH_HOURS:-12}" npx tsx script/check-demo-freshness.ts
 else
   epoch_record="$(find deployments -maxdepth 1 -type f -name 'epoch-*.json' | sort -V | tail -1)"
   RECORD=0 DEMO_URL="$demo_url" SCENES="1 2 3 4 5 6 8" bash docs/demo-video/commands.sh
