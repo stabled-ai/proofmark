@@ -3,8 +3,8 @@
 Give the reviewer only the public repository URL and this command:
 
 ```sh
-git clone --recurse-submodules https://github.com/inchyangv/attest-kyc-ctc.git
-cd attest-kyc-ctc
+git clone --recurse-submodules https://github.com/stabled-ai/proofmark.git
+cd proofmark
 npm ci
 npm run verify:submission
 ```

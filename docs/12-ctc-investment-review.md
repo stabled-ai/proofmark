@@ -209,8 +209,8 @@ agreements, a retention policy, and South Korean legal review. See
 - Product: [attest-kyc.stabled.ai](https://attest-kyc.stabled.ai)
 - On-chain status: [attest-kyc.stabled.ai/onchain](https://attest-kyc.stabled.ai/onchain)
 - Verification flow: [attest-kyc.stabled.ai/verify](https://attest-kyc.stabled.ai/verify)
-- Public code: [github.com/inchyangv/attest-kyc-ctc](https://github.com/inchyangv/attest-kyc-ctc)
-- CI evidence: [GitHub Actions run 33613331190](https://github.com/inchyangv/attest-kyc-ctc/actions/runs/33613331190)
+- Public code: [github.com/stabled-ai/proofmark](https://github.com/stabled-ai/proofmark)
+- CI evidence: [GitHub Actions](https://github.com/stabled-ai/proofmark/actions)
 
 The production web deployment was Ready and its API function was observed in Seoul region `icn1`.
 Vercel also identifies `icn1` as Seoul in its [regions documentation](https://vercel.com/docs/regions).

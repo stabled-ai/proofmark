@@ -31,7 +31,7 @@ allowlist when those meet the need; a more complex cross-chain path is not autom
 Reference links to review before any authorized outreach:
 
 - `https://attest-kyc.stabled.ai/onchain`
-- `https://github.com/inchyangv/attest-kyc-ctc`
+- `https://github.com/stabled-ai/proofmark`
 - `docs/15-submission-evidence.md`
 
 Include [current limitations](19-security-migration.md) and the [issuer-isolation decision](69-issuer-isolation-decision.md).

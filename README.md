@@ -183,8 +183,8 @@ No name, date of birth, document number or account number is written on chain. W
 Requirements: Node.js, npm and Foundry.
 
 ```sh
-git clone --recurse-submodules https://github.com/inchyangv/attest-kyc-ctc.git
-cd attest-kyc-ctc
+git clone --recurse-submodules https://github.com/stabled-ai/proofmark.git
+cd proofmark
 npm ci
 npm test                       # Solidity security/lifecycle and ZK gate tests
 npm run test:ts                # TypeScript regression, including native provider modules
@@ -222,11 +222,11 @@ npx tsx script/publish-epoch.ts --dry-run   # rebuild the active set, self-check
 npx tsx script/publish-epoch.ts --publish   # one root on Sepolia, accepted on CC3
 ```
 
-The contracts on testnet are the v1 build, tagged [`v1-live`](https://github.com/inchyangv/attest-kyc-ctc/tree/v1-live). The worker and scripts at that tag operate them, and the demo kit targets them:
+The contracts on testnet are the v1 build, tagged [`v1-live`](https://github.com/stabled-ai/proofmark/tree/v1-live). The worker and scripts at that tag operate them, and the demo kit targets them:
 
 ```sh
 git worktree add ../attest-kyc-live v1-live
-cd ../attest-kyc-live && npm ci && cp ../attest-kyc-ctc/.env .env
+cd ../attest-kyc-live && npm ci && cp ../proofmark/.env .env
 npm run worker
 ```
 

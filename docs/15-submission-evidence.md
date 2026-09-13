@@ -27,7 +27,7 @@ through Attestcoin, and lets each Creditcoin application enforce its own frozen 
 | Sanctions screening reads official OFAC, UN and EU source data | 26,566 entries and 78,365 names in the current built index | `bash aml/fetch-lists.sh && npx tsx aml/build-index.ts && npx tsx aml/eval.ts` |
 | Core security and lifecycle paths are regression tested | 118 Solidity tests and 600 TypeScript/ABI tests in the source-bound evidence run | `npm run test:evidence && npm run check:submission` prints the exact counts |
 | Public product and APIs answer | [product](https://attest-kyc.stabled.ai), [on-chain state](https://attest-kyc.stabled.ai/onchain), [guided flow](https://attest-kyc.stabled.ai/verify) | `bash scripts/check-demo-urls.sh` |
-| Public CI is reproducible | [GitHub Actions run 33613331190](https://github.com/inchyangv/attest-kyc-ctc/actions/runs/33613331190) | Clone recursively and run the commands above |
+| Public CI is reproducible | [GitHub Actions](https://github.com/stabled-ai/proofmark/actions) | Clone recursively and run the commands above |
 
 Contract addresses and policy IDs are machine-readable in
 [`deployments/cc3-testnet.json`](../deployments/cc3-testnet.json). Epoch inputs and measured

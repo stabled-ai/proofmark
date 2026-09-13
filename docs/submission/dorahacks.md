@@ -158,7 +158,7 @@ Reads are free on Attestcoin, and we claim no ATC demand from them. Testnet evid
 
 | Field | Value | Status |
 |---|---|---|
-| GitHub repository | https://github.com/inchyangv/attest-kyc-ctc | confirm public and pushed |
+| GitHub repository | https://github.com/stabled-ai/proofmark | confirm public and pushed |
 | Deck (PDF URL) | `docs/deck/proofmark-deck.pdf` — host as a GitHub release asset or in the repo raw URL | needs a public URL |
 | Demo video URL | not recorded yet — kit in `docs/demo-video/` | record, upload unlisted, validate with `internal/validate-video-url.sh` |
 | Live product | https://attest-kyc.stabled.ai | live |
