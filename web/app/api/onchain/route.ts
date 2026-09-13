@@ -9,7 +9,9 @@ export const revalidate = 0;
 export async function GET(req: Request) {
   try {
     guardRequest(req, { bucket: 'onchain-status', limit: 60, windowMs: 60_000 });
-    const subject = new URL(req.url).searchParams.get('subject') ?? '0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2';
+    const subject = new URL(req.url).searchParams.get('subject')
+      ?? process.env.NEXT_PUBLIC_DEMO_SUBJECT
+      ?? '0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2';
     if (!ethers.isAddress(subject)) return NextResponse.json({ error: 'Invalid subject address' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     const rpc = process.env.NEXT_PUBLIC_CC3_RPC;
     if (!rpc) throw new Error('hub RPC not configured');
