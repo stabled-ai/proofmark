@@ -25,7 +25,7 @@ jobs:
     timeout-minutes: 90
     env:
       SOURCE_CHAIN_RPC_URL: https://ethereum-sepolia-rpc.publicnode.com
-      SOURCE_HEADER_RPC_URL: https://rpc.sepolia.org
+      SOURCE_HEADER_RPC_URL: https://sepolia.gateway.tenderly.co
       CREDITCOIN_RPC_URL: https://rpc.cc3-testnet.creditcoin.network
       SOURCE_CONTRACT_ADDRESS: '0xfb46D722CD70F1ed399616a9B4745E60B9220609'
       ASC_CONTRACT_ADDRESS: '0x8c29A966a30d9083B760451245aECEbBE1E2d2F4'
