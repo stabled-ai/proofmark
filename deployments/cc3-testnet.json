@@ -18,6 +18,7 @@
     "sourceIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
     "sourceRescreener": "0xD85532Bb5411eD64A4b0D7a4AC30D0e7822342F5",
     "epochPublisher": "0xA177c22AaC30b847374dC462aC2538336C157d3d",
+    "epochWitnessPayer": "0xd5772056e75111C2CD53776CefcAF247c6bFaEC2",
     "workerPayer": "0x15B298E839F6fe85D9305d125db3373D8B933A89",
     "assetOwner": "0x3bFA4A66C9CB1a8ceBAd2D4Bd5F064BC8CB0311d"
   },
@@ -87,6 +88,8 @@
   "operations": {
     "initialWorkerPayer": "0x152Fb5437B5f99E5dEd96c7FFcb6C583dbAfB0e2",
     "workerRotationFundingTransactionHash": "0x202939f0d4a01ec1bb4fc88d62e51daa93177019db690bae54885b52be8778fb",
+    "epochWitnessFundingTransactionHash": "0xf5a8519ab7b12d065da736e20ac7c8dadcdcd7c8666f7d25f4f83a1c2fe79cb4",
+    "epochWitnessFundingBlockNumber": 5483481,
     "noteDeploymentTransactionHash": "0x760eb3221a050d739af038a2bde325a709ce6a291ededd7f255570eb4d80dec0",
     "noteDeploymentBlockNumber": 5483028
   }
