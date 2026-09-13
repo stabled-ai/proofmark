@@ -153,15 +153,15 @@ export default function Screening() {
         <div>
           <form className="panel p-5 sm:p-6" onSubmit={event => { event.preventDefault(); if (!busy) void screen(); }}>
             <h2 className="display mb-5 text-[19px] leading-7">New screening</h2>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+            <div className="grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-2">
               {FIELDS.map(([k, label, hint]) => (
-                <div key={k} className={k === 'fullName' || k === 'dateOfBirth' ? 'col-span-2' : ''}>
+                <div key={k} className={k === 'fullName' || k === 'dateOfBirth' ? 'sm:col-span-2' : ''}>
                   <Field label={label} hint={hint || undefined}>
                     <Input value={form[k]} onChange={set(k)} disabled={busy} required={k === 'fullName'} spellCheck={false} type={k === 'dateOfBirth' ? 'date' : 'text'} placeholder={k === 'fullName' ? 'Enter full legal name' : k === 'nationality' || k === 'residence' ? 'e.g. KR' : undefined} list={k === 'nationality' || k === 'residence' ? 'screening-countries' : undefined} maxLength={k === 'nationality' || k === 'residence' ? 2 : undefined} />
                   </Field>
                 </div>
               ))}
-              <div className="col-span-2"><Field label="Wallet address" hint="Optional">
+              <div className="sm:col-span-2"><Field label="Wallet address" hint="Optional">
                 <Input value={form.walletAddress} onChange={set('walletAddress')} disabled={busy} spellCheck={false} placeholder="0x…" className="mono" />
               </Field></div>
             </div>
