@@ -3,7 +3,7 @@
  * `configureSource(chainKey, ...)` will be given.
  *
  * chainKey is not chainId. Sepolia is chainKey 1, chainId 11155111.
- * We never hardcode it (docs/01-env-verification.md section 3.3), so this asks the chain
+ * The source chain key is not the EVM chain ID, so this asks the chain
  * directly, right before deployment.
  *
  * Usage: npx tsx script/check_chains.ts <expectedChainKey> <expectedChainId>

@@ -15,7 +15,7 @@ import {ReceiptFixture} from "./ReceiptFixture.sol";
 import {SchemaVectors} from "./SchemaVectors.sol";
 
 /// @notice Local mock harness. Exercises every ASC guard without the eight-minute attestation wait.
-/// @dev Exists to prove the findings in docs/05-asc-integration-review.md, not to assert them.
+/// @dev Exercises source binding, lifecycle order and receipt-processing regressions locally.
 contract ProofmarkASCTest is Test {
     address constant PRECOMPILE = 0x0000000000000000000000000000000000000FD2;
 

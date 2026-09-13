@@ -125,10 +125,10 @@ jobs:
         env:
           NEXT_PUBLIC_CC3_RPC: https://rpc.cc3-testnet.creditcoin.network
           NEXT_PUBLIC_SEPOLIA_RPC: https://ethereum-sepolia-rpc.publicnode.com
-          NEXT_PUBLIC_ASC: "0x3C6Fe016645CA52952E29C66E435bDa7F611b242"
-          NEXT_PUBLIC_REGISTRY: "0x2F4E5e1270f90E51251651caf08547393e3C0572"
-          NEXT_PUBLIC_SOURCE: "0xA9A34586303b9fD92e090F9bb1D332DC854c72B9"
-          NEXT_PUBLIC_NOTE: "0xa74aB3De359a55A729f9185Fe4Afe90526E585CA"
+          NEXT_PUBLIC_ASC: "0x8c29A966a30d9083B760451245aECEbBE1E2d2F4"
+          NEXT_PUBLIC_REGISTRY: "0x5752897b1edaD4fe50908B38c4ddA5f376a43110"
+          NEXT_PUBLIC_SOURCE: "0xfb46D722CD70F1ed399616a9B4745E60B9220609"
+          NEXT_PUBLIC_NOTE: "0x5C16b3A87fa909b8BDb899476D049a85A56380B5"
       # ID decoder must survive output-file tracing before a deployment is considered usable.
       - run: npm run test:id-image-build
       - run: npx playwright install --with-deps chromium

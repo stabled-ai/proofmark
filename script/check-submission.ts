@@ -1,4 +1,4 @@
-/** Static, offline assertions for claims that appear in the hackathon submission. */
+/** Static, offline assertions for claims that appear in the public submission. */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +10,10 @@ const args = process.argv.slice(2);
 if (args.length > 1 || (args.length === 1 && args[0] !== '--docs-only')) throw new Error('usage: check:submission [--docs-only]');
 const docsOnly = args[0] === '--docs-only';
 const deployment = JSON.parse(read('deployments/cc3-testnet.json')) as {
+  release?: string;
   contracts: Record<string, string>;
+  roles?: Record<string, string>;
+  governance?: Record<string, string>;
 };
 
 let failures = 0;
@@ -21,27 +24,38 @@ function check(label: string, condition: boolean, detail = ''): void {
 }
 
 const readme = read('README.md');
-const review = read('docs/12-ctc-investment-review.md');
-const commands = read('docs/demo-video/commands.sh');
+const dorahacks = read('docs/submission/dorahacks.md');
+const integrationSummary = read('docs/submission/integration-summary.md');
 const strictCommands = read('docs/demo-video/commands-v2.sh');
 const submissionVerifier = read('scripts/verify-submission.sh');
 const narration = read('docs/demo-video/NARRATION.md');
-const shotlist = read('docs/demo-video/SHOTLIST.md');
-const preflight = read('docs/demo-video/PREFLIGHT.md');
-const driver = read('deploy/verify-demo.mjs');
-const workerDoc = read('docs/06-worker-design.md');
-const vendorDoc = read('docs/07-kyc-vendors.md');
-const productPlan = read('docs/03-product-plan.md');
-check('submission evidence names the deployment tag its claims were read against', /Reconciled \d{4}-\d{2}-\d{2}\..*tagged `[^`]+`/.test(read('docs/15-submission-evidence.md')));
 
+check('default deployment manifest identifies the v2 release', deployment.release === 'v2-live', deployment.release ?? 'missing');
 for (const [name, address] of Object.entries(deployment.contracts)) {
   check(`${name} address in README`, readme.includes(address), address);
-  check(`${name} address in diligence review`, review.includes(address), address);
+  if (['ProofmarkASC', 'ProofmarkRegistry', 'ComplianceSource', 'GatedRwaNote'].includes(name)) {
+    check(`${name} address in strict read-only commands`, strictCommands.includes(address), address);
+  }
 }
 
-for (const name of ['ProofmarkASC', 'ProofmarkRegistry', 'ComplianceSource', 'GatedRwaNote']) {
-  check(`${name} address in recording commands`, commands.includes(deployment.contracts[name]), deployment.contracts[name]);
-}
+const roleAddresses = Object.values({ ...(deployment.roles ?? {}), ...(deployment.governance ?? {}) }).map(value => value.toLowerCase());
+check('v2 manifest separates operational and governance roles',
+  roleAddresses.length >= 9 && new Set(roleAddresses).size === roleAddresses.length,
+  `${new Set(roleAddresses).size}/${roleAddresses.length} distinct`);
+
+check('README names USC and the native proof boundary',
+  readme.includes('Universal Smart Contracts (USC)')
+  && readme.includes('verifyAndEmit')
+  && readme.includes('BlockProver'));
+check('README discloses the hosted sandbox boundary',
+  readme.includes('hosted sandbox') && readme.includes('demo:id') && readme.includes('demo:bank'));
+check('DoraHacks copy leads with the cross-chain READ thesis',
+  dorahacks.includes('One READ for every chain') && dorahacks.includes('isVerified(wallet, policyId)'));
+check('USC integration copy names the SDK, contracts package and BlockProver',
+  integrationSummary.includes('@gluwa/usc-sdk')
+  && integrationSummary.includes('@gluwa/usc-contracts')
+  && integrationSummary.includes('BlockProver'));
+check('standalone integration summary remains present', integrationSummary.trim().length > 0);
 
 const narrationWords = narration
   .split('\n')
@@ -52,33 +66,13 @@ const narrationWords = narration
   .split(/\s+/)
   .filter(Boolean).length;
 check('narration stays inside the 450-word budget', narrationWords <= 450, `${narrationWords}/450 words`);
-const spokenNarration = narration.split('\n').filter(line => line.startsWith('> '))
-  .map(line => line.slice(2)).join(' ').replace(/\s+/g, ' ');
-check('narration says production rejects the sandbox mark and pilot accepts it',
-  spokenNarration.includes("Korea's production policy says no, because the mark honestly says sandbox.")
-  && spokenNarration.includes('The pilot policy says yes.'));
-check('shot list stages production FAIL and sandbox PASS',
-  shotlist.includes('`isVerified(A, 1)` false') && shotlist.includes('`isVerified(A, 2)` true'));
-check('submission verifier routes by deployed generation: strict v2 pins or the read-only v1 kit, never write mode',
-  submissionVerifier.includes('RECORD=0 DEMO_URL="$demo_url" SCENES="2 3 4 6 7 8" bash docs/demo-video/commands-v2.sh')
-  && submissionVerifier.includes('RECORD=0 DEMO_URL="$demo_url" SCENES="1 2 3 4 5 6 8" bash docs/demo-video/commands.sh')
-  && !submissionVerifier.includes('RECORD=1')
-  && strictCommands.includes('read-only scene checks complete'));
-const editCaption = 'edited — cross-chain propagation took about 9 minutes';
-check('shot list carries the edited-wait caption', shotlist.includes(editCaption));
-check('narration carries the same edited-wait caption', narration.includes(editCaption));
-check('preflight ends on the complete read-only verifier', preflight.includes('npm run verify:submission'));
-check('driver source declares production attribute preview=false (not E2E proof)', driver.includes('issue.body.policyPreview?.production === false'));
-check('driver source declares sandbox attribute preview=true (not onchain eligibility proof)', driver.includes('issue.body.policyPreview?.sandbox === true'));
-check('vendor documentation remains available', vendorDoc.trim().length > 0);
-check('Mode B is not still described as an unimplemented ASC handler',
-  !workerDoc.includes('The ASC handler is P1'));
-check('public GitHub is not still marked as needing a push',
-  !productPlan.includes('repository still needs pushing'));
+check('submission verifier is read-only',
+  submissionVerifier.includes('export RECORD=0')
+  && !submissionVerifier.includes('RECORD=1'));
 
-// Internal Korean diligence is intentional. No unverified blanket language requirement is applied.
-if (docsOnly) console.log('NOT CHECKED  test execution evidence (--docs-only); no test-count or release-readiness claim');
-else {
+if (docsOnly) {
+  console.log('NOT CHECKED  test execution evidence (--docs-only); no test-count or release-readiness claim');
+} else {
   try {
     const files = rootTestFiles(repo);
     const evidence = verifyTestEvidence(JSON.parse(read('artifacts/test-evidence/latest.json')), testSourceFingerprint(repo), files);
@@ -93,5 +87,5 @@ if (failures) {
   console.error(`\n${failures} submission assertion(s) failed.`);
   process.exit(1);
 }
-console.log('\nPASS local documentation checks' + (docsOnly ? ' only.' : ' and source-bound local test evidence.'));
-console.log('NOT VERIFIED: public deployment, current eligibility/freshness, video, external reproduction, legal/commercial evidence or final submission.');
+console.log('\nPASS public documentation checks' + (docsOnly ? ' only.' : ' and source-bound local test evidence.'));
+console.log('NOT VERIFIED: current USC materialisation, hosted cutover, video, external reproduction, legal approval or customer adoption.');

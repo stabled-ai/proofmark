@@ -19,7 +19,7 @@
  * Every check runs even after an earlier one fails.
  * Exit 0 when no check failed (warnings are allowed), 1 when any check failed.
  *
- * Onboarding runbook: docs/runbooks/codef-demo-onboarding.md
+ * Required variables are documented in web/.env.example.
  */
 import { readFileSync } from 'node:fs';
 import { CodefClient, type CodefEnv } from '../pipeline/adapters/codef.js';
@@ -177,6 +177,6 @@ async function main(): Promise<void> {
 main()
   .catch((err) => { emit('FAIL', 'preflight', messageOf(err)); })
   .then(() => {
-    if (failed) console.log('one or more checks failed — docs/runbooks/codef-demo-onboarding.md has the fix for each');
+    if (failed) console.log('one or more checks failed; verify the CODEF settings in web/.env.example');
     process.exit(failed ? 1 : 0);
   });

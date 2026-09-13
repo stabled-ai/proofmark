@@ -11,6 +11,24 @@ const files = rootTestFiles(repo);
 function run(program: string, args: string[]): string {
   const result = spawnSync(program, args, { cwd: repo, encoding: 'utf8', timeout: 180_000, maxBuffer: 30_000_000 });
   if (result.error || result.status !== 0) {
+    const diagnostics = result.stdout?.split('\n').flatMap((line) => {
+      try {
+        const event = JSON.parse(line) as {
+          type?: string;
+          data?: { file?: string; name?: string; success?: boolean; counts?: unknown; details?: unknown };
+        };
+        if (event.type === 'test:fail') {
+          return [JSON.stringify({ type: event.type, file: event.data?.file, name: event.data?.name, details: event.data?.details })];
+        }
+        if (event.type === 'test:summary' && event.data?.success === false) {
+          return [JSON.stringify({ type: event.type, file: event.data.file, counts: event.data.counts })];
+        }
+      } catch {
+        // Ignore non-JSON reporter output and retain the concise stderr tail below.
+      }
+      return [];
+    }) ?? [];
+    console.error(diagnostics.join('\n'));
     console.error(result.stderr?.slice(-4000));
     throw new Error(`test command failed; no passing evidence produced: ${program}`);
   }

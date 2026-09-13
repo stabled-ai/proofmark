@@ -7,9 +7,9 @@ const args = process.argv.slice(2);
 const program = basename(process.argv[1]);
 appendFileSync(process.env.DEMO_TEST_LOG, JSON.stringify({ program, args, record: process.env.RECORD }) + '\n');
 const fault = process.env.DEMO_TEST_FAULT;
-const SRC = '0xA9A34586303b9fD92e090F9bb1D332DC854c72B9';
-const ASC = '0x3C6Fe016645CA52952E29C66E435bDa7F611b242';
-const REG = '0x2F4E5e1270f90E51251651caf08547393e3C0572';
+const SRC = '0xfb46D722CD70F1ed399616a9B4745E60B9220609';
+const ASC = '0x8c29A966a30d9083B760451245aECEbBE1E2d2F4';
+const REG = '0x5752897b1edaD4fe50908B38c4ddA5f376a43110';
 const CONTROL = '0x00000000000000000000000000000000DeaDBeef';
 if (program === 'npx') process.exit(0); // Test wrapper routing only, not the mocked downstream verifiers.
 if (program === 'bash') {

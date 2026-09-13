@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { chmodSync, copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { chmodSync, copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
@@ -47,13 +47,20 @@ function harness(t: { after: (fn: () => void) => void }) {
   for (const name of ['cast', 'curl', 'npx', 'bash']) {
     const path = join(dir, name); copyFileSync('test/fixtures/demo-command-stub.mjs', path); chmodSync(path, 0o700);
   }
+  const deployment = JSON.parse(readFileSync('deployments/cc3-testnet.json', 'utf8'));
+  deployment.runtimeCodeHashes = Object.fromEntries(Object.keys(deployment.runtimeCodeHashes)
+    .map(name => [name, keccak256('0x6000')]));
+  deployment.demo.primaryIssuance.sourceConfirmations = 6;
+  const deploymentPath = join(dir, 'deployment.json');
+  writeFileSync(deploymentPath, JSON.stringify(deployment));
   // .mjs syntax remains valid through the no-extension Node executable fixtures.
   const env = { PATH: `${dir}:${process.env.PATH}`, RECORD: '0', SCENES: '6 7 8',
     SEP: 'https://synthetic-source.test', CC3: 'https://synthetic-hub.test', DEMO_TEST_LOG: join(dir, 'calls.jsonl'),
+    PROOFMARK_DEPLOYMENT_MANIFEST: deploymentPath,
     DEMO_EXPECTED_ISSUER: issuer, DEMO_ASC_CODEHASH: keccak256('0x6000'), DEMO_SOURCE_CODEHASH: keccak256('0x6000'),
     DEMO_REGISTRY_CODEHASH: keccak256('0x6000'), DEMO_NOTE_CODEHASH: keccak256('0x6000'),
     SEPOLIA_TX: '0x' + '12'.repeat(32), DEMO_ISSUANCE_SUBJECT: '0x' + '22'.repeat(20),
-    DEMO_ISSUANCE_TX_TO: '0xA9A34586303b9fD92e090F9bb1D332DC854c72B9',
+    DEMO_ISSUANCE_TX_TO: '0xfb46D722CD70F1ed399616a9B4745E60B9220609',
     DEMO_ISSUANCE_ATTRS: '0x' + '34'.repeat(32), DEMO_ISSUANCE_CLAIMS_ROOT: '0x' + '56'.repeat(32),
     DEMO_ISSUANCE_EVIDENCE_HASH: '0x' + '78'.repeat(32), DEMO_SOURCE_CONFIRMATIONS: '6' };
   const run = (extra: Record<string, string> = {}, wrapper = false) => spawnSync('/bin/bash',

@@ -18,7 +18,7 @@ export const ROSTER_SELECTORS = ['verifyWithRoster', 'proveNotInRoster'].map(
 
 export function assertRosterRecordVersion(record: { rosterFormatVersion?: number; epochSchemaVersion?: number; rosterAuthVersion?: number }): void {
   if (record.rosterFormatVersion !== ROSTER_FORMAT_VERSION || record.epochSchemaVersion !== 2 || record.rosterAuthVersion !== 1) {
-    throw new Error('Legacy or unknown roster record: roster format 2, epoch schema 2 AND roster authorization 1 require new compatible contracts and fresh publication. Preserve historical records; see docs/19-security-migration.md.');
+    throw new Error('Legacy or unknown roster record: roster format 2, epoch schema 2 AND roster authorization 1 require compatible v2 contracts and fresh publication. Preserve historical records.');
   }
 }
 
@@ -27,7 +27,7 @@ export async function requireRosterV2(provider: ethers.Provider, registry: strin
   const at = blockTag === undefined ? {} : { blockTag };
   const version = await contract.ROSTER_FORMAT_VERSION(at).catch(() => null);
   if (version !== BigInt(ROSTER_FORMAT_VERSION)) {
-    throw new Error(`Registry ${registry} does not advertise roster v2. Refusing to publish or verify v2 roots against a legacy/unknown deployment; see docs/19-security-migration.md.`);
+    throw new Error(`Registry ${registry} does not advertise roster v2. Refusing to publish or verify v2 roots against a legacy or unknown deployment.`);
   }
   await requireEpochV2(() => contract.EPOCH_SCHEMA_VERSION(at));
   await requireRosterAuthorization(() => contract.ROSTER_AUTH_VERSION(at));

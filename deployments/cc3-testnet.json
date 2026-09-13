@@ -1,17 +1,93 @@
 {
-  "network": { "hub": "cc3-testnet", "hubChainId": 102031, "source": "sepolia", "sourceChainId": 11155111 },
+  "release": "v2-live",
+  "network": {
+    "hub": "cc3-testnet",
+    "hubChainId": 102031,
+    "source": "sepolia",
+    "sourceChainId": 11155111
+  },
   "sourceChainKey": 1,
-  "deployer": "0xFD1222e35a536A62f180aA44826656940e86bD5E",
+  "issuerMode": "single-issuer",
+  "sourceDeployment": {
+    "transactionHash": "0x1eb9cfb389f42294c68812a7377aaed4e4506231ea51b6e4781a1a06a059e34a",
+    "blockNumber": 11698674
+  },
+  "deployer": "0x10575c5290537419620aF5344569Cb9887A816Ff",
+  "roles": {
+    "governanceOwner": "0x45955952130a78874d82CEcE2df3c6cC61AFaD90",
+    "sourceIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+    "sourceRescreener": "0xD85532Bb5411eD64A4b0D7a4AC30D0e7822342F5",
+    "epochPublisher": "0xA177c22AaC30b847374dC462aC2538336C157d3d",
+    "workerPayer": "0x15B298E839F6fe85D9305d125db3373D8B933A89",
+    "assetOwner": "0x3bFA4A66C9CB1a8ceBAd2D4Bd5F064BC8CB0311d"
+  },
+  "governance": {
+    "denialCorrectionApprover": "0x5906d13B6FA796d6BD16f996FE25C03B01c6244f",
+    "assetRecoveryProposer": "0x5b7260369DB6EB43C9be62036788326430d3FAeC",
+    "assetRecoveryApprover": "0x9172842406A337E535FA086DCBc42ef8848884Ad"
+  },
   "contracts": {
-    "EvmV1Decoder":      "0x5eE29aB8845A2AD4BBE1e01c5BD3bCc3AEee47Fd",
-    "ProofmarkASC":      "0x3C6Fe016645CA52952E29C66E435bDa7F611b242",
-    "ProofmarkRegistry": "0x2F4E5e1270f90E51251651caf08547393e3C0572",
-    "ComplianceSource":  "0xA9A34586303b9fD92e090F9bb1D332DC854c72B9",
-    "GatedRwaNote":      "0xa74aB3De359a55A729f9185Fe4Afe90526E585CA"
+    "EvmV1Decoder": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "ProofmarkASC": "0x8c29A966a30d9083B760451245aECEbBE1E2d2F4",
+    "ProofmarkRegistry": "0x5752897b1edaD4fe50908B38c4ddA5f376a43110",
+    "ComplianceSource": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "GatedRwaNote": "0x5C16b3A87fa909b8BDb899476D049a85A56380B5"
+  },
+  "runtimeCodeHashes": {
+    "ProofmarkASC": "0xbb050e54df8659016e5d7601e867246c3c49395bb9d07c0956cd1cff3ba0aa7b",
+    "ProofmarkRegistry": "0xfdce0cf90663141196349cb16656d9569bca7adf4155abe383dbac5e4e7f4d84",
+    "ComplianceSource": "0xdc89731efb953a3221ac1cdf56dc9e80274632b0a3af0396dfc1b2221fe2b58f",
+    "GatedRwaNote": "0x5ffb8e7b831df972e73fbe35669b2a05a4a71f9556330c093d15de104461d775"
   },
   "demo": {
     "productionPolicyId": 1,
     "pilotPolicyId": 2,
-    "notePolicyId": 2
+    "notePolicyId": 2,
+    "issuanceTransactionHash": "0xcad8aa328fdefb00fd0a07c30b9d34264c21ada2bf270c1fd5b5a1552940ac40",
+    "issuanceBlockNumber": 11698705,
+    "issuanceQueryId": "0x514e68527a49393c1d150ed2e521b4bf3682ca1402e82570bad6ff45b481140b",
+    "issuanceRelayTransactionHash": "0xb490b654f9b829169cd6c32c46d02b556422ef99f42ebbe301a3d41fbca62392",
+    "issuanceRelayBlockNumber": 5483107,
+    "subjects": [
+      "0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2",
+      "0x77858131d1E0eAaAe2c38c2cce508c358C9b58ee"
+    ],
+    "primaryIssuance": {
+      "subject": "0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2",
+      "attrs": "0x01030002019a00090027006aa71db8006c885138000000000000000000000000",
+      "claimsRoot": "0xd2cfdc133ad35c3de73947ed9a0e4d76d67da48d5d5e5da154ff340d14d6e194",
+      "evidenceHash": "0x7c7751e8f457fa5152fb86da5245f72a1d12c5df445e80c1892d174cb69dc437",
+      "sourceConfirmations": 12
+    },
+    "epoch": {
+      "number": 1,
+      "root": "0x784b4fc80ff1476db3966559536fb0b61c01a6ebde2ad05c17668d45734584d1",
+      "listVersion": 3877549429,
+      "snapshotId": "0xe71eb575e32c1b86456c48b35ad46d3c0a73871606ba44402afa8dc96c3b4e42",
+      "sourceCutoffBlock": 11698717,
+      "validUntil": 1789423584,
+      "sourceTransactionHash": "0x06a61a43f40b1ebc56cb48482f411d08d38dd97f7365cd4ae08057135da6e23c",
+      "sourceBlockNumber": 11698933,
+      "queryId": "0x6d4fbe16e47ea855c6d30922f88f591fc3e44b4efbc49655fe9e5dd7d7efbf64",
+      "relayTransactionHash": "0xf2bda1c6faeb881885f3f6f91851a1bb72f9db41ea7b3d3b5cf2de8cb2e37741",
+      "relayBlockNumber": 5483309
+    },
+    "witnessTransactions": [
+      "0x2f6ac3c9c4c53089d847ebd6b5d469eeaedb3d82851ce5fa664c32f18662073e",
+      "0x6936f733a03ba21b2c96859c1e728b5e57db6a74b90d9f1618af91b8bdfc1428"
+    ],
+    "mintTransactionHash": "0xdad2f501d047affcad7620b02aaec04a6e40a579d433f707edcd81e4fa1b4e11",
+    "transferTransactionHash": "0x9a93786c134f38364ece73589d1d739e946ac93441bc08ae6d8e0ef1a0a49f29",
+    "balances": {
+      "0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2": "60000000000000000000",
+      "0x77858131d1E0eAaAe2c38c2cce508c358C9b58ee": "40000000000000000000"
+    },
+    "negativeControl": "0x00000000000000000000000000000000DeaDBeef"
+  },
+  "operations": {
+    "initialWorkerPayer": "0x152Fb5437B5f99E5dEd96c7FFcb6C583dbAfB0e2",
+    "workerRotationFundingTransactionHash": "0x202939f0d4a01ec1bb4fc88d62e51daa93177019db690bae54885b52be8778fb",
+    "noteDeploymentTransactionHash": "0x760eb3221a050d739af038a2bde325a709ce6a291ededd7f255570eb4d80dec0",
+    "noteDeploymentBlockNumber": 5483028
   }
 }

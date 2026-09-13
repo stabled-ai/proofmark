@@ -29,4 +29,7 @@ The application context is `keccak256(abi.encode(block.chainid, address(gate), a
 
 `ZkKycPolicyGate` validates proof, caller, policy, current epoch, root revocation/freshness, deadline and nullifier. Its root authority is a local authenticated fixture boundary. It does not authenticate a real provider decision or receive Attestcoin proofs, and it does not by itself perform an RWA transaction. The current circuit proves country/age/expiry, not sanctions matching, PEP, media or transaction exposure.
 
-Production work remains: approved credential issuance/root pipeline, provider step evidence, ongoing revocation propagation, audited ceremony and circuit, scalable membership tree, holder witness custody, measured proving cost and target-chain compatibility. See [winning sprint](../docs/88-winning-sprint.md) and [toolchain security limitations](SECURITY.md).
+Production work remains: approved credential issuance/root pipeline, provider step evidence,
+ongoing revocation propagation, audited ceremony and circuit, scalable membership tree, holder
+witness custody, measured proving cost and target-chain compatibility. See the
+[toolchain security limitations](SECURITY.md).

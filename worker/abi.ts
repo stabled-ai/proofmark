@@ -18,5 +18,5 @@ function abiOf(file: string, name: string): any[] {
 export const COMPLIANCE_SOURCE_ABI = abiOf('ComplianceSource.sol', 'ComplianceSource');
 export const PROOFMARK_ASC_ABI     = abiOf('ProofmarkASC.sol', 'ProofmarkASC');
 
-/** Event name to ASC action code. See docs/04-event-schema.md section 1. */
+/** Event name to the action code consumed by ProofmarkASC. */
 export { EVENT_TO_ACTION, WATCHED_EVENTS, requireIssuerKeyProvenance, requireDenialCorrection } from './source-events.js';

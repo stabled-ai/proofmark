@@ -39,6 +39,7 @@ export interface SnapshotReader {
   getBlockNumber(): Promise<number>;
   getBlock(tag: number | 'finalized'): Promise<SnapshotBlock | null>;
   getTransactionReceipt(hash: string): Promise<SnapshotReceipt | null>;
+  getBlockReceipts?(height: number): Promise<readonly SnapshotReceipt[]>;
   getLogs(filter: { address: string; fromBlock: number; toBlock: number }): Promise<SnapshotLog[]>;
 }
 export interface SourceSnapshotOptions {
@@ -47,6 +48,7 @@ export interface SourceSnapshotOptions {
   checkpoint?: SourceReplayCheckpoint;
   checkpointSink?: (checkpoint: SourceReplayCheckpoint) => void;
   cutoffBlock?: number; expectedCutoffHash?: string; maxBlocks?: number; maxReceipts?: number; logChunk?: number;
+  receiptConcurrency?: number; receiptRetries?: number;
 }
 interface LifecycleState { denied: boolean; revoked: boolean; entry?: RosterEntry; issuerKeyEpoch?: number; issueBlock?: number }
 export interface SourceReplayCheckpoint {
@@ -181,8 +183,10 @@ function normalizedLog(log: SnapshotLog, fromReceipt = false) {
 export async function buildSourceRoster(reader: SnapshotReader, options: SourceSnapshotOptions): Promise<SourceRosterSnapshot> {
   const source = ethers.getAddress(options.source);
   const maxBlocks = options.maxBlocks ?? 20_000, maxReceipts = options.maxReceipts ?? 200_000, chunk = options.logChunk ?? 100;
+  const receiptConcurrency = options.receiptConcurrency ?? 6, receiptRetries = options.receiptRetries ?? 3;
   if (source === ethers.ZeroAddress || !isHash(options.deploymentTx) || typeof options.chainId !== 'bigint' || options.chainId <= 0n ||
       !integer(options.confirmations, 1) || !integer(maxBlocks, 1) || !integer(maxReceipts, 1) || !integer(chunk, 1) || chunk > 1000 ||
+      !integer(receiptConcurrency, 1) || receiptConcurrency > 16 || !integer(receiptRetries, 1) || receiptRetries > 10 ||
       (options.expectedCutoffHash !== undefined && !isHash(options.expectedCutoffHash))) throw new Error('invalid source snapshot settings');
   if (!options.headerReader || options.headerReader === reader) throw new Error('independent source header reader required');
   const [network, head, finalValue, creation, headerNetwork, headerHead, headerFinalValue] = await Promise.all([
@@ -234,10 +238,45 @@ export async function buildSourceRoster(reader: SnapshotReader, options: SourceS
       let nextLogIndex = 0;
       const receiptDigests: string[] = [];
       const blockReceipts: { index: number; receipt: SnapshotReceipt; logs: ReturnType<typeof normalizedLog>[] }[] = [];
+      if (scannedReceipts + block.transactions.length > maxReceipts) {
+        throw new Error('source snapshot exceeds receipt budget; no partial roster allowed');
+      }
+      scannedReceipts += block.transactions.length;
+      receipts += block.transactions.length;
+      let fetchedReceipts: (SnapshotReceipt | null)[] = [];
+      if (reader.getBlockReceipts) {
+        let last: unknown;
+        for (let attempt = 1; attempt <= receiptRetries; attempt++) {
+          try {
+            fetchedReceipts = [...await reader.getBlockReceipts(height)];
+            last = undefined;
+            break;
+          } catch (error) {
+            last = error;
+          }
+          if (attempt < receiptRetries) await new Promise(resolve => setTimeout(resolve, attempt * 200));
+        }
+        if (last) throw last;
+      } else for (let offset = 0; offset < block.transactions.length; offset += receiptConcurrency) {
+        const hashes = block.transactions.slice(offset, offset + receiptConcurrency);
+        fetchedReceipts.push(...await Promise.all(hashes.map(async txHash => {
+          let last: unknown;
+          for (let attempt = 1; attempt <= receiptRetries; attempt++) {
+            try {
+              const receipt = await reader.getTransactionReceipt(txHash);
+              if (receipt) return receipt;
+              last = new Error('missing source transaction receipt');
+            } catch (error) {
+              last = error;
+            }
+            if (attempt < receiptRetries) await new Promise(resolve => setTimeout(resolve, attempt * 200));
+          }
+          if (last instanceof Error && last.message !== 'missing source transaction receipt') throw last;
+          return null;
+        })));
+      }
       for (const [transactionIndex, txHash] of block.transactions.entries()) {
-        if (++scannedReceipts > maxReceipts) throw new Error('source snapshot exceeds receipt budget; no partial roster allowed');
-        receipts++;
-        const receipt = await reader.getTransactionReceipt(txHash);
+        const receipt = fetchedReceipts[transactionIndex];
         if (!receipt || receipt.hash.toLowerCase() !== txHash.toLowerCase() || receipt.index !== transactionIndex ||
             receipt.blockNumber !== height || receipt.blockHash !== block.hash || ![0, 1].includes(receipt.status ?? -1) ||
             !Array.isArray(receipt.logs) || (receipt.status === 0 && receipt.logs.length !== 0)) throw new Error('missing/inconsistent source transaction receipt');

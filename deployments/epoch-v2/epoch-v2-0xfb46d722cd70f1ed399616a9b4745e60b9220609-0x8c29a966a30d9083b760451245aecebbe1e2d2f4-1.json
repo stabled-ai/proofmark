@@ -1,0 +1,165 @@
+{
+  "sourceSnapshot": {
+    "version": 2,
+    "method": "receipt-trie-verified-independent-headers-and-getLogs",
+    "trust": "independent-finalized-header-rpc-plus-cryptographic-receipts-root",
+    "chainId": "11155111",
+    "source": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "deploymentTx": "0x1eb9cfb389f42294c68812a7377aaed4e4506231ea51b6e4781a1a06a059e34a",
+    "deploymentBlock": 11698674,
+    "deploymentBlockHash": "0xdde0f734bd150bc5bcf6dccaa1badfda5bb5cb969a235aede14187c1d381b178",
+    "cutoffBlock": 11698717,
+    "cutoffBlockHash": "0xa5e0ca2ec0330ec7e6a6f3a7e0b9f8cf207f9171fcf5b60307819e9e7ec3c8f3",
+    "cutoffTimestamp": 1789337184,
+    "confirmations": 12,
+    "blocks": 44,
+    "receipts": 5278,
+    "sourceLogs": 7,
+    "headersDigest": "0x686b8f98a74a4624badd9087ddcbde76cf40df696b6a8ebab621d6a01af6b6c9",
+    "blocksDigest": "0x6b57b244650ac33d4d9693c0b787f2d1cfd5be6e6918c708bd7c8bfe61f4c60c",
+    "logsDigest": "0xfc87ac0971d2872a3935c5a8fba26372e2956f8ec24f64cb0a7bdae72ec8c755",
+    "entriesDigest": "0x233e7dab8451bdc280408dc2279920fe434bc3cd7c980f96c7b3e8b060bf18fc",
+    "root": "0x784b4fc80ff1476db3966559536fb0b61c01a6ebde2ad05c17668d45734584d1"
+  },
+  "rosterAuthVersion": 1,
+  "approvedIssuers": [
+    "0x5097627b6ec96a30b473c94cb05c1c21d36fd2f8"
+  ],
+  "epochSchemaVersion": 2,
+  "sourceCutoff": 1789337184,
+  "snapshotId": "0xe71eb575e32c1b86456c48b35ad46d3c0a73871606ba44402afa8dc96c3b4e42",
+  "publishedAt": 1789339908,
+  "rosterFormatVersion": 2,
+  "epoch": 1,
+  "root": "0x784b4fc80ff1476db3966559536fb0b61c01a6ebde2ad05c17668d45734584d1",
+  "listVersion": 3877549429,
+  "validUntil": 1789423584,
+  "validUntilIso": "2026-09-14T22:06:24Z",
+  "validDays": 1,
+  "entryCount": 2,
+  "entries": [
+    {
+      "subject": "0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2",
+      "attrs": "0x01030002019a00090027006aa71db8006c885138000000000000000000000000",
+      "claimsRoot": "0xd2cfdc133ad35c3de73947ed9a0e4d76d67da48d5d5e5da154ff340d14d6e194",
+      "evidenceHash": "0x7c7751e8f457fa5152fb86da5245f72a1d12c5df445e80c1892d174cb69dc437",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    },
+    {
+      "subject": "0x77858131d1E0eAaAe2c38c2cce508c358C9b58ee",
+      "attrs": "0x01030002019a00090027006aa71db8006c885138000000000000000000000000",
+      "claimsRoot": "0xc75305a36ae0e3a300a996f079ddfd97114072cf7cc1e8aead8340d6f8894490",
+      "evidenceHash": "0x0a75c925ff72fd7c560d8dd6e007757c1f75b1c6ce90868f763286009a568bc3",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    }
+  ],
+  "excluded": [],
+  "setEpochPublisherTx": null,
+  "publishEpochTx": "0x06a61a43f40b1ebc56cb48482f411d08d38dd97f7365cd4ae08057135da6e23c",
+  "sepoliaBlock": 11698933,
+  "sepoliaConfirmedAt": "2026-09-13T22:51:48Z",
+  "proofAvailability": {
+    "version": 1,
+    "seedHash": "2e38dc84d1bc8c3552e372e6fb23e0ff3f5790b9e527c5ea7845c9f40a691b3a",
+    "contentHash": "26eaf52571bb176aedcb6a97cdbe2cbfe0a4abeb93e3ecd8861be1c5bc04e518",
+    "replicaCount": 2,
+    "prepublicationBound": true
+  },
+  "hubCarry": {
+    "transactionHash": "0xf2bda1c6faeb881885f3f6f91851a1bb72f9db41ea7b3d3b5cf2de8cb2e37741",
+    "blockNumber": 5483309,
+    "blockHash": "0x1523492a721ad7482603118c77298d8421707a6b492c11e5a30a415a31437f63",
+    "timestamp": 1789341045,
+    "confirmations": 11,
+    "queryId": "0x6d4fbe16e47ea855c6d30922f88f591fc3e44b4efbc49655fe9e5dd7d7efbf64",
+    "sourceBlock": 11698933,
+    "sourceTxIndex": 135
+  },
+  "cc3AcceptedAt": "2026-09-13T23:10:45Z",
+  "propagationSeconds": 1137,
+  "propagationMethod": "source block timestamp to exact matched CC3 acceptance receipt block timestamp",
+  "hubObservation": {
+    "chainId": 102031,
+    "blockNumber": 5483319,
+    "blockHash": "0xf90b4c81a23f6e9816dd5a2d1a7b4c840e5d96f2cd599d7f82bdb0e4dffdcd2c",
+    "timestamp": 1789341195
+  },
+  "policyObservation": {
+    "expectedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+    "policies": [
+      {
+        "id": 1,
+        "requireAll": 65572,
+        "minAssurance": 2,
+        "maxAge": 2592000,
+        "requiredRegime": 1,
+        "requiredJurisdiction": 410,
+        "trustedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+        "requireRoster": true,
+        "exists": true,
+        "frozen": true,
+        "kind": 1
+      },
+      {
+        "id": 2,
+        "requireAll": 65572,
+        "minAssurance": 2,
+        "maxAge": 604800,
+        "requiredRegime": 2,
+        "requiredJurisdiction": 410,
+        "trustedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+        "requireRoster": true,
+        "exists": true,
+        "frozen": true,
+        "kind": 1
+      }
+    ]
+  },
+  "runtimeObservation": {
+    "source": {
+      "address": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+      "codeHash": "0xdc89731efb953a3221ac1cdf56dc9e80274632b0a3af0396dfc1b2221fe2b58f",
+      "blockNumber": 11699040,
+      "blockHash": "0xd8d623aa3e13f3c15b649af973363d94a1f52f70a89e653bbf8134ca1941fc65"
+    },
+    "asc": {
+      "address": "0x8c29A966a30d9083B760451245aECEbBE1E2d2F4",
+      "codeHash": "0xbb050e54df8659016e5d7601e867246c3c49395bb9d07c0956cd1cff3ba0aa7b",
+      "blockNumber": 5483319,
+      "blockHash": "0xf90b4c81a23f6e9816dd5a2d1a7b4c840e5d96f2cd599d7f82bdb0e4dffdcd2c"
+    },
+    "registry": {
+      "address": "0x5752897b1edaD4fe50908B38c4ddA5f376a43110",
+      "codeHash": "0xfdce0cf90663141196349cb16656d9569bca7adf4155abe383dbac5e4e7f4d84",
+      "blockNumber": 5483319,
+      "blockHash": "0xf90b4c81a23f6e9816dd5a2d1a7b4c840e5d96f2cd599d7f82bdb0e4dffdcd2c"
+    }
+  },
+  "registryProofMode": true,
+  "checks": [
+    {
+      "label": "verifyWithRoster(0x4816B6e3…, policy 2 KR pilot)",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "label": "verifyWithRoster(0x4816B6e3…, policy 1 KR VASP production)",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "label": "proveNotInRoster(0x00000000…, never issued)",
+      "expected": true,
+      "actual": true
+    }
+  ],
+  "checkedAt": "2026-09-13T23:14:18.484Z",
+  "sourcePublicationObservation": {
+    "transactionHash": "0x06a61a43f40b1ebc56cb48482f411d08d38dd97f7365cd4ae08057135da6e23c",
+    "blockNumber": 11698933,
+    "blockHash": "0xb329692648b4952a44843592e37c42aceccbd4a486375fa87ed95cba2bbaa717",
+    "status": 1,
+    "confirmations": 112,
+    "observedAt": 1789341260362
+  }
+}

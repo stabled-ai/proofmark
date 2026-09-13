@@ -2,23 +2,23 @@
 
 `deck.html` is the source. `proofmark-deck.pdf` and `slides/*.png` are rendered from it.
 
-Current version: **2026-09-07 submission deck**, 13 slides, for the BUIDL CTC 2026 Fall form and
-the CEIP conversation that follows it. The story runs: problem → product → what the demo shows →
-one mark two policies → architecture → security → operations → why Creditcoin → business →
-competition → team → ask. Team, market and the ask live here and in the DoraHacks text, not in
-the two-minute video.
+Current version: **2026-09-14 investor and judge deck**, 16 slides, one claim per slide. It replaces the
+2026-09-07 submission deck (13 slides, white canvas; see git history before this commit). The story runs:
+problem → the call → verify/prove/enforce → live evidence → one mark two policies → revocation travels →
+why now → business structure → value chain → revenue model → go-to-market → security → founder → team → ask. The root README states the deployment and product boundaries.
 
-Every number on a slide has a source in the repository (test counts from `npm test` and
-`npm run test:ts`, sanctions counts from the built index, timings from
-`docs/16-propagation-observations.md`, hashes from the README). Update the HTML, re-render, and
-commit both; a rendered deck whose PDF disagrees with its source is worse than no deck.
+Every number on a slide has a source in the repository: test counts from `npm run test:evidence`,
+sanctions counts from the built index, transaction records from `deployments/`, hashes from the README,
+and team and iM Bank facts from the Validator corporate deck. Update the HTML, re-render, and commit both;
+a rendered deck whose PDF disagrees with its source is worse than no deck.
 
 ```sh
-node docs/deck/render.mjs              # all 13 slides plus the PDF
+node docs/deck/render.mjs              # every slide plus the PDF
 node docs/deck/render.mjs --only 6,11  # just those PNGs; the PDF always rewrites
 ```
 
-Rendering uses the system Chrome through Playwright, so no chromium download is needed.
+Rendering uses the system Chrome through Playwright, so no chromium download is needed. The slide count is
+read from the document, so adding or cutting a slide needs no code change.
 
-Design follows `web/DESIGN.md`: white canvas, one blue for action, black plate with mint reserved
-for the cover and the three divider slides (5, 9, 13).
+Design follows `web/DESIGN.md`: one dark canvas, hairline structure, Poppins display over Inter, mono for
+code and hashes, mint as the only accent, status in three hues. No tiles, gradients or icons.

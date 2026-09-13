@@ -61,9 +61,8 @@ export interface RecoverySnapshot {
 /**
  * File-backed persistent state.
  *
- * Why this exists: the example worker keeps `loanTracker` in memory and starts from
- * `getBlockNumber()`. A restart loses tracking and misses everything that happened while down.
- *   (docs/02-loan-flow-analysis.md §7)
+ * The worker cannot rely on in-memory tracking: a restart would otherwise miss source events and
+ * lose ownership of a signed relay transaction.
  *
  * Writes go to a tmp file then rename, so a crash never leaves half a file.
  */

@@ -49,6 +49,7 @@
     "supply-chain": "tsx script/supply-chain.ts",
     "economics": "tsx script/unit-economics.ts",
     "roster:bundle": "tsx script/roster-bundle.ts",
+    "epoch:sign-approval": "tsx script/sign-epoch-approval.ts",
     "roster:benchmark": "tsx script/benchmark-roster-bundle.ts",
     "check:submission": "tsx script/check-submission.ts",
     "verify:epoch": "tsx script/verify-epoch-record.ts",

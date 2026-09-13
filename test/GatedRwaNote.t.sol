@@ -17,7 +17,7 @@ import {Action, Policy, Methods} from "../src/lib/ProofmarkTypes.sol";
 import {MockBlockProver} from "./mocks/MockBlockProver.sol";
 import {ReceiptFixture} from "./ReceiptFixture.sol";
 
-/// @notice Checks the demo script in docs/03-product-plan.md section 10 actually runs.
+/// @notice Exercises the policy-gated RWA path used by the public demo.
 contract GatedRwaNoteTest is Test {
     address constant PRECOMPILE = 0x0000000000000000000000000000000000000FD2;
     uint64 constant SEPOLIA_KEY = 1;

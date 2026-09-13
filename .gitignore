@@ -42,7 +42,11 @@ docs/deck/.DS_Store
 
 # Internal working notes — local only
 /REVIEW.md
+/TICKET.md
 /TICKETS.md
 /internal/
 /ENHANCE.md
+/docs/submission/dorahacks-form-answers.md
+/docs/submission/team-information.md
+/밸리데이터_Deck_2026.pdf
 .env*.local

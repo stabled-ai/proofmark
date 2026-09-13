@@ -11,8 +11,7 @@ import {Action, Mark, MarkStatus, MarkOrigin} from "./lib/ProofmarkTypes.sol";
 
 /// @title ProofmarkASC
 /// @notice The chain of record, deployed on Creditcoin CC3. Verifies marks issued on Ethereum
-///         through the Attestcoin BlockProver and materialises them into state.
-/// @dev docs/04-event-schema.md section 5, docs/05-asc-integration-review.md
+///         through the USC BlockProver and materialises them into state.
 ///
 /// Deployment requires linking the `EvmV1Decoder` library. See the note below.
 //
@@ -36,7 +35,7 @@ contract ProofmarkASC is Ownable2Step, ASCBaseX {
     uint256 public constant DENIAL_CORRECTION_VERSION = 1;
     uint256 public constant MAX_EPOCH_AGE = EpochBounds.MAX_AGE;
 
-    // Event signatures, computed with cast keccak. See docs/04 section 8.
+    // Event signatures, computed with cast keccak from ComplianceSource.
     bytes32 internal constant SIG_ISSUED = 0xffac883eea6676651044a7e28ee0527defa8e3fce7558142c598e6569ef5a5f3;
     bytes32 internal constant SIG_KEYED_ISSUED =
         keccak256("KeyedMarkIssued(address,bytes32,address,uint64,bytes32,bytes32)");

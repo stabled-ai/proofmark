@@ -2,7 +2,6 @@
 pragma solidity ^0.8.30;
 
 /// @notice ASC action codes. First argument to `execute(action, ...)`.
-/// @dev docs/04-event-schema.md section 1
 enum Action {
     MarkIssued, // 0
     MarkRevoked, // 1
@@ -22,7 +21,7 @@ enum MarkStatus {
 }
 
 /// @notice Bitmap of checks performed. Carries what was done, not a verdict.
-/// @dev docs/03-product-plan.md section 4.1. This is what makes the mark portable across regimes.
+/// @dev Recording facts instead of a shared verdict makes the mark portable across regimes.
 library Methods {
     // Identity checks
     uint32 internal constant WALLET_CONTROL = 1 << 0;
@@ -45,7 +44,7 @@ library Methods {
     uint32 internal constant ONCHAIN_EXPOSURE = 1 << 20;
 }
 
-/// @notice Revocation reason codes. See docs/04-event-schema.md section 3.2.
+/// @notice Revocation reason codes emitted by ComplianceSource.
 library RevokeReason {
     uint16 internal constant USER_REQUEST = 1;
     uint16 internal constant RESCREEN_HIT = 2;

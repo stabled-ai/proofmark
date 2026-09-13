@@ -2,8 +2,8 @@
 
 Two minutes, eight scenes, one wallet's life: verified, admitted, refused, revoked. Everything on
 screen is the hosted deployment `https://attest-kyc.stabled.ai` and the two public testnets. The
-narration is [NARRATION.md](NARRATION.md); the commands are [commands.sh](commands.sh); the go /
-no-go list is [PREFLIGHT.md](PREFLIGHT.md).
+narration is [NARRATION.md](NARRATION.md), and the public read-only checks are in
+[commands-v2.sh](commands-v2.sh). Run `npm run verify:submission` before recording.
 
 ## What the two minutes have to make an investor feel
 
@@ -83,7 +83,7 @@ cut to the explorer rather than retrying on camera, and narrate it as an earlier
 | Epoch 1 accepted, 8m 00s later | CC3 | `0xb011cd6e5a590b924858262cdfc832a6ef0d71cc4b78c3ac61efaf3d0c2f532f` | 1 |
 
 There is no prior on-chain revocation for holder A. If scene 7's transaction fails, the fallback is
-the 2026-08-30 revocation observation in `docs/16-propagation-observations.md` (8m 43s), narrated as
+the 2026-08-30 revocation observation retained in the v1 deployment history (8m 43s), narrated as
 a measurement, not as footage.
 
 ## Cast

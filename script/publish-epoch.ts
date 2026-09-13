@@ -31,7 +31,7 @@
  * deployment supports batching merely because the working-tree implementation now does.
  */
 import { ethers } from 'ethers';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,7 +41,9 @@ import {
   type RosterEntry, type RosterTree,
 } from '../pipeline/roster.js';
 import { ROSTER_REGISTRY_ABI, ROSTER_SELECTORS, requireRosterV2 } from '../pipeline/roster-format.js';
-import { buildSourceRoster, assertSourceSnapshot, type SourceSnapshotManifest } from '../pipeline/roster-source.js';
+import {
+  buildSourceRoster, assertSourceSnapshot, type SnapshotReceipt, type SourceSnapshotManifest,
+} from '../pipeline/roster-source.js';
 import { SourceCheckpointStore } from '../pipeline/roster-source-checkpoint.js';
 import { loadLists } from '../aml/loader.js';
 import type { ListProvenance } from '../aml/provenance.js';
@@ -195,7 +197,8 @@ async function buildFromChain(src: ethers.JsonRpcProvider, headers: ethers.JsonR
       checkpointSink: store && (!saved || cutoffBlock === undefined || cutoffBlock > saved.blockNumber)
         ? value => store.save(value) : undefined,
       logChunk: num('SOURCE_SCAN_CHUNK', 100), maxBlocks: num('SOURCE_SNAPSHOT_MAX_BLOCKS', 20_000),
-      maxReceipts: num('SOURCE_SNAPSHOT_MAX_RECEIPTS', 200_000) });
+      maxReceipts: num('SOURCE_SNAPSHOT_MAX_RECEIPTS', 200_000),
+      receiptConcurrency: num('SOURCE_RECEIPT_CONCURRENCY', 6), receiptRetries: num('SOURCE_RECEIPT_RETRIES', 3) });
   } finally { store?.close(); }
   const m = snapshot.manifest;
   say(`  source snapshot blocks ${m.deploymentBlock}..${m.cutoffBlock}, ${m.receipts} receipts, ${m.sourceLogs} source logs`);
@@ -582,6 +585,10 @@ Environment (fresh snapshot for new sends; v2 deployments and dedicated journal 
   SOURCE_DEPLOYMENT_TX   verified direct CREATE transaction; otherwise matching deployment manifest
   SOURCE_CONFIRMATIONS   default 12; cutoff also must be at/below finalized
   SOURCE_SCAN_CHUNK      default 100, maximum 1000. Receipt/getLogs comparison window
+  SOURCE_RECEIPT_CONCURRENCY default 6, maximum 16. Parallel individual receipt requests; never JSON-RPC batching
+  SOURCE_RECEIPT_RETRIES default 3, maximum 10. Bounded retries for transient receipt RPC failures
+  SOURCE_CUTOFF_BLOCK    optional --dry-run finalized cutoff; requires exact SOURCE_CUTOFF_HASH
+  SOURCE_CUTOFF_HASH     optional --dry-run block hash paired with SOURCE_CUTOFF_BLOCK
   SOURCE_SNAPSHOT_MAX_BLOCKS    default 20000. Per-run scan budget; without checkpoint, full history
   SOURCE_SNAPSHOT_MAX_RECEIPTS  default 200000. Per-run receipt budget; without checkpoint, full history
   SOURCE_SNAPSHOT_CHECKPOINT_PATH optional encrypted incremental replay checkpoint
@@ -625,8 +632,40 @@ function providers(): { src: ethers.JsonRpcProvider; headers: ethers.JsonRpcProv
   const sourceUrl = process.env.SOURCE_CHAIN_RPC_URL || DEFAULT_SOURCE_RPC;
   const headerUrl = process.env.SOURCE_HEADER_RPC_URL || DEFAULT_SOURCE_HEADER_RPC;
   if (new URL(sourceUrl).href === new URL(headerUrl).href) throw new Error('SOURCE_HEADER_RPC_URL must differ from SOURCE_CHAIN_RPC_URL');
+  const src = new ethers.JsonRpcProvider(connection(sourceUrl), 11_155_111, opts) as ethers.JsonRpcProvider & {
+    getBlockReceipts(height: number): Promise<readonly SnapshotReceipt[]>;
+  };
+  src.getBlockReceipts = async (height: number) => {
+    const raw = await src.send('eth_getBlockReceipts', [ethers.toQuantity(height)]);
+    if (!Array.isArray(raw)) throw new Error('invalid eth_getBlockReceipts response');
+    const number = (value: unknown) => typeof value === 'number' ? value
+      : typeof value === 'string' && ethers.isHexString(value) ? Number(BigInt(value)) : Number.NaN;
+    return raw.map((receipt: any) => ({
+      hash: receipt.transactionHash,
+      blockNumber: number(receipt.blockNumber),
+      blockHash: receipt.blockHash,
+      index: number(receipt.transactionIndex),
+      status: receipt.status == null ? null : number(receipt.status),
+      contractAddress: receipt.contractAddress,
+      logs: Array.isArray(receipt.logs) ? receipt.logs.map((log: any) => ({
+        address: log.address,
+        blockNumber: number(log.blockNumber),
+        blockHash: log.blockHash,
+        transactionHash: log.transactionHash,
+        transactionIndex: number(log.transactionIndex),
+        index: number(log.logIndex),
+        topics: log.topics,
+        data: log.data,
+        removed: log.removed,
+      })) : receipt.logs,
+      cumulativeGasUsed: BigInt(receipt.cumulativeGasUsed),
+      logsBloom: receipt.logsBloom,
+      type: number(receipt.type),
+      root: receipt.root,
+    }));
+  };
   return {
-    src: new ethers.JsonRpcProvider(connection(sourceUrl), 11_155_111, opts),
+    src,
     headers: new ethers.JsonRpcProvider(connection(headerUrl), 11_155_111, opts),
     hub: new ethers.JsonRpcProvider(connection(process.env.CREDITCOIN_RPC_URL || DEFAULT_HUB_RPC), 102_031, opts),
   };
@@ -636,7 +675,12 @@ async function dryRun(): Promise<void> {
   const { src, headers, hub } = providers();
   await requireRosterV2(hub, REGISTRY_ADDRESS);
   step('Building the roster from chain state');
-  const r = await buildFromChain(src, headers, hub);
+  const cutoffBlock = process.env.SOURCE_CUTOFF_BLOCK ? num('SOURCE_CUTOFF_BLOCK', -1) : undefined;
+  const cutoffHash = process.env.SOURCE_CUTOFF_HASH;
+  if ((cutoffBlock === undefined) !== (cutoffHash === undefined)) {
+    throw new Error('SOURCE_CUTOFF_BLOCK and SOURCE_CUTOFF_HASH must be configured together');
+  }
+  const r = await buildFromChain(src, headers, hub, cutoffBlock, cutoffHash);
   printRoster(r);
   selfCheck(r.tree);
 
@@ -664,9 +708,15 @@ async function dryRun(): Promise<void> {
     const block = await src.getBlock(r.scannedTo);
     if (!block?.hash || block.timestamp !== p.sourceCutoff) throw new Error('source cutoff changed while preparing approval plan');
     step('Issuer signing plan — independently review the roster and snapshot before signing');
-    say(JSON.stringify({ version: 1, sourceCutoffBlock: r.scannedTo, sourceCutoffBlockHash: block.hash, sourceSnapshot: r.sourceSnapshot,
-      ...typed, requiredIssuers: [...new Set(r.tree.entries.map(e => e.issuer.toLowerCase()))], entries: r.tree.entries, approvals: [] },
-    (_key, value) => typeof value === 'bigint' ? value.toString() : value, 2));
+    const plan = { version: 1, sourceCutoffBlock: r.scannedTo, sourceCutoffBlockHash: block.hash, sourceSnapshot: r.sourceSnapshot,
+      ...typed, requiredIssuers: [...new Set(r.tree.entries.map(e => e.issuer.toLowerCase()))], entries: r.tree.entries, approvals: [] };
+    const serializedPlan = JSON.stringify(plan, (_key, value) => typeof value === 'bigint' ? value.toString() : value, 2);
+    say(serializedPlan);
+    const planPath = process.env.EPOCH_APPROVAL_PLAN_PATH;
+    if (planPath) {
+      writeFileSync(planPath, `${serializedPlan}\n`, { flag: 'wx', mode: 0o600 });
+      say(`  Approval plan written with exclusive create: ${planPath}`);
+    }
     say('  Save only the JSON object, add {issuer, signature} approvals, and supply EPOCH_APPROVALS_FILE. Never edit signed fields.');
   } else say('  Set EPOCH_PUBLISHER_ADDRESS to print a publisher-bound EIP-712 signing plan.');
 

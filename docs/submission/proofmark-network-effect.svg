@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Proofmark compliance network effect</title>
+  <desc id="desc">Credential issuers, asset policies, chains and continuous compliance operations connect through one Proofmark READ interface and create recurring enterprise revenue.</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#edf3ff"/>
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="50%" cy="48%" r="38%">
+      <stop offset="0" stop-color="#1759e8" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#1759e8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#2a3d68" flood-opacity=".12"/>
+    </filter>
+    <marker id="arrow2" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#1759e8"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg2)"/>
+  <rect width="1600" height="900" fill="url(#centerGlow)"/>
+
+  <g transform="translate(72 58)">
+    <rect width="42" height="42" rx="10" fill="#1759e8"/>
+    <path d="M34 15.2A14 14 0 1 1 27.4 8.9" fill="none" stroke="#fff" stroke-width="3.1" stroke-linecap="round"/>
+    <path d="m15.2 22 4.3 4.3 9.4-10.8" fill="none" stroke="#fff" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="58" y="30" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700">Proofmark</text>
+  </g>
+
+  <text x="72" y="154" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" letter-spacing="-1">THE COMPLIANCE NETWORK EFFECT</text>
+  <text x="72" y="194" fill="#607089" font-family="Inter, Arial, sans-serif" font-size="19">One READ interface connects credential supply, regulated assets and recurring operations.</text>
+
+  <path d="M580 356C485 288 385 300 320 358" fill="none" stroke="#1759e8" stroke-width="3" marker-end="url(#arrow2)"/>
+  <path d="M1020 356C1115 288 1215 300 1280 358" fill="none" stroke="#1759e8" stroke-width="3" marker-end="url(#arrow2)"/>
+  <path d="M1280 548C1210 616 1114 626 1020 570" fill="none" stroke="#1759e8" stroke-width="3" marker-end="url(#arrow2)"/>
+  <path d="M580 570C486 626 390 616 320 548" fill="none" stroke="#1759e8" stroke-width="3" marker-end="url(#arrow2)"/>
+
+  <g filter="url(#softShadow)">
+    <rect x="108" y="286" width="360" height="180" rx="24" fill="#fff" stroke="#d9e1ee"/>
+    <rect x="1132" y="286" width="360" height="180" rx="24" fill="#fff" stroke="#d9e1ee"/>
+    <rect x="1132" y="492" width="360" height="180" rx="24" fill="#fff" stroke="#d9e1ee"/>
+    <rect x="108" y="492" width="360" height="180" rx="24" fill="#fff" stroke="#d9e1ee"/>
+    <rect x="548" y="318" width="504" height="320" rx="34" fill="#0d1524" stroke="#1759e8" stroke-width="2"/>
+  </g>
+
+  <g>
+    <rect x="140" y="318" width="44" height="44" rx="12" fill="#edf3ff"/>
+    <path d="M153 340h18M157 334h10M157 346h10" stroke="#1759e8" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="204" y="345" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Credential issuers</text>
+    <text x="140" y="386" fill="#607089" font-family="Inter, Arial, sans-serif" font-size="16">KYC providers · Banks · Institutions</text>
+    <text x="140" y="419" fill="#1759e8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">ONE INTEGRATION → MANY APPS</text>
+  </g>
+
+  <g>
+    <rect x="1164" y="318" width="44" height="44" rx="12" fill="#edf3ff"/>
+    <path d="M1177 340l8 8 12-16" fill="none" stroke="#1759e8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1228" y="345" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Asset policies</text>
+    <text x="1164" y="386" fill="#607089" font-family="Inter, Arial, sans-serif" font-size="16">Issuer · Regime · Methods · Freshness</text>
+    <text x="1164" y="419" fill="#1759e8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">LOCAL RULES → SHARED FACTS</text>
+  </g>
+
+  <g>
+    <rect x="1164" y="524" width="44" height="44" rx="12" fill="#edf3ff"/>
+    <circle cx="1186" cy="546" r="11" fill="none" stroke="#1759e8" stroke-width="2.4"/>
+    <path d="M1175 546h22M1186 535c4 4 4 18 0 22M1186 535c-4 4-4 18 0 22" fill="none" stroke="#1759e8" stroke-width="1.8"/>
+    <text x="1228" y="551" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Assets &amp; chains</text>
+    <text x="1164" y="592" fill="#607089" font-family="Inter, Arial, sans-serif" font-size="16">RWA · Stablecoin · Lending · Funds</text>
+    <text x="1164" y="625" fill="#1759e8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">MORE READERS → MORE VALUE</text>
+  </g>
+
+  <g>
+    <rect x="140" y="524" width="44" height="44" rx="12" fill="#edf3ff"/>
+    <path d="M151 548a12 12 0 1 0 4-13M151 534v10h10" fill="none" stroke="#1759e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="204" y="551" fill="#101827" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Continuous compliance</text>
+    <text x="140" y="592" fill="#607089" font-family="Inter, Arial, sans-serif" font-size="16">Rescreen · Review · Revoke · Evidence</text>
+    <text x="140" y="625" fill="#1759e8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">RECURRING OPERATIONS</text>
+  </g>
+
+  <g>
+    <rect x="590" y="360" width="420" height="236" rx="25" fill="#121f35" stroke="#35517e"/>
+    <text x="800" y="410" text-anchor="middle" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2">SHARED VERIFIED REGISTRY</text>
+    <text x="800" y="466" text-anchor="middle" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700">One compliance state</text>
+    <rect x="646" y="496" width="308" height="62" rx="15" fill="#173326" stroke="#4b9564"/>
+    <text x="800" y="535" text-anchor="middle" fill="#b3fcb2" font-family="SFMono-Regular, Consolas, monospace" font-size="19" font-weight="700">isVerified(wallet, policyId)</text>
+  </g>
+
+  <g>
+    <rect x="72" y="726" width="1456" height="66" rx="16" fill="#fff" stroke="#d9e1ee"/>
+    <text x="104" y="766" fill="#1759e8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1">REVENUE</text>
+    <text x="222" y="766" fill="#25344b" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="600">Issuer SLA · Issuance · Rescreening · Evidence ops · Provider adapters · Policy integration</text>
+  </g>
+
+  <g>
+    <rect x="72" y="808" width="1456" height="66" rx="16" fill="#0d1524"/>
+    <text x="104" y="849" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1">TEAM EDGE</text>
+    <text x="235" y="849" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="600">GDAC alumni · 7 years operating · 400+ corporate members · VASP / ISMS / MSB · Stablecoin &amp; AML infrastructure</text>
+  </g>
+</svg>

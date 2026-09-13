@@ -2,326 +2,544 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Proofmark · The compliance gateway for Creditcoin</title>
+<title>Proofmark · Verified once. Enforced by every asset. Revoked everywhere.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- 1 · cover -->
-<section class="slide plate" id="s1">
-  <div class="pad" style="justify-content:center;padding-bottom:60px">
-    <div style="display:grid;grid-template-columns:1fr 310px;gap:58px;align-items:center">
-      <div>
-        <div style="font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)">BUIDL CTC 2026 Fall · RWA track</div>
-        <h1 style="font-size:82px;margin-top:18px;line-height:1">Proof<span class="mint">mark</span></h1>
-        <div style="font-size:27px;color:rgba(255,255,255,.92);margin-top:14px">Verified once. Enforced by every asset. Revoked everywhere.</div>
-        <div class="rule" style="margin:28px 0 22px"></div>
-        <div class="sub" style="font-size:16px;line-height:1.7">
-          A KYC mark issued on Ethereum, proven to Creditcoin through Attestcoin, and enforced by a
-          tokenised note's own transfer check. Live on Creditcoin CC3 Testnet and Ethereum Sepolia.
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:17px 20px">
-          <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Cross-chain path</div>
-          <div style="font-family:Poppins,Inter,sans-serif;font-size:30px;margin-top:4px" class="mint">Live</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.5)">5 contracts · 2 testnets · gate reverts on chain</div>
-        </div>
-        <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:17px 20px">
-          <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Sanctions screening</div>
-          <div style="font-family:Poppins,Inter,sans-serif;font-size:30px;margin-top:4px">26,566</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.5)">OFAC · UN · EU entries, parsed from source</div>
-        </div>
-        <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:17px 20px">
-          <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Cleartext PII on chain</div>
-          <div style="font-family:Poppins,Inter,sans-serif;font-size:30px;margin-top:4px">0 bytes</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.5)">two commitments; metadata is pseudonymous</div>
-        </div>
-      </div>
+<!-- 01 · cover -->
+<section class="slide" id="s1">
+  <div class="pad">
+    <div style="display:flex;align-items:center;gap:14px">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" class="seal" aria-hidden="true">
+        <path d="M27.5 10.2A13 13 0 1 1 21.5 4.4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <path d="m10.5 16.5 4 4 9-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="eyebrow" style="margin:0">BUIDL CTC 2026 Fall · RWA track · September 2026</span>
+    </div>
+    <div class="grow"></div>
+    <div class="display" style="font-size:112px;letter-spacing:-.05em">Proof<span class="mint">mark</span></div>
+    <div class="display" style="font-size:34px;margin-top:22px;color:var(--fg);font-weight:400;letter-spacing:-.02em">
+      Verified once. Enforced by every asset. Revoked everywhere.
+    </div>
+    <div class="grow"></div>
+    <div class="strip" style="grid-template-columns:1.25fr .8fr 1.25fr;border-bottom:none">
+      <div><div class="k">Live</div><div class="v" style="font-size:22px">Creditcoin CC3 · Ethereum Sepolia</div></div>
+      <div><div class="k">Cleartext PII on chain</div><div class="v" style="font-size:22px">0 bytes</div></div>
+      <div><div class="k">Interface</div><div class="v" style="font-size:20px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.01em">isVerified(wallet, policyId)</div></div>
     </div>
   </div>
-  <div class="foot"><span>attest-kyc.stabled.ai · Validator Inc.</span><span class="pageno">01</span></div>
+  <div class="foot"><span>attest-kyc.stabled.ai · Validator Inc.</span><span>01 / 16</span></div>
 </section>
 
-<!-- 2 · problem -->
+<!-- 02 · problem -->
 <section class="slide" id="s2">
-  <div class="pad dense">
-    <div class="eyebrow">The problem</div>
-    <h2>Every tokenised asset has a holder problem.</h2>
-    <p class="lede">Securities rules, AML law and licence conditions say the same thing: <span class="strong">know who holds the asset, at issuance and every day after.</span> On chain, that question has three bad answers today.</p>
-    <div class="grid g3" style="margin-top:26px">
-      <div class="tile"><div class="k">Per-app KYC</div><div class="v" style="font-size:20px">Rebuild everything</div><div class="n">Vendor contract, PII flow, evidence retention and rescreening repeat for every asset and every chain.</div></div>
-      <div class="tile"><div class="k">Reusable boolean</div><div class="v" style="font-size:20px">“KYC passed”</div><div class="n">Hides what was checked, by whom, under which regime, how long ago, and whether it is still true.</div></div>
-      <div class="tile"><div class="k">Cross-chain copy</div><div class="v" style="font-size:20px">Trust the relayer</div><div class="n">A signing key becomes the compliance truth. The trust problem does not go away; it moves.</div></div>
+  <div class="pad">
+    <div class="eyebrow"><span class="n">02</span> The problem</div>
+    <h2>Every tokenised asset has to know who holds it.<br>At issuance, on every transfer, every day after.</h2>
+    <p class="lede">Securities law, AML rules and licence conditions all ask the same question. On chain it has three answers, and all three fail the day a holder is revoked.</p>
+    <div class="grow"></div>
+    <div class="cols c3">
+      <div>
+        <div class="k">Answer one</div>
+        <div class="v">Per-app KYC</div>
+        <div class="p">Vendor contract, personal-data flow, evidence retention and rescreening, rebuilt for every asset on every chain.</div>
+      </div>
+      <div>
+        <div class="k">Answer two</div>
+        <div class="v">“KYC passed”</div>
+        <div class="p">A boolean that hides who checked, what was checked, under which regime, how long ago, and whether it is still true.</div>
+      </div>
+      <div>
+        <div class="k">Answer three</div>
+        <div class="v">A relayer</div>
+        <div class="p">Copy the flag to another chain and one signing key becomes the compliance authority. The trust problem moves; it does not go away.</div>
+      </div>
     </div>
-    <table style="margin-top:26px">
-      <thead><tr><th style="width:200px">Same credential, asked by</th><th>What the asset actually needs to know</th><th style="width:200px">Answer today</th></tr></thead>
-      <tbody>
-        <tr><td class="strong">KR production RWA note</td><td>Document authenticity · bank account · sanctions · production regime · KR jurisdiction · trusted issuer · under 30 days old</td><td><span class="tag gray">not expressible</span></td></tr>
-        <tr><td class="strong">KR pilot note</td><td>Same checks, sandbox regime accepted, seven-day freshness</td><td><span class="tag gray">not expressible</span></td></tr>
-        <tr><td class="strong">Any note, next month</td><td>Was this holder revoked since? By whom? Can the asset find out without an admin key?</td><td><span class="tag bad">no</span></td></tr>
-      </tbody>
-    </table>
-    <div class="callout" style="margin-top:18px">What is missing is a <span class="strong">policy layer the asset owns</span>: what was checked, by whom, under which regime, how recently, and whether it is still standing.</div>
+    <div style="height:44px"></div>
+    <div class="kicker">What is missing is a policy layer the <span class="mint">asset</span> owns: what was checked, by whom, how recently, and whether it still stands.</div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">02</span></div>
+  <div class="foot"><span>Proofmark</span><span>02 / 16</span></div>
 </section>
 
-<!-- 3 · product -->
+<!-- 03 · the product -->
 <section class="slide" id="s3">
   <div class="pad">
-    <div class="eyebrow">The product</div>
-    <h2>Verify. Prove. Enforce.</h2>
-    <p class="lede">Proofmark separates <span class="strong">what an issuer checked</span> from <span class="strong">whether that is enough for this asset</span>, and makes the second question a view function on Creditcoin.</p>
-    <div class="grid g3" style="margin-top:32px">
-      <div class="tile" style="height:260px"><div class="k">1 · Verify</div><div class="v" style="font-size:25px">Credential in</div><div class="n" style="font-size:14px;margin-top:14px">Wallet signature, ID document, bank account, sanctions. Only checks that ran set a bit. Korean rails are integrated in code; the public sandbox labels its demo adapters on the page, in the evidence and on chain.</div><div style="margin-top:14px"><span class="tag blue">method bits</span> <span class="tag blue">regime</span> <span class="tag blue">assurance</span></div></div>
-      <div class="tile" style="height:260px;background:#ebf8ff"><div class="k" style="color:#2b6cb0">2 · Prove</div><div class="v" style="font-size:25px">Attestcoin</div><div class="n" style="font-size:14px;margin-top:14px">The issuer emits on Ethereum. Creditcoin's BlockProver verifies that exact source transaction inside our ASC. No Proofmark oracle, no relayer signature, nothing to trust in the middle.</div><div style="margin-top:14px"><span class="tag blue">source proof</span> <span class="tag blue">ordered</span> <span class="tag blue">replay-safe</span></div></div>
-      <div class="tile" style="height:260px"><div class="k">3 · Enforce</div><div class="v" style="font-size:25px">Frozen policy</div><div class="n" style="font-size:14px;margin-top:14px">Each asset binds to a frozen policy: methods, assurance, age, regime, jurisdiction, issuer, roster freshness. <code>isVerified(wallet, policy)</code> answers; the note's transfer hook enforces it on both sides.</div><div style="margin-top:14px"><span class="tag ok">isVerified</span> <span class="tag ok">RWA gate</span> <span class="tag ok">revocation</span></div></div>
+    <div class="eyebrow"><span class="n">03</span> The product</div>
+    <h2>One read. The asset enforces it inside every transfer.</h2>
+    <div class="grow"></div>
+    <div class="mono" style="font-size:58px;letter-spacing:-.02em;color:var(--fg-strong);line-height:1">
+      <span class="mint">isVerified</span>(wallet, policyId)
     </div>
-    <div class="callout" style="margin-top:25px"><span class="strong">Positioning:</span> the compliance gateway for Creditcoin. One layer above credential providers, one call below every asset.</div>
+    <div class="grow"></div>
+    <div class="cols c3">
+      <div>
+        <div class="k">Credential</div>
+        <div class="p" style="margin-top:8px"><span class="strong">What an issuer verified.</span> Method bitmap, assurance, regime, jurisdiction, timestamps, two commitments. Names and account numbers stay off chain.</div>
+      </div>
+      <div>
+        <div class="k">Policy</div>
+        <div class="p" style="margin-top:8px"><span class="strong">What this asset requires.</span> Required checks, minimum assurance, trusted issuer, regime, jurisdiction, maximum age. Frozen at birth; nobody can loosen it later.</div>
+      </div>
+      <div>
+        <div class="k">Enforcement</div>
+        <div class="p" style="margin-top:8px"><span class="strong">Inside the transfer hook.</span> Sender and recipient are both read. Ineligible, expired, sanctioned or revoked holders cannot send or receive.</div>
+      </div>
+    </div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">03</span></div>
+  <div class="foot"><span>Proofmark</span><span>03 / 16</span></div>
 </section>
 
-<!-- 4 · the demo -->
+<!-- 04 · how it works -->
 <section class="slide" id="s4">
-  <div class="pad dense">
-    <div class="eyebrow">What the two-minute demo shows</div>
-    <h2>It runs today, end to end, on public testnets.</h2>
-    <div style="margin-top:22px;display:grid;grid-template-columns:1fr 30px 1fr 30px 1fr 30px 1fr;align-items:stretch">
-      <div class="tile"><div class="k">1 · Screen</div><div class="v" style="font-size:20px">BLOCK</div><div class="n">“Kim Jong Un · KP” against live OFAC, UN and EU data. Entry 20157, risk band 5, corroborated by date of birth.</div></div>
-      <div style="text-align:center;color:#2b6cb0;font-size:22px;align-self:center">→</div>
-      <div class="tile"><div class="k">2 · Issue on Ethereum</div><div class="v" style="font-size:20px">27,933 gas</div><div class="n">Guided <code>/verify</code> flow. A bitmap and two 32-byte commitments land on Sepolia. No name, birth date or account number.</div></div>
-      <div style="text-align:center;color:#2b6cb0;font-size:22px;align-self:center">→</div>
-      <div class="tile" style="background:#ebf8ff"><div class="k" style="color:#2b6cb0">3 · Prove to Creditcoin</div><div class="v" style="font-size:20px">8 – 11 min</div><div class="n">Attestcoin attests the block; our ASC verifies inclusion and materialises the mark. Measured across three runs, shown as a labelled edit.</div></div>
-      <div style="text-align:center;color:#2b6cb0;font-size:22px;align-self:center">→</div>
-      <div class="tile"><div class="k">4 · Enforce</div><div class="v" style="font-size:20px">revert</div><div class="n">Verified to verified: 40 KPCN moved. Unverified recipient: <code>RecipientNotVerified</code>. Revoked sender: <code>SenderNotVerified</code>.</div></div>
+  <div class="pad">
+    <div class="eyebrow"><span class="n">04</span> Ethereum → Attestcoin → Creditcoin</div>
+    <h2>Verify. Prove. Enforce.</h2>
+    <div class="grow"></div>
+    <div class="cols c3 rail">
+      <div><div class="mono">ComplianceSource.issueOnce()</div><div class="p small" style="margin-top:6px">one event on Ethereum, request ID consumed once</div></div>
+      <div><div class="mono">BlockProver.verifyAndEmit()</div><div class="p small" style="margin-top:6px">inside <code>ProofmarkASC.execute()</code>, source pinned</div></div>
+      <div><div class="mono">GatedRwaNote._update()</div><div class="p small" style="margin-top:6px">reads <code>isVerified</code> for sender and recipient</div></div>
     </div>
-    <table style="margin-top:20px">
-      <thead><tr><th style="width:280px">On-chain evidence</th><th style="width:150px">Chain</th><th>Transaction</th></tr></thead>
-      <tbody class="mono">
-        <tr><td>Two marks issued in one <code>issueBatch</code></td><td>Sepolia</td><td>0x29049802…8d69f1</td></tr>
-        <tr><td>Worker <code>execute()</code> materialised both</td><td>Creditcoin CC3</td><td>0x50c30b31…567d8</td></tr>
-        <tr><td>Verified A → verified B, 40 KPCN</td><td>Creditcoin CC3</td><td>0xefe550ff…aa0d</td></tr>
-        <tr><td>Epoch 1 root published, accepted 8m 00s later</td><td>Sepolia → CC3</td><td>0x2adefae2…16df → 0xb011cd6e…532f</td></tr>
-      </tbody>
-    </table>
-    <div class="callout" style="margin-top:16px">Every verdict in the video is reproducible read-only: <code>bash docs/demo-video/commands.sh</code>. Full hashes in the README.</div>
-  </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">04</span></div>
-</section>
-
-<!-- 5 · policy -->
-<section class="slide plate" id="s5">
-  <div class="pad" style="justify-content:center">
-    <div style="font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.5)">The insight, as a return value</div>
-    <h1 style="font-size:42px;margin-top:16px;line-height:1.2;max-width:1000px">One mark. Two policies. Two answers.</h1>
-    <div class="grid g2" style="margin-top:34px;gap:18px;max-width:1000px">
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:22px">
-        <div style="display:flex;justify-content:space-between"><span style="font-size:16px;font-weight:600">Policy #1 · KR production</span><span class="tag bad">isVerified = false</span></div>
-        <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:12px;line-height:1.7">methods 0x10024 · assurance ≥ 2 · max age 30 d<br>regime <b>1 production</b> · jurisdiction 410 · pinned issuer · frozen</div>
+    <div style="height:40px"></div>
+    <div class="cols c3">
+      <div>
+        <div class="k">Verify · Ethereum Sepolia</div>
+        <div class="v">Credential in</div>
+        <div class="p">Wallet signature, ID document, bank account, sanctions against OFAC, UN and EU source lists. Only a check that ran sets a bit. <code>ComplianceSource</code> emits the mark as an event.</div>
       </div>
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:22px">
-        <div style="display:flex;justify-content:space-between"><span style="font-size:16px;font-weight:600">Policy #2 · KR sandbox pilot</span><span class="tag ok">isVerified = true</span></div>
-        <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:12px;line-height:1.7">methods 0x10024 · assurance ≥ 2 · max age 7 d<br>regime <b>2 sandbox</b> · jurisdiction 410 · pinned issuer · frozen</div>
+      <div>
+        <div class="k">Prove · Attestcoin</div>
+        <div class="v">Proof, not relay</div>
+        <div class="p">Creditcoin’s <code>BlockProver</code> verifies that exact Ethereum transaction inside our ASC. The worker only carries proof material. Anyone could run it; it holds no authority.</div>
+      </div>
+      <div>
+        <div class="k">Enforce · Creditcoin CC3</div>
+        <div class="v">Frozen policy</div>
+        <div class="p"><code>ProofmarkRegistry</code> judges the mark against the asset’s policy. The tokenised note reverts on its own: <code>RecipientNotVerified</code>, <code>SenderNotVerified</code>.</div>
       </div>
     </div>
-    <div class="sub" style="font-size:16px;line-height:1.7;margin-top:28px;max-width:980px">The same wallet, the same mark, read by two frozen policies on CC3. The mark honestly carries <b style="color:#fff">regime = sandbox</b>, so production says no and the pilot says yes. A note binds to one policy for life. Nobody, including us, can loosen an asset's rules after the fact. <b style="color:#fff">Portability is a view function, not a promise.</b></div>
+    <div style="height:44px"></div>
+    <div class="kicker">Remove Attestcoin and the middle box becomes a relayer we operate. <span class="mint">That is the trust the product exists to remove.</span></div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">05</span></div>
+  <div class="foot"><span>Proofmark</span><span>04 / 16</span></div>
 </section>
 
-<!-- 6 · architecture -->
+<!-- 05 · live -->
+<section class="slide" id="s5">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">05</span> Live on public testnets</div>
+    <h2>It runs end to end.<br>Every verdict reproduces from your terminal.</h2>
+    <div class="grow"></div>
+    <div style="display:grid;grid-template-columns:1fr 312px;gap:56px;align-items:start">
+      <table>
+        <thead><tr><th>On-chain evidence</th><th>Chain</th><th class="r">Result</th></tr></thead>
+        <tbody>
+          <tr><td>Two marks issued in one <code>issueBatch</code></td><td class="muted">Sepolia</td><td class="r mono muted">0x29049802…69f1</td></tr>
+          <tr><td>Attestcoin proof materialised both marks</td><td class="muted">Creditcoin CC3</td><td class="r mono muted">0x50c30b31…67d8</td></tr>
+          <tr><td>Verified A → verified B, 40 KPCN</td><td class="muted">Creditcoin CC3</td><td class="r mono muted">0xefe550ff…aa0d</td></tr>
+          <tr><td>Verified A → unissued wallet</td><td class="muted">Creditcoin CC3</td><td class="r"><span class="tag bad">RecipientNotVerified</span></td></tr>
+          <tr><td>Revoked A → verified B</td><td class="muted">Creditcoin CC3</td><td class="r"><span class="tag bad">SenderNotVerified</span></td></tr>
+          <tr><td>Roster epoch root published, then accepted</td><td class="muted">Sepolia → CC3</td><td class="r mono muted">8m 15s</td></tr>
+        </tbody>
+      </table>
+      <div style="padding-top:36px">
+        <div class="strip" style="grid-template-columns:1fr;border-top:1px solid var(--line-strong)">
+          <div style="padding:11px 0;border-left:none"><div class="k">Issue → enforceable on Creditcoin</div><div class="v num" style="margin-top:6px">7m 55s – 10m 48s</div></div>
+          <div style="padding:11px 0;border-left:none;border-top:1px solid var(--line)"><div class="k">Revoke → tombstone on Creditcoin</div><div class="v num" style="margin-top:6px">8m 43s</div></div>
+          <div style="padding:11px 0;border-left:none;border-top:1px solid var(--line)"><div class="k">Sanctions index, parsed from source</div><div class="v num" style="margin-top:6px">26,566 entries</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="height:36px"></div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>05 / 16</span></div>
+</section>
+
+<!-- 06 · one mark two policies -->
 <section class="slide" id="s6">
   <div class="pad">
-    <div class="eyebrow">Architecture · why Attestcoin</div>
-    <h2>Ethereum provenance. Creditcoin policy. Nothing in between.</h2>
-    <div style="margin-top:30px;display:grid;grid-template-columns:1fr 46px 1fr 46px 1fr;align-items:center">
-      <div class="tile" style="height:214px"><div class="k">Ethereum Sepolia</div><div class="v" style="font-size:22px">ComplianceSource</div><div class="n" style="font-size:14px;margin-top:12px"><code>issueOnce</code> · <code>revoke</code> · <code>deny</code> · <code>publishEpoch</code>. Events only; no personal data. Request IDs are consumed once.</div></div>
-      <div style="text-align:center;color:#2b6cb0;font-size:23px">→</div>
-      <div class="tile" style="height:214px;background:#ebf8ff"><div class="k" style="color:#2b6cb0">Attestcoin</div><div class="v" style="font-size:22px">Proof, not relay</div><div class="n" style="font-size:14px;margin-top:12px">Attesters confirm the source block; BlockProver verifies transaction inclusion and continuity. Our worker only fetches and submits; anyone could.</div></div>
-      <div style="text-align:center;color:#2b6cb0;font-size:23px">→</div>
-      <div class="tile" style="height:214px"><div class="k">Creditcoin CC3</div><div class="v" style="font-size:22px">ASC · Registry · Note</div><div class="n" style="font-size:14px;margin-top:12px">State machine with an ordered cursor and tombstones; frozen policies; roster roots. <code>GatedRwaNote</code> checks sender and recipient on every transfer.</div></div>
-    </div>
-    <div class="grid g4" style="margin-top:24px">
-      <div class="tile"><div class="k">Source pinned</div><div class="n">one chain key, one contract, set once</div></div>
-      <div class="tile"><div class="k">Ordered</div><div class="n">source block + transaction index per subject</div></div>
-      <div class="tile"><div class="k">Revocable</div><div class="n">tombstones outrank every root; deny beats allow</div></div>
-      <div class="tile"><div class="k">Two modes</div><div class="n">direct mark, or epoch roster with non-membership proofs</div></div>
-    </div>
-    <div class="callout" style="margin-top:22px">Remove Attestcoin and the middle box becomes a Proofmark-operated relayer. <span class="strong">The product would lose its trust model.</span> That is why it is built here.</div>
-  </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">06</span></div>
-</section>
-
-<!-- 7 · security -->
-<section class="slide" id="s7">
-  <div class="pad dense">
-    <div class="eyebrow">Security depth</div>
-    <h2>We attacked the state machine, and the protocol's base contract.</h2>
-    <table style="margin-top:20px">
-      <thead><tr><th style="width:290px">Failure mode</th><th>Control in code</th><th style="width:180px">Regression test</th></tr></thead>
-      <tbody>
-        <tr><td class="strong">Same address, wrong chain</td><td>ASC pins source chain key and contract; configured once, never changed</td><td><code>WrongChain</code></td></tr>
-        <tr><td class="strong">Stale proof resurrection</td><td>Per-subject cursor on source block and transaction index; older proofs are skipped, visibly</td><td><code>StaleResurrection</code></td></tr>
-        <tr><td class="strong">Sanctions denial downgraded</td><td>Monotonic denial: every one of 24 delivery orders leaves the subject denied</td><td><code>DenialOrder</code></td></tr>
-        <tr><td class="strong">Policy rug on a live asset</td><td>Permanent freeze; the note constructor rejects a mutable policy</td><td><code>FrozenPolicy</code></td></tr>
-        <tr><td class="strong">Forged roster gap</td><td>Roster v2: domain-separated hashes, committed leaf count, full proof shape</td><td><code>RosterV2</code></td></tr>
-        <tr><td class="strong">API replay, worker crash</td><td>Wallet / flow / consent binding, on-chain <code>issueOnce</code>, signed envelope persisted before send</td><td><code>IssueOnceReplay</code></td></tr>
-      </tbody>
-    </table>
-    <div class="grid g3" style="margin-top:12px">
-      <div class="tile" style="padding:14px 22px"><div class="k">Solidity</div><div class="v" style="font-size:24px">108 / 108</div><div class="n">Foundry: state, policy, gate, proof, ordering</div></div>
-      <div class="tile" style="padding:14px 22px"><div class="k">TypeScript</div><div class="v" style="font-size:24px">465 / 465</div><div class="n">vendors, AML, roster, vault, worker</div></div>
-      <div class="tile" style="background:#ebf8ff;padding:14px 22px"><div class="k" style="color:#2b6cb0">Upstream findings</div><div class="v" style="font-size:22px">2 high-severity</div><div class="n">in Attestcoin's <code>ASCBase</code>: the handler cannot see source chain or order. Fixed in our fork with mutation tests; offered upstream</div></div>
-    </div>
-    <div class="callout" style="margin-top:10px;font-size:13px;padding:9px 16px">Our own September review found two v1 defects (denial ordering, roster non-membership). Both are fixed and regression-tested in tree; the v2 redeploy is milestone one. External audit follows with the CertiK credits and tranche 3.</div>
-  </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">07</span></div>
-</section>
-
-<!-- 8 · operations -->
-<section class="slide" id="s8">
-  <div class="pad dense">
-    <div class="eyebrow">Compliance operations</div>
-    <h2>A credential is a lifecycle, not a mint.</h2>
-    <div class="grid g2" style="margin-top:22px;gap:20px">
+    <div class="eyebrow"><span class="n">06</span> The insight, as a return value</div>
+    <h1 style="font-size:60px">One mark. Two policies. Two answers.</h1>
+    <div class="grow"></div>
+    <div class="cols c2">
       <div>
-        <div class="tile"><div class="k">Sanctions engine</div><div class="v" style="font-size:25px">26,566 entries</div><div class="n" style="font-size:13.5px">78,365 names · OFAC SDN, UN Consolidated, EU FSF · parsed from source XML · stale sources fail closed · FATF June 2026 tables source-verified</div></div>
-        <div class="grid g3" style="margin-top:12px">
-          <div class="tile"><div class="k">Listed recall</div><div class="v" style="font-size:22px">200 / 200</div></div>
-          <div class="tile"><div class="k">Clean names</div><div class="v" style="font-size:22px">610 / 610</div></div>
-          <div class="tile"><div class="k">Evasions caught</div><div class="v" style="font-size:22px">7 / 7</div></div>
+        <div class="k">Policy 1 · KR production</div>
+        <div class="v mono bad">isVerified = false</div>
+        <div class="detail" style="margin-top:18px">
+          <div class="l">methods</div><div class="d">0x10024 · ID document · bank account · sanctions</div>
+          <div class="l">assurance</div><div class="d">≥ 2</div>
+          <div class="l">max age</div><div class="d strong">30 days</div>
+          <div class="l">regime</div><div class="d strong">1 · production</div>
+          <div class="l">jurisdiction</div><div class="d">410 · KR</div>
+          <div class="l">issuer</div><div class="d">pinned · policy frozen</div>
         </div>
       </div>
       <div>
-        <table>
-          <thead><tr><th>Korean regulatory rails, integrated in code</th><th style="width:130px">Status</th></tr></thead>
+        <div class="k">Policy 2 · KR sandbox pilot</div>
+        <div class="v mono ok">isVerified = true</div>
+        <div class="detail" style="margin-top:18px">
+          <div class="l">methods</div><div class="d">0x10024 · ID document · bank account · sanctions</div>
+          <div class="l">assurance</div><div class="d">≥ 2</div>
+          <div class="l">max age</div><div class="d strong">7 days</div>
+          <div class="l">regime</div><div class="d strong">2 · sandbox</div>
+          <div class="l">jurisdiction</div><div class="d">410 · KR</div>
+          <div class="l">issuer</div><div class="d">pinned · policy frozen</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:44px"></div>
+    <div class="kicker">Same wallet, same mark, same block. The mark carries <span class="mono">regime = sandbox</span>, so production says no and the pilot says yes. <span class="mint">Portability is a view function, not a promise.</span></div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>06 / 16</span></div>
+</section>
+
+<!-- 07 · revocation travels -->
+<section class="slide" id="s7">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">07</span> Revocation travels</div>
+    <h1 style="font-size:60px">Revoke on Ethereum.<br>The asset on Creditcoin refuses.<br><span class="mint">Nobody touched it.</span></h1>
+    <div class="grow"></div>
+    <div class="strip" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <div><div class="k">Ethereum Sepolia</div><div class="v mono" style="font-size:22px">revoke(A)</div></div>
+      <div><div class="k">Attestcoin</div><div class="v" style="font-size:22px">proof of the event</div></div>
+      <div><div class="k">Creditcoin CC3</div><div class="v" style="font-size:22px">tombstone on A</div></div>
+      <div><div class="k">The note, 8m 43s later</div><div class="v mono bad" style="font-size:22px">SenderNotVerified</div></div>
+    </div>
+    <div style="height:40px"></div>
+    <div class="p" style="max-width:1000px;font-size:16px">An older issuance proof cannot resurrect a revoked mark: every subject carries a cursor on source block and transaction index. A sanctions denial cannot be cleared by a later issue. Deny beats allow, in code, on every asset that reads the policy.</div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>07 / 16</span></div>
+</section>
+
+<!-- 08 · why now -->
+<section class="slide" id="s8">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">08</span> Why now · why Creditcoin</div>
+    <h2>Regulation puts the holder question on the issuer.<br>Attestcoin makes the answer portable.</h2>
+    <div class="grow"></div>
+    <div class="cols c3">
+      <div>
+        <div class="k">Rules</div>
+        <div class="v">Issuer owns AML</div>
+        <div class="p">GENIUS Act signed, MiCA in force. Korea’s FIU 2026 plan puts AML duties directly on stablecoin issuers, with freeze and burn. Gating holders is no longer optional.</div>
+      </div>
+      <div>
+        <div class="k">Rails</div>
+        <div class="v">Proof, not trust</div>
+        <div class="p">Attestcoin proves Ethereum state inside Creditcoin execution today. For the first time a compliance fact can cross chains without a relayer key becoming the authority.</div>
+      </div>
+      <div>
+        <div class="k">Demand</div>
+        <div class="v">Repeated per asset</div>
+        <div class="p">Every RWA, stablecoin and lending market on Creditcoin repeats the same eligibility work per asset. One frozen policy and one read replace it. Reads stay permissionless.</div>
+      </div>
+    </div>
+    <div style="height:44px"></div>
+    <div class="kicker">We do not size this top-down. <span class="mint">Every regulated token needs the read.</span> We sell the operations that keep it true.</div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>08 / 16</span></div>
+</section>
+
+<!-- 09 · where it sits -->
+<section class="slide" id="s9">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">09</span> Business structure</div>
+    <h2>The compliance layer of a stablecoin company.<br>Not a standalone KYC tool.</h2>
+    <div class="grow"></div>
+    <table>
+      <thead><tr><th>Validator stack</th><th>What is in it</th><th class="r">Status</th></tr></thead>
+      <tbody>
+        <tr><td style="width:170px">Issuance</td><td class="muted">mint and burn contracts · real-time proof of reserve · 1:1 reserve verification · post-quantum signatures</td><td class="r"><span class="tag ok">iM Bank PoC done</span></td></tr>
+        <tr><td>Distribution</td><td class="muted">exchange and payment APIs · cross-border rails · gasless wallets</td><td class="r"><span class="tag gray">building</span></td></tr>
+        <tr><td>Compliance</td><td class="muted">KYC/AML command centre · sanctions · travel rule · freeze and burn · <span class="strong">Proofmark, the on-chain read</span></td><td class="r"><span class="tag mint">testnet live</span></td></tr>
+      </tbody>
+    </table>
+    <div style="height:32px"></div>
+    <div class="strip" style="grid-template-columns:1fr 1fr 1.2fr">
+      <div><div class="k">Revenue line 1</div><div class="v" style="font-size:22px">Reserve yield, as issuer</div><div class="p small" style="margin-top:4px">scales with issuance, not headcount</div></div>
+      <div><div class="k">Revenue line 2</div><div class="v" style="font-size:22px">Infrastructure fees</div><div class="p small" style="margin-top:4px">mint and burn, remittance, payment, API</div></div>
+      <div><div class="k">Revenue line 3 · the tollgate</div><div class="v mint" style="font-size:22px">Compliance licence</div><div class="p small" style="margin-top:4px">every issuer and distributor the FIU 2026 rule touches</div></div>
+    </div>
+    <div style="height:32px"></div>
+    <div class="kicker">Whether we issue, a bank issues, or USDC lands in Korea, the tollgate gets paid. <span class="mint">Proofmark is the tollgate’s on-chain face.</span></div>
+  </div>
+  <div class="foot"><span>Proofmark · Validator Inc.</span><span>09 / 16</span></div>
+</section>
+
+<!-- 10 · how money moves -->
+<section class="slide" id="s10">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">10</span> Value chain</div>
+    <h2>Who pays whom.</h2>
+    <div class="grow"></div>
+    <div class="cols c4 rail" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div><div class="mono">runs the check</div><div class="p small" style="margin-top:6px">identity · bank account · sanctions</div></div>
+      <div><div class="mono">issues, proves, revokes</div><div class="p small" style="margin-top:6px">Ethereum event → Creditcoin proof</div></div>
+      <div><div class="mono">reads isVerified()</div><div class="p small" style="margin-top:6px">every transfer · frozen policy</div></div>
+      <div><div class="mono">holds the asset</div><div class="p small" style="margin-top:6px">or is refused, on chain</div></div>
+    </div>
+    <div style="height:40px"></div>
+    <div class="cols c4 chain">
+      <div>
+        <div class="k">Credential rails</div>
+        <div class="v">Vendors</div>
+        <div class="p">CODEF, KFTC Open Banking, Sumsub, OFAC, UN and EU lists. They verify; they do not decide.</div>
+        <div class="money">per completed check, at cost</div>
+      </div>
+      <div>
+        <div class="k">Operator of record</div>
+        <div class="v mint">Proofmark</div>
+        <div class="p">Verify, issue, rescreen, revoke, keep the evidence. One lifecycle, one policy surface, every chain.</div>
+        <div class="money">bills the platform; owns the margin</div>
+      </div>
+      <div>
+        <div class="k">Consumers</div>
+        <div class="v">Asset operators</div>
+        <div class="p">Stablecoin issuers, RWA platforms, lenders, exchanges. They bind one frozen policy and read it forever.</div>
+        <div class="money">contract + per active wallet / month</div>
+      </div>
+      <div>
+        <div class="k">End users</div>
+        <div class="v">Holders</div>
+        <div class="p">Submit documents once. Reuse the mark across every asset that accepts the issuer.</div>
+        <div class="money">pay nothing</div>
+      </div>
+    </div>
+    <div style="height:44px"></div>
+    <div class="kicker">On-chain reads stay free and permissionless. <span class="mint">Revenue attaches to the regulated work, never to the read.</span></div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>10 / 16</span></div>
+</section>
+<!-- 11 · revenue model -->
+<section class="slide" id="s11">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">11</span> Revenue model</div>
+    <h2>One meter: the active verified wallet.</h2>
+    <div class="grow"></div>
+    <table>
+      <thead><tr><th>Line</th><th>What is billed</th><th class="r">Unit</th></tr></thead>
+      <tbody>
+        <tr><td style="width:210px">Platform</td><td class="muted">issuer platform, policy governance, service levels</td><td class="r muted">annual contract</td></tr>
+        <tr><td>Issuance</td><td class="muted">each completed identity, bank-account or sanctions check</td><td class="r muted">per check</td></tr>
+        <tr><td>Continuous compliance</td><td class="muted">rescreening, revocation, roster epochs, monitoring</td><td class="r muted">per active wallet / month</td></tr>
+        <tr><td>Evidence</td><td class="muted">encrypted vault, retention, audit export, erasure records</td><td class="r muted">annual tier + storage</td></tr>
+        <tr><td>Services</td><td class="muted">provider and jurisdiction adapters, policy integration</td><td class="r muted">project + subscription</td></tr>
+      </tbody>
+    </table>
+    <div style="height:32px"></div>
+    <div class="strip" style="grid-template-columns:1fr 1fr 1fr">
+      <div><div class="k">Pass-through</div><div class="v" style="font-size:22px">Vendor checks, at cost</div></div>
+      <div><div class="k">Margin</div><div class="v" style="font-size:22px">Compliance and evidence</div></div>
+      <div><div class="k">Cost driver</div><div class="v" style="font-size:22px">Wallets and reviews, not reads</div></div>
+    </div>
+    <div style="height:32px"></div>
+    <div class="kicker">The first two design partners set the price. <span class="mint">The pilot measures willingness to pay and operating burden, not gross margin.</span></div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>11 / 16</span></div>
+</section>
+
+<!-- 12 · go to market -->
+<section class="slide" id="s12">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">12</span> Go-to-market</div>
+    <h2>Sell to ourselves first. Then to the chain.<br>Then to every issuer the rule touches.</h2>
+    <div class="grow"></div>
+    <div class="cols c4 steps">
+      <div>
+        <div class="k">1 · 2026 H2</div>
+        <div class="v" style="font-size:24px">Captive issuer</div>
+        <div class="p">Validator’s own won-stablecoin stack, with the iM Bank PoC as the channel. Proofmark gates our own issuance and distribution.</div>
+        <div class="p small mint" style="margin-top:10px">→ first production issuer</div>
+      </div>
+      <div>
+        <div class="k">2 · to 2027 Q1</div>
+        <div class="v" style="font-size:24px">Creditcoin</div>
+        <div class="p">CEIP pilot. Two design partners among Creditcoin RWA and lending applications, one of them paid. Measured issue → revoke → gate service level.</div>
+        <div class="p small mint" style="margin-top:10px">→ first external consumers</div>
+      </div>
+      <div>
+        <div class="k">3 · 2027</div>
+        <div class="v" style="font-size:24px">Korean issuers</div>
+        <div class="p">FIU obligations land on every stablecoin issuer and distributor. Sell the tollgate: platform, rescreening, evidence.</div>
+        <div class="p small mint" style="margin-top:10px">→ the licence line</div>
+      </div>
+      <div>
+        <div class="k">4 · 2027 onward</div>
+        <div class="v" style="font-size:24px">Other chains</div>
+        <div class="p">Spoke readers expose the same verified root and policy semantics on additional chains. Same product, more readers.</div>
+        <div class="p small mint" style="margin-top:10px">→ one issuer, every chain</div>
+      </div>
+    </div>
+    <div style="height:36px"></div>
+    <div class="strip" style="grid-template-columns:repeat(4,1fr)">
+      <div><div class="k">Month-12 target</div><div class="v num" style="font-size:22px">1 production issuer</div></div>
+      <div><div class="k">Month-12 target</div><div class="v num" style="font-size:22px">2 design partners</div></div>
+      <div><div class="k">Month-12 target</div><div class="v num" style="font-size:22px">1 paid pilot</div></div>
+      <div><div class="k">Month-12 target</div><div class="v num" style="font-size:22px">1 external provider</div></div>
+    </div>
+  </div>
+  <div class="foot"><span>Proofmark · Validator Inc.</span><span>12 / 16</span></div>
+</section>
+<!-- 13 · security -->
+<section class="slide" id="s13">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">13</span> Security</div>
+    <h2>We attacked the state machine.<br>Then the protocol’s base contract.</h2>
+    <div class="grow"></div>
+    <div style="display:grid;grid-template-columns:400px 1fr;gap:56px;align-items:start">
+      <div>
+        <div class="strip two" style="grid-template-columns:1fr 1fr">
+          <div><div class="k">Solidity</div><div class="v num">118</div><div class="p small" style="margin-top:4px">Foundry tests</div></div>
+          <div><div class="k">TypeScript</div><div class="v num">600</div><div class="p small" style="margin-top:4px">worker · AML · roster</div></div>
+          <div style="border-top:1px solid var(--line)"><div class="k">Failure modes</div><div class="v num">9</div><div class="p small" style="margin-top:4px">one regression test each</div></div>
+          <div style="border-top:1px solid var(--line)"><div class="k">Upstream</div><div class="v num">2</div><div class="p small" style="margin-top:4px">high-severity, <code>ASCBase</code></div></div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Failure mode</th><th class="r">Control in code</th></tr></thead>
+        <tbody>
+          <tr><td>Same address, second attested chain</td><td class="r muted">source chain key and contract pinned once</td></tr>
+          <tr><td>Stale proof resurrects a revoked mark</td><td class="r muted">per-subject cursor: block, transaction index</td></tr>
+          <tr><td>Sanctions denial downgraded</td><td class="r muted">monotonic; only a governed correction supersedes</td></tr>
+          <tr><td>Policy changed under a live asset</td><td class="r muted">permanent freeze, checked in the note constructor</td></tr>
+          <tr><td>Forged roster non-membership</td><td class="r muted">domain-separated hashes, committed leaf count</td></tr>
+          <tr><td>Replay, crash mid-send, owner-only recovery</td><td class="r muted"><code>issueOnce</code> · persisted envelope · proposal + delay</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="height:36px"></div>
+    <div class="kicker"><code>ASCBase</code> did not pass chain key or block height to the handler: a same-address contract on another chain passed as trusted, and a stale proof revived a revoked mark. <span class="mint">Our fork widens one internal signature. Report offered upstream under MIT.</span></div>
+  </div>
+  <div class="foot"><span>Proofmark</span><span>13 / 16</span></div>
+</section>
+
+<!-- 14 · founder -->
+<section class="slide" id="s14">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">14</span> Founder</div>
+    <h2>Seven years running a regulated exchange.</h2>
+    <div class="grow"></div>
+    <div style="display:grid;grid-template-columns:400px 1fr;gap:56px;align-items:start">
+      <div>
+        <div class="k">Founder and CEO</div>
+        <div class="display" style="font-size:44px;margin-top:8px">Ash Han</div>
+        <div class="p small" style="margin-top:8px">Sungkyunkwan University, Business Administration · born 1989</div>
+        <div class="p" style="margin-top:18px">Founded GDAC at 28 and ran it for seven years as CEO: VASP registration, ISMS, incident response, FSC examinations, bank due diligence. Grew it into Korea’s largest B2B exchange. Closed it in 2025 and founded Validator to build the infrastructure underneath.</div>
+        <div class="p small" style="margin-top:14px">Author of four books on Bitcoin and blockchain finance.</div>
+      </div>
+      <div>
+        <table class="rows">
+          <thead><tr><th colspan="2">Regulatory record</th></tr></thead>
           <tbody>
-            <tr><td>ID document authenticity: Government24 resident card, driver licence, OCR via CODEF</td><td><span class="tag ok">integrated</span></td></tr>
-            <tr><td>Bank account: holder name + ₩1 transfer via KFTC Open Banking</td><td><span class="tag ok">integrated</span></td></tr>
-            <tr><td>Consent bound to wallet signature and flow; one flow finalises once</td><td><span class="tag ok">live</span></td></tr>
-            <tr><td>AES-256-GCM evidence vault, rescreen → revoke batch, manual review, erasure records</td><td><span class="tag ok">implemented</span></td></tr>
-            <tr><td>Production bank rail, PEP and adverse media (licensed sources)</td><td><span class="tag warn">contract stage</span></td></tr>
+            <tr><td style="width:150px">VASP</td><td class="muted">Korea’s fourth registration; the first and only corporate-focused exchange</td></tr>
+            <tr><td>AML rating</td><td class="muted">Top tier in the FSC risk-based assessment, three quarters in a row</td></tr>
+            <tr><td>ISMS</td><td class="muted">First in the industry to certify exchange and custody together</td></tr>
+            <tr><td>FinCEN MSB</td><td class="muted">Obtained directly from the US Treasury</td></tr>
+          </tbody>
+        </table>
+        <div style="height:24px"></div>
+        <table class="rows">
+          <thead><tr><th colspan="2">Industry</th></tr></thead>
+          <tbody>
+            <tr><td style="width:150px">Community</td><td class="muted">Founded Ethereum Korea Meetup and the Deconomy forum</td></tr>
+            <tr><td>Protocol</td><td class="muted">Tendermint advisor; Interchain Foundation founding member</td></tr>
+            <tr><td>Institutions</td><td class="muted">Trained and advised Bank of Korea, Shinhan, Hana and Hanwha</td></tr>
+            <tr><td>Research</td><td class="muted">Three research books for institutions, cited by the Bank of Korea</td></tr>
+            <tr><td>Clients</td><td class="muted">400+ corporate members, Samsung, Hyundai and Kakao among them</td></tr>
+            <tr><td>IP</td><td class="muted">Five blockchain-finance patents</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="callout" style="margin-top:20px"><span class="strong">Nothing is silently mocked.</span> The public sandbox labels its demo ID and bank adapters on the page, in the evidence, and in the mark's regime field, which is why production policy #1 rejects it. Connect a rail, and the same flow issues a production mark.</div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">08</span></div>
+  <div class="foot"><span>Proofmark · Validator Inc.</span><span>14 / 16</span></div>
 </section>
 
-<!-- 9 · why creditcoin -->
-<section class="slide plate" id="s9">
-  <div class="pad" style="justify-content:center">
-    <div style="font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.5)">Why Creditcoin · why now</div>
-    <h1 style="font-size:43px;margin-top:16px;line-height:1.22;max-width:1020px">Creditcoin becomes the compliance decision layer for credentials issued anywhere.</h1>
-    <div class="grid g3" style="margin-top:34px;gap:16px;max-width:1030px">
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:22px"><div style="font-size:15px;font-weight:600">For assets</div><div class="sub" style="font-size:14px;line-height:1.6;margin-top:9px">Every RWA, lending and stablecoin launch on Creditcoin repeats the same holder-eligibility work. One frozen policy and one read replace it. Reads stay free and permissionless.</div></div>
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:22px"><div style="font-size:15px;font-weight:600">For issuers</div><div class="sub" style="font-size:14px;line-height:1.6;margin-top:9px">One Creditcoin integration exposes an existing credential to every application and policy on the chain. Issuers keep their customer; Proofmark carries the fact.</div></div>
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:22px"><div style="font-size:15px;font-weight:600">For the protocol</div><div class="sub" style="font-size:14px;line-height:1.6;margin-top:9px">A product that stops working without Attestcoin: proven source events replace the operator signature that otherwise owns cross-chain compliance.</div></div>
+<!-- 15 · team -->
+<section class="slide" id="s15">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">15</span> Team · Validator Inc.</div>
+    <h2>Regulation, finance and engineering in one team.</h2>
+    <div class="grow"></div>
+    <div class="cols c4 team">
+      <div>
+        <div class="k">CEO</div>
+        <div class="v">Ash Han</div>
+        <div class="edu">Sungkyunkwan University, Business Administration</div>
+        <div class="line">Founder and CEO, GDAC, 7 years</div>
+        <div class="line">VASP no. 4 · FinCEN MSB · ISMS</div>
+        <div class="line">Founder, Deconomy forum</div>
+        <div class="line">Advisor, Tendermint</div>
+      </div>
+      <div>
+        <div class="k">Chief Compliance Officer</div>
+        <div class="v">Youree Lee, Ph.D</div>
+        <div class="edu">Ewha Womans University, Ph.D International Business</div>
+        <div class="line">CCO and VP, Peertec (GDAC)</div>
+        <div class="line">IB, Shinhan Macquarie</div>
+        <div class="line">Sumitomo Mitsui Banking Corp.</div>
+        <div class="line">Adjunct professor, Hanyang</div>
+      </div>
+      <div>
+        <div class="k">CTO</div>
+        <div class="v">Yongku Lee</div>
+        <div class="edu">Korea University, Computer Engineering</div>
+        <div class="line">CTO, Permachain (FIG)</div>
+        <div class="line">CTO, Peertec (GDAC)</div>
+        <div class="line">CTO, Riiid</div>
+        <div class="line">Exchange core, wallet, custody</div>
+      </div>
+      <div>
+        <div class="k">Product and protocol</div>
+        <div class="v">Incheol Yang</div>
+        <div class="edu">KAIST, Computer Science</div>
+        <div class="line">Co-founder, Baekdu Technologies</div>
+        <div class="line">Engineer, Coinone</div>
+        <div class="line">Engineer, PUBG</div>
+        <div class="line">Proofmark implementation lead</div>
+      </div>
     </div>
-    <div class="sub" style="font-size:15px;margin-top:28px;max-width:1000px">No top-down TAM. The first market is two integrations: one Creditcoin asset that consumes a policy and one issuer that supplies a credential. Everything after that is repetition.</div>
+    <div style="height:36px"></div>
+    <div class="strip" style="grid-template-columns:1fr 1fr 1.4fr">
+      <div><div class="k">Validator Inc.</div><div class="v" style="font-size:20px">Seoul, founded 2026</div><div class="p small" style="margin-top:4px">won-stablecoin issuance, distribution, AML/KYC</div></div>
+      <div><div class="k">Validator FZCO</div><div class="v" style="font-size:20px">Dubai DMCC, Dec 2025</div><div class="p small" style="margin-top:4px">global issuance and distribution entity</div></div>
+      <div><div class="k">Bank-grade proof of work</div><div class="v" style="font-size:20px">iM Bank QSSN PoC, June 2026</div><div class="p small" style="margin-top:4px">issuance, reserves, bank integration · with Finger and MCC</div></div>
+    </div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">09</span></div>
+  <div class="foot"><span>Proofmark · Validator Inc.</span><span>15 / 16</span></div>
 </section>
 
-<!-- 10 · business -->
-<section class="slide" id="s10">
-  <div class="pad dense">
-    <div class="eyebrow">Business model</div>
-    <h2>Keep reads free. Sell institutional operations.</h2>
-    <table style="margin-top:22px">
-      <thead><tr><th style="width:250px">Paid surface</th><th style="width:220px">Charging unit</th><th>Buyer</th></tr></thead>
-      <tbody>
-        <tr><td class="strong">Issuer platform + SLA</td><td>annual contract</td><td>regulated issuer · RWA platform · lender</td></tr>
-        <tr><td class="strong">Issuance + continuous rescreening</td><td>per check · active wallet / month</td><td>issuer or application</td></tr>
-        <tr><td class="strong">Evidence vault + audit export</td><td>annual tier + storage</td><td>obligated institution</td></tr>
-        <tr><td class="strong">Provider / jurisdiction adapter</td><td>build + subscription</td><td>credential provider or ecosystem</td></tr>
-        <tr><td class="strong">Policy integration + governance</td><td>project + support</td><td>Creditcoin application</td></tr>
-      </tbody>
-    </table>
-    <div class="grid g3" style="margin-top:25px">
-      <div class="tile"><div class="k">First buyer</div><div class="v" style="font-size:20px">RWA / lender</div><div class="n">consumes a frozen wallet policy</div></div>
-      <div class="tile"><div class="k">First supplier</div><div class="v" style="font-size:20px">Credential issuer</div><div class="n">supplies an independent credential</div></div>
-      <div class="tile"><div class="k">Proof of market</div><div class="v" style="font-size:20px">2 design partners</div><div class="n">a priced pilot and a renewal, not a user count</div></div>
+<!-- 16 · the ask -->
+<section class="slide" id="s16">
+  <div class="pad">
+    <div class="eyebrow"><span class="n">16</span> The ask</div>
+    <h1 style="font-size:66px">USD 100k. 12 weeks.<br>Milestone-gated.</h1>
+    <div class="grow"></div>
+    <div class="cols c3">
+      <div>
+        <div class="k">Weeks 1 – 4 · $25k</div>
+        <div class="v">Productise</div>
+        <div class="p">v2 contracts redeployed with role separation. Managed vault and KMS. Adapter specification. Design-partner discovery.</div>
+      </div>
+      <div>
+        <div class="k">Weeks 5 – 8 · $35k</div>
+        <div class="v">Integrate</div>
+        <div class="p">One external credential provider on testnet. Distributed API controls. A Creditcoin application in partner staging.</div>
+      </div>
+      <div>
+        <div class="k">Weeks 9 – 12 · $40k</div>
+        <div class="v">Pilot</div>
+        <div class="p">External security review and fixes. Two design partners or one paid pilot. Measured issue → revoke → gate service level.</div>
+      </div>
     </div>
-    <div class="callout" style="margin-top:20px">The revenue attaches to the work regulated institutions already pay for: issuance, rescreening, evidence and SLAs. The chain read is the distribution, not the product.</div>
+    <div style="height:44px"></div>
+    <div class="kicker">Week 12: an independent credential → Attestcoin → a frozen Creditcoin policy → <span class="mint">a partner’s asset admitting and refusing holders on its own.</span></div>
   </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">10</span></div>
-</section>
-
-<!-- 11 · competition -->
-<section class="slide" id="s11">
-  <div class="pad dense">
-    <div class="eyebrow">Competition</div>
-    <h2>We integrate credential leaders; we compete on Creditcoin policy.</h2>
-    <table style="margin-top:22px">
-      <thead><tr><th style="width:205px">Alternative</th><th>Strength</th><th>Proofmark wedge</th><th style="width:190px">Our gap</th></tr></thead>
-      <tbody>
-        <tr><td class="strong">Sumsub + Chainlink CCID</td><td>Enterprise KYC and reusable credentials across major EVM chains</td><td>Creditcoin-native Attestcoin provenance, frozen per-asset policy, revocation that travels</td><td>distribution · vendors</td></tr>
-        <tr><td class="strong">zkMe zkKYC</td><td>ZK credentials, selective disclosure, multi-jurisdiction products</td><td>Proven source events, lifecycle state, roster non-membership, asset gate</td><td>ZK privacy · adoption</td></tr>
-        <tr><td class="strong">Direct vendor integration</td><td>Authoritative checks and contracted operations</td><td>One normalised credential path for many Creditcoin apps; policy changes without re-integration</td><td>we still need the rail</td></tr>
-        <tr><td class="strong">App allowlist</td><td>Simple for one launch</td><td>Portable, auditable issuer / regime / freshness semantics; no admin key on the hot path</td><td>more moving parts</td></tr>
-      </tbody>
-    </table>
-    <div class="grid g2" style="margin-top:22px;gap:18px">
-      <div class="callout"><span class="strong">The moat we are building:</span> provider adapters + policy semantics + lifecycle evidence + Creditcoin integrations, compounding with each asset that binds to a policy.</div>
-      <div class="callout" style="border-left-color:#dd6b20"><span class="strong">What is not a moat:</span> a bitmap, or a team-controlled issuer by itself. We say so, and we price accordingly.</div>
-    </div>
-    <div class="muted" style="font-size:10.5px;margin-top:16px">Sources: sumsub.com/newsroom (Chainlink cross-chain identity) · zk.me/credentials/zkkyc · checked 2026-09-02</div>
-  </div>
-  <div class="foot"><span>Proofmark</span><span class="pageno">11</span></div>
-</section>
-
-<!-- 12 · team -->
-<section class="slide" id="s12">
-  <div class="pad dense">
-    <div class="eyebrow">Team · Validator Inc.</div>
-    <h2>We ran the regulated stack before we put it on chain.</h2>
-    <table style="margin-top:22px">
-      <thead><tr><th style="width:190px">Name</th><th style="width:210px">Role</th><th>Relevant background</th></tr></thead>
-      <tbody>
-        <tr><td class="strong">Ash Han</td><td>CEO</td><td>Founded and ran GDAC, a Korean digital-asset exchange, through VASP registration, ISMS certification and FinCEN MSB. Interchain ecosystem background.</td></tr>
-        <tr><td class="strong">Youree Lee, Ph.D</td><td>Chief Compliance Officer</td><td>Wrote the AML/KYC policy and handled supervisory examinations at GDAC's operator. Prior banking roles.</td></tr>
-        <tr><td class="strong">Yongku Lee</td><td>CTO</td><td>Exchange core, wallet, custody and security systems at production scale.</td></tr>
-        <tr><td class="strong">Incheol Yang</td><td>Product / protocol</td><td>Exchange core and non-face-to-face KYC integration; Solidity across DEX protocols. Proofmark implementation lead.</td></tr>
-      </tbody>
-    </table>
-    <div class="grid g3" style="margin-top:20px">
-      <div class="tile"><div class="k">Regulator-facing</div><div class="v" style="font-size:19px">Examined, not theorised</div><div class="n">The policy, the filings and the examinations were done by these people, in Korea's non-face-to-face KYC regime</div></div>
-      <div class="tile"><div class="k">Operator-grade</div><div class="v" style="font-size:19px">Exchange core to custody</div><div class="n">The systems that hold customer funds and evidence, built and run in production</div></div>
-      <div class="tile"><div class="k">Protocol-deep</div><div class="v" style="font-size:19px">Found bugs upstream</div><div class="n">Two high-severity findings in Attestcoin's base contract, during a two-week build</div></div>
-    </div>
-    <div class="callout" style="margin-top:16px;font-size:13.5px">Proofmark is that operating knowledge encoded as contracts. The operating history belongs to the prior company and the individuals; Validator Inc. does not claim those licences.</div>
-  </div>
-  <div class="foot"><span>Proofmark · Validator Inc.</span><span class="pageno">12</span></div>
-</section>
-
-<!-- 13 · ask -->
-<section class="slide plate" id="s13">
-  <div class="pad" style="justify-content:center">
-    <div style="font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.5)">The ask · CEIP</div>
-    <h1 style="font-size:43px;margin-top:15px;line-height:1.2">USD 100k · 12 weeks · milestone-gated.</h1>
-    <div class="grid g3" style="margin-top:30px;gap:16px">
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:21px"><div style="font-size:14px;font-weight:600">$25k · Productise</div><div class="sub" style="font-size:13px;line-height:1.55;margin-top:8px">v2 contracts redeployed with role separation and managed vault / KMS; adapter specification; first design-partner discovery</div></div>
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:21px"><div style="font-size:14px;font-weight:600">$35k · Integrate</div><div class="sub" style="font-size:13px;line-height:1.55;margin-top:8px">One external credential adapter on testnet; distributed API controls; a Creditcoin application in partner staging</div></div>
-      <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:21px"><div style="font-size:14px;font-weight:600">$40k · Pilot</div><div class="sub" style="font-size:13px;line-height:1.55;margin-top:8px">External security review and fixes; two design partners or one paid pilot; measured issue → revoke → gate SLA</div></div>
-    </div>
-    <div class="grid g2" style="margin-top:24px;gap:16px">
-      <div class="callout dark"><span class="mint">What the money buys:</span> the four things a testnet cannot prove. An independent credential, a real buyer, managed operations, external review.</div>
-      <div class="callout dark"><span class="mint">Success in week 12:</span> independent credential → Attestcoin → frozen Creditcoin policy → a partner's asset refusing and admitting holders on its own.</div>
-    </div>
-    <div class="sub" style="font-size:13px;line-height:1.7;margin-top:24px">
-      attest-kyc.stabled.ai · github.com/stabled-ai/proofmark · science@stabled.ai<br>
-      CEIP published range: $25k–$500k · creditcoin.org/Fund
-    </div>
-  </div>
-  <div class="foot"><span>Proofmark · The compliance gateway for Creditcoin</span><span class="pageno">13</span></div>
+  <div class="foot"><span>Validator Inc. · ash@stabled.ai</span><span>16 / 16</span></div>
 </section>
 
 </body>

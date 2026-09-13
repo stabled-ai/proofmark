@@ -1,0 +1,23 @@
+{
+  "release": "v1-historical-retired",
+  "network": {
+    "hub": "cc3-testnet",
+    "hubChainId": 102031,
+    "source": "sepolia",
+    "sourceChainId": 11155111
+  },
+  "sourceChainKey": 1,
+  "deployer": "0xFD1222e35a536A62f180aA44826656940e86bD5E",
+  "contracts": {
+    "EvmV1Decoder": "0x5eE29aB8845A2AD4BBE1e01c5BD3bCc3AEee47Fd",
+    "ProofmarkASC": "0x3C6Fe016645CA52952E29C66E435bDa7F611b242",
+    "ProofmarkRegistry": "0x2F4E5e1270f90E51251651caf08547393e3C0572",
+    "ComplianceSource": "0xA9A34586303b9fD92e090F9bb1D332DC854c72B9",
+    "GatedRwaNote": "0xa74aB3De359a55A729f9185Fe4Afe90526E585CA"
+  },
+  "demo": {
+    "productionPolicyId": 1,
+    "pilotPolicyId": 2,
+    "notePolicyId": 2
+  }
+}

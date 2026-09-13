@@ -9,7 +9,7 @@ description = "Public epoch roots in generated prose"
 targetRules = ["generic-api-key"]
 condition = "AND"
 regexTarget = "line"
-paths = ['''(^|/)(README\.md|deployments/epoch-[0-9]+\.md)$''']
+paths = ['''(^|/)(README\.md|deployments/(epoch-[0-9]+\.md|epoch-v[0-9]+/[^/]+\.md))$''']
 regexes = ['''sorted-key Merkle root, `0x[0-9a-fA-F]{64}`''']
 
 [[allowlists]]

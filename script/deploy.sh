@@ -15,19 +15,19 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT="$ROOT/deployments/cc3-testnet.json"
+OUT="${DEPLOYMENT_OUT:-$ROOT/deployments/cc3-testnet.json}"
 DECODER_PATH="node_modules/@gluwa/usc-contracts/contracts/decoding/EvmV1Decoder.sol:EvmV1Decoder"
 
 # Shell variables read with `source .env` are not exported to a child process by default. Load and
 # export the repository's testnet configuration here so the documented command works as written.
-if [ -f "$ROOT/.env" ]; then
+if [ "${DEPLOY_ENV_LOADED:-0}" != "1" ] && [ -f "$ROOT/.env" ]; then
   set -a
   # shellcheck disable=SC1091
   source "$ROOT/.env"
   set +a
 fi
 
-# Measured values, docs/01-env-verification.md section 3.3
+# Creditcoin USC testnet defaults. Preflight reads and validates the live chain metadata.
 SOURCE_CHAIN_KEY="${SOURCE_CHAIN_KEY:-1}"     # chainKey 1 is Sepolia. Not the same as chainId 11155111.
 
 red()  { printf '\033[31m%s\033[0m\n' "$*"; }
@@ -165,17 +165,20 @@ deploy() {
       --private-key "$DEPLOYER_PRIVATE_KEY" \
       src/ProofmarkRegistry.sol:ProofmarkRegistry --constructor-args "$asc" \
       | awk '/Deployed to:/{print $3}')
+  [ -n "$reg" ] || { red "x Registry deployment failed"; exit 1; }
   grn "   ProofmarkRegistry = $reg"
 
   # ── 4. ComplianceSource (Sepolia) ─────────────────────────────────
   echo "── 4/8  ComplianceSource → Sepolia"
-  local srcaddr srctx srcoutput
+  local srcaddr srctx srcblock srcoutput
   srcoutput=$(forge create --broadcast --rpc-url "$SOURCE_CHAIN_RPC_URL" \
       --private-key "$DEPLOYER_PRIVATE_KEY" \
       src/ComplianceSource.sol:ComplianceSource --constructor-args "$governance_owner")
   srcaddr=$(printf '%s\n' "$srcoutput" | awk '/Deployed to:/{print $3}')
   srctx=$(printf '%s\n' "$srcoutput" | awk '/Transaction hash:/{print $3}')
   [[ "$srcaddr" =~ ^0x[0-9a-fA-F]{40}$ && "$srctx" =~ ^0x[0-9a-fA-F]{64}$ ]] || { red "x source deployment address/transaction missing; preserve deployment output and reconcile before continuing"; exit 1; }
+  srcblock=$(cast receipt "$srctx" blockNumber --rpc-url "$SOURCE_CHAIN_RPC_URL")
+  [[ "$srcblock" =~ ^[1-9][0-9]*$ ]] || { red "x source deployment block missing"; exit 1; }
   grn "   ComplianceSource = $srcaddr"
 
   # 5. Cross-registration
@@ -228,6 +231,7 @@ deploy() {
       src/GatedRwaNote.sol:GatedRwaNote \
       --constructor-args "KR Pilot Credit Note" "KPCN" "$reg" "$pilotpolicy" "$asset_owner" \
       | awk '/Deployed to:/{print $3}')
+  [ -n "$note" ] || { red "x GatedRwaNote deployment failed"; exit 1; }
   cast send "$note" "configureRecoveryGovernance(address,address)" \
       "$ASSET_RECOVERY_PROPOSER_ADDRESS" "$ASSET_RECOVERY_APPROVER_ADDRESS" \
       --rpc-url "$CREDITCOIN_RPC_URL" --private-key "$ASSET_OWNER_PRIVATE_KEY" >/dev/null
@@ -236,10 +240,11 @@ deploy() {
   # Record
   cat > "$OUT" <<JSON
 {
+  "release": "v2-live",
   "network": { "hub": "cc3-testnet", "hubChainId": 102031, "source": "sepolia", "sourceChainId": 11155111 },
   "sourceChainKey": $SOURCE_CHAIN_KEY,
   "issuerMode": "$PROOFMARK_ISSUER_MODE",
-  "sourceDeployment": { "transactionHash": "$srctx" },
+  "sourceDeployment": { "transactionHash": "$srctx", "blockNumber": $srcblock },
   "deployer": "$addr",
   "roles": {
     "governanceOwner": "$governance_owner",
@@ -308,18 +313,19 @@ JSON
 
   # Check the gate is closed rather than just saying so
   #
-  # `cast call` leaves msg.sender at 0, so without --from the onlyOwner check fires first.
+  # `cast call` leaves msg.sender at 0, so without the asset owner's --from the onlyOwner check
+  # fires first. The deployer is intentionally not the asset owner.
   # OwnableUnauthorizedAccount (0x118cdaa7) and RecipientNotVerified (0x17887111) both look
   # like a revert but mean different things, so compare the selector.
   echo
   echo "=== Gate closure check (nobody is verified yet) ==="
   local gateout
   gateout=$(cast call "$note" "mint(address,uint256)" "$addr" 1000000000000000000 \
-              --from "$addr" --rpc-url "$CREDITCOIN_RPC_URL" 2>&1 || true)
+              --from "$asset_owner" --rpc-url "$CREDITCOIN_RPC_URL" 2>&1 || true)
   if echo "$gateout" | grep -q "17887111\|RecipientNotVerified"; then
     grn "  ok RecipientNotVerified. The gate is closed, as expected."
   elif echo "$gateout" | grep -q "118cdaa7\|OwnableUnauthorized"; then
-    red "  x OwnableUnauthorizedAccount. --from is missing, so the gate was not verified."; exit 1
+    red "  x OwnableUnauthorizedAccount. The asset-owner --from is missing or wrong, so the gate was not verified."; exit 1
   else
     red "  x unexpected result: $gateout"; exit 1
   fi

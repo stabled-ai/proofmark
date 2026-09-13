@@ -13,12 +13,12 @@ interface IProofmarkRegistry {
 
 /// @title GatedRwaNote
 /// @notice A demo RWA token, a credit note, transferable only between wallets that pass a policy.
-/// @dev docs/03-product-plan.md section 5.1, layer L3. This contract is where removing Attestcoin
-///      becomes visible: the gate stops working.
+/// @dev This contract makes the USC dependency visible at the asset boundary: the gate reads
+///      compliance state that only a verified source event can change.
 ///
 /// Tokenised assets carry a legal requirement to screen holders. This contract enforces that at
 /// transfer time. New deployments require a frozen fresh-roster policy and a verified current
-/// roster witness for each holder. Source issuer approvals are proved through Attestcoin; the
+/// roster witness for each holder. Source issuer approvals are proved through USC; the
 /// roster's completeness and screening quality remain issuer/publisher trust assumptions.
 ///
 /// The policy is fixed in the constructor because which policy gates the token is a property of the

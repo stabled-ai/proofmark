@@ -6,7 +6,7 @@ import { evidenceVaultStatus } from '@/lib/evidence-vault';
 import { bankStateStore } from '@/lib/bank-state';
 import { issuanceBudgetStatus, issuanceJournalStatus, issuanceTrackingStatus } from '@/lib/issuance-server';
 import { guardError, guardRequest } from '@/lib/request-guard';
-import { handleIssuanceRequest } from '../issue/route';
+import { handleIssuanceRequest } from '@/lib/issuance-route';
 import { processingPolicyStatus } from '@/lib/privacy-processing-policy-server';
 import { retentionPolicyStatus } from '@/lib/retention-policy-server';
 

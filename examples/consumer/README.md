@@ -36,8 +36,8 @@ missing methods/issuer/regime/jurisdiction or absent/stale witness can produce a
 No particular rejection reason is invented from that boolean. A configuration, RPC, runtime,
 schema, binding, mutable/unknown policy or observation failure exits 2 with `verdict: unavailable`,
 `verified: null` and a fixed error code; it must not be treated as a cached prior success or an
-ordinary negative credential. Remote diagnostics are not printed. See [consumer read boundaries
-and executed tests](../../docs/81-consumer-verdict-boundary.md).
+ordinary negative credential. Remote diagnostics are not printed. The executable boundary cases
+live in [`pipeline/consumer-verdict.test.ts`](../../pipeline/consumer-verdict.test.ts).
 
 The working-tree [`GatedRwaNote`](../../src/GatedRwaNote.sol) applies the check to both sender and recipient, with explicit owner recovery paths. **New deployments require a frozen `requireRoster=true` policy and `ROSTER_WITNESS_VERSION=1`.** The historical public token is an older Direct-mode build and has not acquired this protection.
 
@@ -59,7 +59,11 @@ const transactionRequest = { to: registryAddress, data: prepared.data };
 
 No issuer private key is needed to deliver an already-approved membership proof. At execution the Registry validates the current root, issuer authorization, freshness and tombstone again. On every `isVerified` call it applies the consumer policy to the cached mark. A new epoch invalidates the old witness even if the root repeats; expiry cannot be extended by recaching. Direct ASC provenance is not rewritten. Both sender and recipient need witnesses for the same current epoch.
 
-An issuer process is also unnecessary for **reconstructing a previously distributed proof**. Use the [content-addressed bundle and replica workflow](../../docs/39-roster-proof-availability.md): export a current epoch record to a reviewed destination, copy the hash-named file before any outage, and reconstruct proofs locally or from the local HTTP replica. These files expose wallet-linked credential fields; do not upload real rosters without distribution approval.
+An issuer process is also unnecessary for **reconstructing a previously distributed proof**. Use
+the [content-addressed bundle tooling](../../pipeline/roster-bundle.ts): export a current epoch
+record to a reviewed destination, copy the hash-named file before any outage, and reconstruct
+proofs locally or from the local HTTP replica. These files expose wallet-linked credential fields;
+do not upload real rosters without distribution approval.
 
 ```ts
 import { readFileSync } from 'node:fs';
@@ -77,14 +81,17 @@ if (checked.eligible && checked.transaction) {
 
 An accepted non-inclusion proof returns `eligible: false`. A successful inclusion simulation is not a stored witness. RPC failure, schema mismatch, expiration or a newer epoch is not permission to fall back to an older bundle or Direct credential.
 
-The [connected local bundle test](../../docs/39-roster-proof-availability.md#connected-bundle-to-wallet-test)
+The [connected local bundle test](../../pipeline/roster-bundle-chain.test.ts)
 executes the exported bundle → current-chain check → explicitly authorized local wallet witness
 transaction → token gate path. It also sends an old request after an epoch change and checks the
 actual reverted receipt. That demonstrates why a successful earlier simulation must not be
 treated as execution authorization. The wallet and both chains are synthetic local fixtures,
 not a browser integration or public deployment; the library never signs or sends for the caller.
 
-The generic `ProofmarkConsumer.sol` remains an example for arbitrary frozen policies, including weaker Direct policies; it is not automatically suitable for high-risk assets. Choosing a permissive policy does not establish continued screening freshness. [Timing, outage evidence and remaining trust limits](../../docs/34-fresh-roster-consumers.md) explain the new asset path.
+The generic `ProofmarkConsumer.sol` remains an example for arbitrary frozen policies, including
+weaker Direct policies; it is not automatically suitable for high-risk assets. Choosing a
+permissive policy does not establish continued screening freshness. High-risk consumers should
+require the current issuer-approved roster and fail closed when the witness is missing or stale.
 
 [`deployments/cc3-testnet.json`](../../deployments/cc3-testnet.json) documents a historical release.
 It is not automatically trusted by this reader and has not acquired the working-tree schema fixes.

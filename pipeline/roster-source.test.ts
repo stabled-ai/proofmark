@@ -14,6 +14,7 @@ const attrs = (expiry = now + 1000) => packAttrs({ kind: 1, assurance: 3, regime
 
 class Reader implements SnapshotReader {
   blocks = new Map<number, SnapshotBlock>(); receipts = new Map<string, SnapshotReceipt>();
+  getBlockReceipts?: (height: number) => Promise<readonly SnapshotReceipt[]>;
   final = 9; head = 10; chainId = 11155111n; reads: number[] = [];
   constructor() {
     for (let i = 0; i <= 10; i++) this.blocks.set(i, { number: i, hash: ethers.id(`block-${i}`), parentHash: ethers.id(`block-${i - 1}`),
@@ -78,6 +79,26 @@ test('source replay excludes unrelayed revokes, deny-before-issue and never-issu
   for (let i = 1; i <= 9; i++) assert.ok(r.reads.includes(i), `empty block ${i} is not a stopping point`);
   assert.equal(s.manifest.cutoffBlock, 9);
   assert.equal(s.manifest.receipts, 3);
+});
+
+test('block receipt transport preserves the same receipt-root verification without per-transaction RPC reads', async () => {
+  const r = new Reader();
+  r.tx(2, [issue(alice)]); r.tx(7, [revoke(alice), issue(bob)]);
+  const getReceipt = r.getTransactionReceipt.bind(r);
+  let individualReads = 0, blockReads = 0;
+  r.getTransactionReceipt = async tx => {
+    individualReads++;
+    return getReceipt(tx);
+  };
+  r.getBlockReceipts = async height => {
+    blockReads++;
+    return structuredClone([...r.receipts.values()].filter(receipt => receipt.blockNumber === height).sort((a, b) => a.index - b.index));
+  };
+  const snapshot = await buildSourceRoster(r, options(r));
+  assert.deepEqual(snapshot.tree.entries.map(entry => entry.subject), [bob]);
+  assert.equal(individualReads, 1, 'only the deployment receipt is read before the block sweep');
+  assert.equal(blockReads, 9, 'every block, including empty blocks, supplies an exact receipt set');
+  assert.equal(snapshot.manifest.receipts, 3);
 });
 
 test('same-block and mixed receipt lifecycle replay is deterministic at the original cutoff after later writes', async () => {
@@ -199,7 +220,8 @@ test('missing receipts, changed coordinates and receipt-local log omission fail 
 test('wrong chain, missing finality, unfinalized cutoff, fake deployment and partial-scan budgets are rejected', async () => {
   const r = new Reader(); r.tx(2, [issue(alice)]);
   for (const changed of [{ chainId: 1n }, { cutoffBlock: 10 }, { deploymentTx: ethers.id('missing') }, { maxBlocks: 2 }, { maxReceipts: 1 },
-    { confirmations: 0 }, { logChunk: 0 }, { expectedCutoffHash: ethers.ZeroHash }]) {
+    { confirmations: 0 }, { logChunk: 0 }, { receiptConcurrency: 0 }, { receiptConcurrency: 17 }, { receiptRetries: 0 },
+    { receiptRetries: 11 }, { expectedCutoffHash: ethers.ZeroHash }]) {
     await assert.rejects(buildSourceRoster(r, { ...options(r), ...changed }));
   }
   const wrong = new Reader(); wrong.receipts.get(wrong.deploymentTx)!.contractAddress = issuer;

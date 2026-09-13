@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Proofmark multichain READ architecture</title>
+  <desc id="desc">Source-chain compliance events are verified through Attestcoin on Creditcoin, materialised into Proofmark Registry, and consumed by assets across Creditcoin and future spoke chains.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080d18"/>
+      <stop offset="0.55" stop-color="#0d1424"/>
+      <stop offset="1" stop-color="#080d18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0" stop-color="#1759e8" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#1759e8" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity=".035"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity=".35"/>
+    </filter>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#5d8fff"/>
+    </marker>
+    <marker id="arrow-mint" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#b3fcb2"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+
+  <g transform="translate(72 64)">
+    <rect width="42" height="42" rx="10" fill="#1759e8"/>
+    <path d="M34 15.2A14 14 0 1 1 27.4 8.9" fill="none" stroke="#fff" stroke-width="3.1" stroke-linecap="round"/>
+    <path d="m15.2 22 4.3 4.3 9.4-10.8" fill="none" stroke="#fff" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="58" y="30" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700">Proofmark</text>
+  </g>
+
+  <text x="72" y="158" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" letter-spacing="-1">ONE VERIFIED STATE. EVERY CHAIN CAN READ IT.</text>
+  <text x="72" y="198" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="19">Attestcoin turns source-chain compliance events into a shared policy READ for regulated assets.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="72" y="254" width="370" height="470" rx="24" fill="#111a2b" stroke="#26344d"/>
+    <rect x="494" y="254" width="612" height="470" rx="24" fill="#101b30" stroke="#345fae"/>
+    <rect x="1158" y="254" width="370" height="470" rx="24" fill="#111a2b" stroke="#26344d"/>
+  </g>
+
+  <text x="104" y="304" fill="#7eabff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2">SOURCE CHAINS</text>
+  <text x="526" y="304" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2">ATTESTCOIN ON CREDITCOIN</text>
+  <text x="1190" y="304" fill="#7eabff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="2">READ CONSUMERS</text>
+
+  <g>
+    <rect x="104" y="334" width="306" height="126" rx="16" fill="#16233b" stroke="#35517e"/>
+    <circle cx="137" cy="370" r="15" fill="#627eea"/>
+    <text x="164" y="376" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">Ethereum</text>
+    <rect x="320" y="350" width="68" height="26" rx="13" fill="#173326"/>
+    <text x="354" y="368" text-anchor="middle" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">LIVE</text>
+    <text x="128" y="414" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="15">Sepolia · Issue · Revoke · Sanctions denial</text>
+    <text x="128" y="438" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="15">Roster epoch · Evidence commitments</text>
+  </g>
+
+  <g>
+    <rect x="104" y="486" width="306" height="126" rx="16" fill="#121d31" stroke="#2a3a57" stroke-dasharray="7 7"/>
+    <circle cx="137" cy="522" r="15" fill="#2b3c5b"/>
+    <path d="M130 522h14M137 515v14" stroke="#b9c3d6" stroke-width="2" stroke-linecap="round"/>
+    <text x="164" y="528" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">More source chains</text>
+    <rect x="315" y="502" width="73" height="26" rx="13" fill="#222c3d"/>
+    <text x="351.5" y="520" text-anchor="middle" fill="#b9c3d6" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">NEXT</text>
+    <text x="128" y="566" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="15">Same credential schema</text>
+    <text x="128" y="590" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="15">No KYC stack rebuild</text>
+  </g>
+
+  <path d="M410 397H484" fill="none" stroke="#5d8fff" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <text x="447" y="380" text-anchor="middle" fill="#7eabff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">PROOF</text>
+
+  <g>
+    <rect x="526" y="334" width="548" height="62" rx="14" fill="#15233b" stroke="#2b4168"/>
+    <circle cx="558" cy="365" r="17" fill="#1759e8"/>
+    <text x="558" y="371" text-anchor="middle" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">1</text>
+    <text x="589" y="371" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">ATTEST</text>
+    <text x="700" y="371" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="16">Independent attestors confirm the source block</text>
+
+    <rect x="526" y="412" width="548" height="62" rx="14" fill="#15233b" stroke="#2b4168"/>
+    <circle cx="558" cy="443" r="17" fill="#1759e8"/>
+    <text x="558" y="449" text-anchor="middle" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">2</text>
+    <text x="589" y="449" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">VERIFY</text>
+    <text x="700" y="449" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="16">BlockProver validates the exact Ethereum receipt</text>
+
+    <rect x="526" y="490" width="548" height="62" rx="14" fill="#15233b" stroke="#2b4168"/>
+    <circle cx="558" cy="521" r="17" fill="#1759e8"/>
+    <text x="558" y="527" text-anchor="middle" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">3</text>
+    <text x="589" y="527" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">MATERIALISE</text>
+    <text x="748" y="527" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="16">ProofmarkASC orders and stores lifecycle state</text>
+
+    <rect x="526" y="568" width="548" height="112" rx="18" fill="#173326" stroke="#4b9564"/>
+    <text x="556" y="605" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.5">ONE STANDARD READ</text>
+    <text x="556" y="646" fill="#f7f9ff" font-family="SFMono-Regular, Consolas, monospace" font-size="25" font-weight="700">isVerified(wallet, policyId)</text>
+  </g>
+
+  <path d="M1074 624H1148" fill="none" stroke="#b3fcb2" stroke-width="3" marker-end="url(#arrow-mint)"/>
+  <text x="1111" y="607" text-anchor="middle" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700">READ</text>
+
+  <g>
+    <rect x="1190" y="334" width="306" height="92" rx="16" fill="#16233b" stroke="#35517e"/>
+    <text x="1218" y="371" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">Creditcoin RWA</text>
+    <rect x="1404" y="352" width="68" height="26" rx="13" fill="#173326"/>
+    <text x="1438" y="370" text-anchor="middle" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">LIVE</text>
+    <text x="1218" y="400" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="14">Transfer policy enforced onchain</text>
+
+    <rect x="1190" y="446" width="306" height="92" rx="16" fill="#121d31" stroke="#2a3a57" stroke-dasharray="7 7"/>
+    <text x="1218" y="483" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">Spoke chains</text>
+    <rect x="1400" y="464" width="72" height="26" rx="13" fill="#222c3d"/>
+    <text x="1436" y="482" text-anchor="middle" fill="#b9c3d6" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">NEXT</text>
+    <text x="1218" y="512" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="14">Same root · Same policy semantics</text>
+
+    <rect x="1190" y="558" width="306" height="122" rx="16" fill="#121d31" stroke="#2a3a57"/>
+    <text x="1218" y="595" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">Any regulated asset</text>
+    <text x="1218" y="628" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="14">Stablecoins · Lending · Funds</text>
+    <text x="1218" y="654" fill="#96a2b8" font-family="Inter, Arial, sans-serif" font-size="14">Local policy · Shared evidence</text>
+  </g>
+
+  <g>
+    <rect x="72" y="764" width="1456" height="76" rx="18" fill="#0e1728" stroke="#26344d"/>
+    <text x="108" y="810" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">ONE ISSUANCE</text>
+    <circle cx="288" cy="804" r="4" fill="#52617a"/>
+    <text x="322" y="810" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">MANY POLICY READS</text>
+    <circle cx="558" cy="804" r="4" fill="#52617a"/>
+    <text x="592" y="810" fill="#f7f9ff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">ONE REVOCATION</text>
+    <path d="M790 804H884" stroke="#5d8fff" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <text x="920" y="810" fill="#b3fcb2" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">EVERY BOUND ASSET UPDATES</text>
+  </g>
+</svg>

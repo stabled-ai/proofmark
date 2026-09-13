@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Proofmark demo video — scene commands for the two-minute cut, against the live testnet deployment.
+# Proofmark demo video — historical scene commands for the retired v1 testnet deployment.
 #
 # Every block is labelled with the SHOTLIST.md scene it belongs to. Run the whole file before
 # recording to confirm the chain still says what NARRATION.md claims:
@@ -24,7 +24,7 @@
 #   * pass --from on a gated call, or msg.sender is zero and onlyOwner fires before the gate
 #   * "missing field mixHash" from cast on CC3 is harmless; Creditcoin runs a Substrate block format
 #
-# This file targets the deployment in deployments/cc3-testnet.json. The strict v2 checks for the
+# This file targets the retired deployment in deployments/cc3-testnet-v1.json. The strict v2 checks for the
 # post-migration contracts live in commands-v2.sh and are not used for this recording.
 
 set -euo pipefail

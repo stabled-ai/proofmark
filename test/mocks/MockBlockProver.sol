@@ -5,8 +5,7 @@ import {INativeQueryVerifier} from "../../src/lib/VerifierInterface.sol";
 
 /// @notice Mock of the BlockProver precompile at 0x...0FD2, injected with `vm.etch`.
 /// @dev Pure, writes no state, so etching over empty storage is safe.
-///      The P0 "local mock BlockProver harness" from docs/03-product-plan.md.
-///      It exists so the full ASC path can be tested without the eight-minute attestation wait.
+///      It lets the full ASC application path run without a public attestation wait.
 contract MockBlockProver {
     /// @dev Always verifies. What we are testing is the ASC guard logic, not proof arithmetic.
     function verifyAndEmit(

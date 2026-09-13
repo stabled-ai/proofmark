@@ -10,7 +10,6 @@ import {IERC1271} from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 /// @title ComplianceSource
 /// @notice The origin of issuance, deployed on Ethereum Sepolia. Emits only purpose-built events meant to be read cross-chain.
-/// @dev docs/04-event-schema.md §3·§6
 ///
 /// ASC v2 atomically consumes every trusted lifecycle event in receipt order. A contract issuer
 /// may batch different calls or repeat a subject; the last ordinary event wins, while denial is
@@ -27,7 +26,7 @@ contract ComplianceSource is Ownable2Step, EIP712 {
         "RosterApproval(uint32 epoch,bytes32 root,uint32 listVersion,uint40 validUntil,uint40 sourceCutoff,bytes32 snapshotId,address publisher)"
     );
     uint256 public constant MAX_EPOCH_AGE = EpochBounds.MAX_AGE;
-    // Events. See docs/04 section 3.
+    // Lifecycle events consumed by ProofmarkASC.
 
     /// @dev sig 0xffac883eea6676651044a7e28ee0527defa8e3fce7558142c598e6569ef5a5f3
     event MarkIssued(

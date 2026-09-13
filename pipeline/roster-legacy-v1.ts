@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
  * This is a read-only port of the pre-v2 `pipeline/roster.ts`, kept so the judge verification path
  * can rebuild and verify the historical epoch records against the deployed registry. It must not
  * be used to publish new roots: the v2 format in `pipeline/roster.ts` fixes the leaf/internal-node
- * confusion described in docs/19-security-migration.md, and new publications use that format.
+ * ambiguity, and new publications use that format.
  */
 
 export interface LegacyRosterEntry {

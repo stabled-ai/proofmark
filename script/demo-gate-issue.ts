@@ -83,6 +83,7 @@ async function issueOne(
   persona: Persona,
   adapter: KrAdapter,
   engine: ListBackedAmlEngine,
+  issuanceNowMs: number,
 ): Promise<{ wallet: string; out: Extract<IssueOutcome, { status: 'ISSUED' }> }> {
   const wallet = new ethers.Wallet(req(persona.keyVar)).address;
 
@@ -142,6 +143,7 @@ async function issueOne(
       identityPolicy: SYNTHETIC_INDIVIDUAL_NONFACE_POLICY },
     adapter,
     engine,
+    issuanceNowMs,
   );
 
   if (out.status !== 'ISSUED') {
@@ -171,6 +173,14 @@ async function issueOne(
 async function main() {
   const dryRun = process.argv.includes('--dry-run');
 
+  // Source validators, not the local workstation, decide whether issuedAt is in the future.
+  // Anchor both records to an observed source block so clock skew cannot invalidate the batch.
+  const provider = new ethers.JsonRpcProvider(req('SOURCE_CHAIN_RPC_URL'));
+  const sourceHead = await provider.getBlock('latest');
+  if (!sourceHead) throw new Error('latest source block is unavailable');
+  const issuanceNowMs = Math.min(Date.now(), sourceHead.timestamp * 1000);
+  console.log(`source time anchor: block ${sourceHead.number}, ${new Date(issuanceNowMs).toISOString()}\n`);
+
   // Demo vendors on both axes, with the sandbox switch on. The regime discloses it.
   const adapter = new KrAdapter(new DemoIdDocumentVendor(), new DemoBankAccountVendor(), { sandboxBits: true });
 
@@ -187,17 +197,17 @@ async function main() {
   });
 
   const issued = [];
-  for (const persona of PERSONAS) issued.push(await issueOne(persona, adapter, engine));
+  for (const persona of PERSONAS) issued.push(await issueOne(persona, adapter, engine, issuanceNowMs));
 
   const items = issued.map(({ wallet, out }) => toIssueCall(wallet, out));
   console.log(`\nissueBatch items: ${items.map((i) => i.subject).join(', ')}`);
 
   if (dryRun) {
     console.log('--dry-run: nothing sent.');
+    provider.destroy();
     return;
   }
 
-  const provider = new ethers.JsonRpcProvider(req('SOURCE_CHAIN_RPC_URL'));
   const signer = new ethers.Wallet(req('ISSUER_PRIVATE_KEY'), provider);
   const source = new ethers.Contract(req('SOURCE_CONTRACT_ADDRESS'), SOURCE_ABI, signer);
 
@@ -210,6 +220,7 @@ async function main() {
   console.log(`   block      ${receipt.blockNumber}`);
   console.log(`   status     ${receipt.status === 1 ? 'success' : 'FAILED'}`);
   console.log(`   mined at   ${minedAt.toISOString()}  (start the propagation clock here)`);
+  provider.destroy();
 }
 
 main().catch((e) => {

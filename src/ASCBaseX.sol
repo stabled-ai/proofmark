@@ -8,8 +8,7 @@ import {INativeQueryVerifier, NativeQueryVerifierLib} from "./lib/VerifierInterf
 ///         protection follow the original exactly; the handler additionally receives `chainKey`,
 ///         `blockHeight`, and the transaction index derived from the verified Merkle proof.
 ///
-/// @dev Why the fork. See docs/05-asc-integration-review.md sections 1 and 2.
-///
+/// @dev Why the fork:
 ///  original: _processAndEmitEvent(action, queryId, encodedTransaction)
 ///  fork:     _processAndEmitEvent(action, chainKey, blockHeight, txIndex, encodedTransaction)
 ///

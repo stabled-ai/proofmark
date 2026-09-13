@@ -4,7 +4,7 @@
 # The two-minute recording kit against the live deployment is commands.sh (same directory).
 #
 # Blocks retain the older verification scene numbers, not the new two-minute SHOTLIST numbers.
-# Run the strict read-only checks with reviewed pins; see docs/44-demo-verification.md:
+# Run the strict read-only checks with reviewed deployment pins:
 #
 #   bash docs/demo-video/commands-v2.sh
 #
@@ -30,7 +30,7 @@
 #
 # Historical outputs captured on 2026-09-01 remain as context, not current evidence.
 # As of 2026-09-07 the checks require reviewed runtime/issuer pins and compatible v2 contracts.
-# The old deployment must fail. See docs/44-demo-verification.md before recording or migrating.
+# A legacy or incorrectly pinned deployment must fail before any scene claim is accepted.
 
 set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -48,10 +48,10 @@ DEMO_URL="${DEMO_URL:-https://attest-kyc.stabled.ai}"           # the hosted dem
 SEPOLIA_EXPLORER="https://sepolia.etherscan.io"
 CC3_EXPLORER="https://creditcoin-testnet.blockscout.com"
 
-ASC=0x3C6Fe016645CA52952E29C66E435bDa7F611b242   # ProofmarkASC, CC3
-REG=0x2F4E5e1270f90E51251651caf08547393e3C0572   # ProofmarkRegistry, CC3
-NOTE=0xa74aB3De359a55A729f9185Fe4Afe90526E585CA  # GatedRwaNote "KR Pilot Credit Note" / KPCN, POLICY_ID 2
-SRC=0xA9A34586303b9fD92e090F9bb1D332DC854c72B9   # ComplianceSource, Sepolia
+ASC=0x8c29A966a30d9083B760451245aECEbBE1E2d2F4   # ProofmarkASC, CC3
+REG=0x5752897b1edaD4fe50908B38c4ddA5f376a43110   # ProofmarkRegistry, CC3
+NOTE=0x5C16b3A87fa909b8BDb899476D049a85A56380B5  # GatedRwaNote "KR Pilot Credit Note" / KPCN, POLICY_ID 2
+SRC=0xfb46D722CD70F1ed399616a9B4745E60B9220609   # ComplianceSource, Sepolia
 
 SUB=0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2        # sandbox mark: methods 0x190027, assurance 3
 
@@ -60,8 +60,8 @@ RWA_HOLDER="${RWA_HOLDER:-0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2}"     # A, 
 RWA_RECIPIENT="${RWA_RECIPIENT:-0x77858131d1E0eAaAe2c38c2cce508c358C9b58ee}" # B, passes policy 2
 RWA_CONTROL="${RWA_CONTROL:-0x00000000000000000000000000000000DeaDBeef}" # never issued, passes nothing
 
-# Set at record time only: the subject of the mark pre-issued through /verify about 15 minutes
-# before recording, whose attestation has crossed to CC3 by the time scene 6 is filmed. See PREFLIGHT.md.
+# Set at record time only: the subject of a mark pre-issued through /verify after its attestation
+# has crossed to CC3. Confirm the mark with the read-only verifier before recording scene 6.
 TAKE_B_SUBJECT="${TAKE_B_SUBJECT:-}"
 
 # Optional: the Sepolia tx hash the /verify issuance returned, so scene 4 can print its explorer URL.
@@ -181,7 +181,7 @@ if want 3; then
   # -> "sandboxBits":true   so the mark carries regime KR_FSC_NONFACE_SANDBOX
   # -> "vendor":"demo:id"   "vendor":"demo:bank"   "live":false
   # -> "configured":true    for id, bank and issuer
-  # -> "address":"0xA9A34586303b9fD92e090F9bb1D332DC854c72B9"
+  # -> "address":"0xfb46D722CD70F1ed399616a9B4745E60B9220609"
   #      NB this is ComplianceSource on Sepolia, the contract the issuer writes to — not the signing
   #      EOA. The signer appears as onchain.issuer in the /verify issuance response.
   printf '%s' "$status_json" | grep -q '"demo":true'         || { echo 'FAIL: demo mode is off'; exit 1; }
@@ -234,7 +234,7 @@ if want 6; then
 
   # The ASC accepts a proof from one source chain and one source contract only.
   cast call $ASC 'expectedChainKey()(uint64)' --rpc-url "$CC3"   # -> 1   Sepolia
-  cast call $ASC 'sourceContract()(address)'  --rpc-url "$CC3"   # -> 0xA9A34586303b9fD92e090F9bb1D332DC854c72B9
+  cast call $ASC 'sourceContract()(address)'  --rpc-url "$CC3"   # -> 0xfb46D722CD70F1ed399616a9B4745E60B9220609
 
   # The same mark, two policies, two answers. This is the portability claim, on chain.
   assert_call 'holder production rejection' false "$REG" 'isVerified(address,uint256)(bool)' "$SUB" 1 --rpc-url "$CC3"

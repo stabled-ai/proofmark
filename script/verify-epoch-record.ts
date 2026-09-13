@@ -110,7 +110,7 @@ async function verifyLegacyRecord(): Promise<void> {
   check(`recorded roster evidence has at least ${requiredRemaining}s freshness remaining (recording margin, not policy lifetime)`, remaining >= requiredRemaining,
     `${Math.floor(remaining / 3600)}h remaining; effective until ${iso(effectiveUntil)}`);
   check('observation block remains canonical', (await provider.getBlock(latestBlock.number))?.hash === latestBlock.hash);
-  console.log('NOTE  roster format 1 is the deployed v1 build. Its non-inclusion proof accepts internal nodes as leaves (docs/19-security-migration.md); the corrected v2 format in this tree is not deployed and is not claimed here.');
+  console.log('NOTE  roster format 1 is the legacy v1 build. Its non-inclusion proof accepts internal nodes as leaves; publish new roots only with the corrected v2 contracts and format.');
 }
 
 async function verifyV2Record(): Promise<void> {

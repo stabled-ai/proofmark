@@ -32,7 +32,6 @@ struct RosterMark {
 
 /// @title ProofmarkRegistry
 /// @notice The only surface a dApp calls. One line: `isVerified(subject, policyId)`.
-/// @dev docs/03-product-plan.md §6.4·§6.5
 ///
 /// Policy registration is permissionless. Each dApp registers what its own jurisdiction and risk
 /// appetite require. We make no equivalence claim between Korean and EU KYC. We publish the checks

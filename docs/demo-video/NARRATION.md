@@ -86,7 +86,7 @@ then `/onchain` showing the mark ACTIVE and the verifier's pins.*
 |---|---|
 | 26,566 entries | OFAC SDN 19,321 + UN 1,011 + EU 6,234, the built index the hosted deployment serves |
 | risk band five | `POST /api/screen` for the preset, verified 2026-09-07 |
-| "about nine minutes" | measured propagation 7m 55s to 10m 48s across two issuance runs; 8m 43s for the one recorded revocation; epoch 1 in 8m 00s (`docs/16-propagation-observations.md`) |
+| "about nine minutes" | historical v1 deployment records: issuance 7m 55s to 10m 48s, one revocation 8m 43s, and epoch 1 in 8m 00s |
 | "N minutes" in the scene-7 caption | the elapsed time `commands.sh` prints when the tombstone lands in that take |
 
 If a scene needs a figure that is not in this table, cut the claim, not the provenance.

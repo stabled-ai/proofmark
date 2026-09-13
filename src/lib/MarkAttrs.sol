@@ -3,8 +3,7 @@ pragma solidity ^0.8.30;
 
 /// @title MarkAttrs
 /// @notice Packs eight scalar mark fields into one bytes32. 192 bits used, 64 reserved.
-/// @dev docs/04-event-schema.md §2
-///
+/// @dev Schema 0 layout:
 ///  bit 255      248 247      240 239        224 223           208
 ///      │ kind  u8 │assurance u8│  regime u16  │ jurisdiction u16│
 ///  bit 207        176 175        136 135      96 95      64 63   0

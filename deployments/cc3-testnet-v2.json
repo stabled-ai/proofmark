@@ -1,0 +1,37 @@
+{
+  "release": "v2-deployment-raw",
+  "status": "Historical deployment output. Use deployments/cc3-testnet.json for current operational roles and transaction evidence.",
+  "network": { "hub": "cc3-testnet", "hubChainId": 102031, "source": "sepolia", "sourceChainId": 11155111 },
+  "sourceChainKey": 1,
+  "issuerMode": "single-issuer",
+  "sourceDeployment": {
+    "transactionHash": "0x1eb9cfb389f42294c68812a7377aaed4e4506231ea51b6e4781a1a06a059e34a",
+    "blockNumber": 11698674
+  },
+  "deployer": "0x10575c5290537419620aF5344569Cb9887A816Ff",
+  "roles": {
+    "governanceOwner": "0x45955952130a78874d82CEcE2df3c6cC61AFaD90",
+    "sourceIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+    "sourceRescreener": "0xD85532Bb5411eD64A4b0D7a4AC30D0e7822342F5",
+    "epochPublisher": "0xA177c22AaC30b847374dC462aC2538336C157d3d",
+    "workerPayer": "0x152Fb5437B5f99E5dEd96c7FFcb6C583dbAfB0e2",
+    "assetOwner": "0x3bFA4A66C9CB1a8ceBAd2D4Bd5F064BC8CB0311d"
+  },
+  "governance": {
+    "denialCorrectionApprover": "0x5906d13B6FA796d6BD16f996FE25C03B01c6244f",
+    "assetRecoveryProposer": "0x5b7260369DB6EB43C9be62036788326430d3FAeC",
+    "assetRecoveryApprover": "0x9172842406A337E535FA086DCBc42ef8848884Ad"
+  },
+  "contracts": {
+    "EvmV1Decoder":      "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "ProofmarkASC":      "0x8c29A966a30d9083B760451245aECEbBE1E2d2F4",
+    "ProofmarkRegistry": "0x5752897b1edaD4fe50908B38c4ddA5f376a43110",
+    "ComplianceSource":  "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "GatedRwaNote":      "0x5C16b3A87fa909b8BDb899476D049a85A56380B5"
+  },
+  "demo": {
+    "productionPolicyId": 1,
+    "pilotPolicyId": 2,
+    "notePolicyId": 2
+  }
+}
