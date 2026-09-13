@@ -40,6 +40,7 @@ export default function OnChain() {
 function Header() {
   return (
     <PageHeader
+      eyebrow="On-chain status"
       title="Wallet lookup"
       lede="Check a wallet’s verification status and service requirements."
       aside={<Tag tone="gray">Creditcoin testnet</Tag>}
@@ -51,17 +52,17 @@ function WalletSearch({ current }: { current: string | null }) {
   return (
     <div className="panel mb-6 p-5 sm:p-6">
       <form action="/onchain" method="get" role="search" aria-label="Wallet lookup">
-        <label htmlFor="wallet-address" className="mb-2 block text-sm font-semibold text-fg-strong">Wallet address</label>
+        <label htmlFor="wallet-address" className="index mb-2 block text-fg-muted">Wallet address</label>
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="relative min-w-0 flex-1">
-            <Icon name="search" size={19} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-fg-muted" />
+            <Icon name="search" size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-subtle" />
             <input key={current ?? 'sample'} id="wallet-address" name="subject" defaultValue={current ?? ''}
               required pattern="0x[a-fA-F0-9]{40}" maxLength={42} autoComplete="off" spellCheck={false}
               aria-describedby="wallet-format" placeholder="Enter a wallet address, starting with 0x"
-              className="h-12 w-full rounded-md border border-line-strong bg-sunk pl-11 pr-4 text-sm text-fg-strong placeholder:text-fg-muted focus:border-mint" />
+              className="mono h-10 w-full rounded-md border border-line-strong bg-sunk pl-10 pr-4 text-fg-strong placeholder:font-sans placeholder:text-[13px] placeholder:text-fg-subtle focus:border-mint focus:shadow-[0_0_0_3px_var(--mint-tint)] focus:outline-none" />
           </div>
-          <button type="submit" className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-mint px-7 text-sm font-semibold text-mint-fg transition-colors hover:bg-mint-hover">
-            Look up wallet<Icon name="arrow" size={16} />
+          <button type="submit" className="btn btn-md btn-primary">
+            Look up wallet<Icon name="arrow" size={14} />
           </button>
         </div>
         <span id="wallet-format" className="sr-only">Use a 42-character wallet address: 0x followed by 40 hexadecimal characters.</span>
@@ -96,17 +97,17 @@ function Loading() {
 
 function SubjectTabs({ current }: { current: string | null }) {
   return (
-    <nav className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" aria-label="Sample wallets">
-      <span className="text-fg-muted">Sample wallets</span>
+    <nav className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1" aria-label="Sample wallets">
+      <span className="index">Sample wallets</span>
       {SUBJECTS.map(s => {
         const active = (s.subject ?? null) === current;
         return (
           <Link key={s.key} aria-current={active ? 'page' : undefined}
             href={s.subject ? `/onchain?subject=${s.subject}` : '/onchain'}
-            className={`inline-flex min-h-8 items-center gap-1 font-medium transition-colors ${
+            className={`index inline-flex min-h-8 items-center gap-1.5 transition-colors ${
               active ? 'text-mint' : 'text-fg-muted hover:text-mint'}`}>
             {s.label}
-            <Icon name="chevron" size={12} />
+            <Icon name="arrow" size={11} />
           </Link>
         );
       })}
@@ -139,7 +140,7 @@ function PolicyCard({ p }: { p: Policy }) {
     <div className="panel flex flex-col overflow-hidden" data-policy={p.name} data-result={!explained ? 'UNCONFIRMED' : p.verified ? 'PASS' : 'FAIL'}>
       <div className="flex items-start justify-between gap-3 px-5 pt-5">
         <div className="min-w-0">
-          <h3 className="text-base font-semibold leading-6 text-fg-strong">{title}</h3>
+          <h3 className="display text-[17px] leading-6">{title}</h3>
         </div>
         <Tag tone={!explained ? 'warn' : p.verified ? 'ok' : 'bad'} size="lg">{!explained ? 'Unconfirmed' : p.verified ? 'Requirements met' : 'Not met'}</Tag>
       </div>
@@ -158,7 +159,7 @@ function PolicyCard({ p }: { p: Policy }) {
         })}
       </ul>
       <details className="mt-auto border-t border-line px-5 py-3">
-        <summary className="cursor-pointer text-xs font-medium text-fg-muted hover:text-fg-strong">Policy details</summary>
+        <summary className="index cursor-pointer text-fg-muted hover:text-fg-strong">Policy details</summary>
         <p className="mt-3 text-xs leading-5 text-fg-muted">Registry response: CHAIN {p.verified ? 'TRUE' : 'FALSE'}. State-based diagnostic, not a contract reason code. {p.warning}</p>
         {p.reasonCodes.length > 0 && <ul className="mt-2 space-y-1 text-xs leading-5 text-fg-muted">{p.reasonCodes.map(code => <li key={code}>{REASONS[code] ?? code}</li>)}</ul>}
         <div className="mono mt-2 text-fg-muted">policy #{p.id} · schema {p.policySchemaVersion ?? 'unconfirmed'} · kind {p.kind ?? 'unconfirmed'} · {p.frozen ? 'frozen' : 'mutable'}</div>
@@ -276,10 +277,10 @@ function OnChainView() {
       <Header />
       <WalletSearch current={subject} />
       <div role="alert" className="panel flex flex-col items-center px-6 py-12 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warn-tint text-warn"><Icon name="warning" size={24} /></div>
-        <h2 className="text-xl font-semibold text-fg-strong">Verification status unavailable</h2>
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md border border-warn/25 bg-warn-tint text-warn"><Icon name="warning" size={22} /></div>
+        <h2 className="display text-[22px] leading-7">Verification status unavailable</h2>
         <p className="mt-2 max-w-md text-sm leading-6 text-fg-muted">We couldn’t retrieve a current result for this wallet. Try again in a moment.</p>
-        <button aria-label="Retry observation" className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-mint px-5 text-sm font-semibold text-mint-fg hover:bg-mint-hover" onClick={() => setRefresh(n => n + 1)}>Try again</button>
+        <button aria-label="Retry observation" className="btn btn-md btn-primary mt-5" onClick={() => setRefresh(n => n + 1)}>Try again</button>
         <details className="mt-5 max-w-xl text-xs text-fg-muted"><summary className="cursor-pointer">Error details</summary><p className="mt-2 break-words">{err}</p></details>
       </div>
     </>
@@ -302,29 +303,29 @@ function OnChainView() {
       <section aria-label="Wallet verification result" className="panel overflow-hidden">
         <div className="flex flex-wrap items-start justify-between gap-5 p-5 sm:p-6">
           <div className="flex min-w-0 items-start gap-4">
-            <div className={`hidden h-12 w-12 shrink-0 items-center justify-center rounded-full sm:flex ${statusTone === 'ok' ? 'bg-ok-tint text-ok' : statusTone === 'bad' ? 'bg-bad-tint text-bad' : statusTone === 'warn' ? 'bg-warn-tint text-warn' : 'bg-surface-2 text-fg-muted'}`}>
-              <Icon name={statusTone === 'bad' || statusTone === 'warn' ? 'warning' : m.status === 0 ? 'wallet' : 'shield'} size={25} />
+            <div className={`hidden h-12 w-12 shrink-0 items-center justify-center rounded-md border sm:flex ${statusTone === 'ok' ? 'border-ok/25 bg-ok-tint text-ok' : statusTone === 'bad' ? 'border-bad/25 bg-bad-tint text-bad' : statusTone === 'warn' ? 'border-warn/25 bg-warn-tint text-warn' : 'border-line bg-canvas-2 text-fg-muted'}`}>
+              <Icon name={statusTone === 'bad' || statusTone === 'warn' ? 'warning' : m.status === 0 ? 'wallet' : 'shield'} size={22} />
             </div>
             <div className="min-w-0">
-              <div className="mb-1 text-xs text-fg-muted">Verification status</div>
-              <h2 className="text-xl font-semibold tracking-tight text-fg-strong sm:text-2xl">{statusLabel}</h2>
+              <div className="index mb-1.5">Verification status</div>
+              <h2 className="display text-[22px] leading-7 sm:text-[26px] sm:leading-8">{statusLabel}</h2>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-fg-muted">
                 <Hash value={d.subject} href={cc3Address(d.subject)} head={10} tail={6} />
                 {m.regime === 2 && <Tag tone="gray">Sandbox credential</Tag>}
               </div>
             </div>
           </div>
-          <button aria-label="Refresh observation" className="inline-flex h-9 items-center justify-center rounded-md border border-line-strong px-4 text-xs font-semibold text-fg-strong transition-colors hover:bg-surface-2" onClick={() => setRefresh(n => n + 1)}>Refresh</button>
+          <button aria-label="Refresh observation" className="btn btn-sm btn-secondary" onClick={() => setRefresh(n => n + 1)}>Refresh</button>
         </div>
         {m.status === 0 && <p className="px-5 pb-5 text-sm text-fg-muted sm:px-6">This wallet has no verification credential on this network.</p>}
         <div className="grid grid-cols-3 gap-px border-t border-line bg-line">
-          <div className="bg-surface px-3 py-4 sm:px-6"><p className="text-xs text-fg-muted">Country</p><p className="mt-1 text-[13px] font-semibold text-fg-strong sm:text-sm">{ISO_NUMERIC[m.jurisdiction]?.split(' · ')[1] ?? (m.jurisdiction || 'Not available')}</p></div>
-          <div className="bg-surface px-3 py-4 sm:px-6"><p className="text-xs text-fg-muted">Level</p><p className="mt-1 text-[13px] font-semibold text-fg-strong sm:text-sm">{m.status === 0 ? 'Not available' : `Level ${m.assurance}`}</p></div>
-          <div className="bg-surface px-3 py-4 sm:px-6"><p className="text-xs text-fg-muted">Expires</p><p className="mt-1 text-[13px] font-semibold text-fg-strong sm:text-sm">{m.expiry ? ts(m.expiry).slice(0, 10) : 'Not available'}</p></div>
+          <div className="bg-surface px-3 py-4 sm:px-6"><p className="index">Country</p><p className="mt-1.5 text-[13px] font-semibold text-fg-strong sm:text-sm">{ISO_NUMERIC[m.jurisdiction]?.split(' · ')[1] ?? (m.jurisdiction || 'Not available')}</p></div>
+          <div className="bg-surface px-3 py-4 sm:px-6"><p className="index">Level</p><p className="mt-1.5 text-[13px] font-semibold text-fg-strong sm:text-sm">{m.status === 0 ? 'Not available' : `Level ${m.assurance}`}</p></div>
+          <div className="bg-surface px-3 py-4 sm:px-6"><p className="index">Expires</p><p className="mt-1.5 text-[13px] font-semibold text-fg-strong sm:text-sm">{m.expiry ? ts(m.expiry).slice(0, 10) : 'Not available'}</p></div>
         </div>
       </section>
 
-      <Section title="Service requirements" aside={<span>Checked {ts(d.observation.timestamp)}</span>}>
+      <Section index="01" title="Service requirements" aside={<span className="mono">Checked {ts(d.observation.timestamp)}</span>}>
         <div className="grid gap-4 md:grid-cols-2">
           {d.policies.map(p => <PolicyCard key={p.id} p={p} />)}
         </div>
@@ -335,7 +336,7 @@ function OnChainView() {
       )}
 
       <details className="panel mt-6 px-5 pb-1 sm:px-6">
-        <summary className="cursor-pointer py-4 text-sm font-semibold text-fg-strong">Credential details</summary>
+        <summary className="index cursor-pointer py-4 text-fg-strong hover:text-mint">Credential details</summary>
         <div className="pb-5">
         <DetailList>
           <DetailRow label="Subject" hint="The wallet the mark is bound to"><Hash value={d.subject} href={cc3Address(d.subject)} full /></DetailRow>
@@ -378,7 +379,7 @@ function OnChainView() {
       </details>
 
       <details className="panel mt-3 px-5 pb-1 sm:px-6">
-        <summary className="cursor-pointer py-4 text-sm font-semibold text-fg-strong">Network &amp; technical details</summary>
+        <summary className="index cursor-pointer py-4 text-fg-strong hover:text-mint">Network &amp; technical details</summary>
         <div className="pb-5">
           <DetailList>
             <DetailRow label="Network">Creditcoin CC3 Testnet</DetailRow>

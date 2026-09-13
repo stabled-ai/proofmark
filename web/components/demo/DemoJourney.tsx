@@ -103,12 +103,12 @@ function TrainingCard({ result, scenario, onScenario, busy }: { result: Sanction
   return (
     <article className="panel overflow-hidden" data-demo-training={result.trainingDecision}>
       <div className="flex items-center justify-between gap-3 border-b border-line px-6 py-4">
-        <h2 className="font-semibold text-fg-strong">Sample screening</h2>
+        <h2 className="display text-[17px] leading-6">Sample screening</h2>
         <Icon name="search" size={18} className="text-mint" />
       </div>
       <div className="p-6">
-        <p className="text-xs text-fg-muted">Sample identity</p>
-        <p className="mt-1 text-lg font-semibold text-fg-strong">{result.subject.name}</p>
+        <p className="index">Sample identity</p>
+        <p className="display mt-1.5 text-[20px] leading-7">{result.subject.name}</p>
         <p className="mt-1 text-[13px] text-fg-muted">{result.subject.dateOfBirth || 'Birth date not provided'}{result.subject.nationality ? ` · ${result.subject.nationality}` : ''}</p>
         <div className="mt-5 grid gap-2 sm:grid-cols-2">
           {SCENARIOS.map(item => (
@@ -118,7 +118,7 @@ function TrainingCard({ result, scenario, onScenario, busy }: { result: Sanction
             </button>
           ))}
         </div>
-        <div className="mt-5 border-t border-line pt-5"><Status tone={tone} className="text-lg">{outcome}</Status><p className="mt-2 text-[13px] leading-5 text-fg-muted">{explanation}</p></div>
+        <div className="mt-5 border-t border-line pt-5"><Status tone={tone} className="display text-[20px] leading-7">{outcome}</Status><p className="mt-2 text-[13px] leading-5 text-fg-muted">{explanation}</p></div>
       </div>
     </article>
   );
@@ -131,18 +131,18 @@ function CredentialCard({ data }: { data: ChainState }) {
   return (
     <article className="panel overflow-hidden" data-demo-chain="loaded">
       <div className="flex items-center justify-between gap-3 border-b border-line px-6 py-4">
-        <h2 className="font-semibold text-fg-strong">Testnet credential</h2>
+        <h2 className="display text-[17px] leading-6">Testnet credential</h2>
         <Icon name="shield" size={18} className="text-mint" />
       </div>
       <div className="p-6">
-        <div className="rounded-md border border-mint/20 bg-mint-tint p-5"><div className="flex items-center justify-between gap-3"><span className="text-sm font-semibold text-mint">Proofmark</span><Status tone={tone}>{status.charAt(0) + status.slice(1).toLowerCase()}</Status></div><div className="mt-8 text-xs text-fg-muted">Credential holder</div><div className="mt-1 text-fg-strong"><Hash value={data.subject} head={8} tail={6} /></div></div>
-        <div className="mt-5"><span className="text-xs font-medium text-fg-muted">Completed checks</span><div className="mt-2 flex flex-wrap gap-1.5">{methods.length ? methods.map(method => <Tag key={method.key} tone="mint">{method.label}</Tag>) : <span className="text-[13px] text-fg-muted">No checks recorded.</span>}</div></div>
-        <details className="mt-5 border-t border-line pt-4"><summary className="cursor-pointer text-xs font-medium text-fg-muted">Credential details</summary>
+        <div className="rounded-md border border-mint/20 bg-mint-tint p-5"><div className="flex items-center justify-between gap-3"><span className="text-sm font-semibold text-mint">Proofmark</span><Status tone={tone}>{status.charAt(0) + status.slice(1).toLowerCase()}</Status></div><div className="index mt-8">Credential holder</div><div className="mt-1 text-fg-strong"><Hash value={data.subject} head={8} tail={6} /></div></div>
+        <div className="mt-5"><span className="index">Completed checks</span><div className="mt-2 flex flex-wrap gap-1.5">{methods.length ? methods.map(method => <Tag key={method.key} tone="mint">{method.label}</Tag>) : <span className="text-[13px] text-fg-muted">No checks recorded.</span>}</div></div>
+        <details className="mt-5 border-t border-line pt-4"><summary className="index cursor-pointer text-fg-muted hover:text-fg-strong">Credential details</summary>
         <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line text-[13px]">
           {[
             ['Assurance', `Level ${data.mark.assurance}`], ['Environment', data.mark.regime === 2 ? 'Sandbox' : `Regime ${data.mark.regime}`],
             ['Jurisdiction', data.mark.jurisdiction === 410 ? 'South Korea' : String(data.mark.jurisdiction)], ['Origin', data.mark.origin === 2 ? 'Roster' : data.mark.origin === 1 ? 'Direct' : 'None'],
-          ].map(([label, value]) => <div key={label} className="bg-surface-2 p-3"><dt className="text-xs text-fg-muted">{label}</dt><dd className="mt-1 font-medium text-fg-strong">{value}</dd></div>)}
+          ].map(([label, value]) => <div key={label} className="bg-surface-2 p-3"><dt className="index">{label}</dt><dd className="mt-1.5 font-medium text-fg-strong">{value}</dd></div>)}
         </dl>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3"><Tag tone="gray" mono>{data.mark.methodsHex}</Tag><a href={cc3Block(data.blockNumber)} target="_blank" rel="noreferrer" className="link inline-flex items-center gap-1.5 text-xs">View on explorer<Icon name="external" size={12} /></a></div>
         </details>
@@ -158,14 +158,14 @@ function PolicyCard({ policy }: { policy: Policy }) {
   return (
     <article className="panel flex flex-col overflow-hidden" data-demo-policy={policy.id} data-demo-verdict={result.label}>
       <div className="flex items-start justify-between gap-3 border-b border-line px-6 py-4">
-        <h3 className="min-w-0 font-semibold text-fg-strong">{policy.name === 'KR VASP production' ? 'Korea · production' : policy.name === 'KR sandbox pilot' ? 'Korea · sandbox' : policy.name}</h3>
+        <h3 className="display min-w-0 text-[17px] leading-6">{policy.name === 'KR VASP production' ? 'Korea · production' : policy.name === 'KR sandbox pilot' ? 'Korea · sandbox' : policy.name}</h3>
         <Tag tone={result.tone} size="lg">{result.reliable ? policy.verified ? 'Eligible' : 'Not eligible' : 'Needs review'}</Tag>
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className={`text-[13px] leading-5 ${result.reliable && !policy.verified ? 'text-bad' : 'text-fg'}`}>{reason.human}</p>
         {missing.length > 0 && <div className="mt-3 flex flex-wrap gap-1.5">{missing.map(method => <Tag key={method.key} tone="bad">Missing · {method.label}</Tag>)}</div>}
         {!policy.verified && <p className="mt-3 text-[13px] leading-5 text-fg-muted">{reason.action}</p>}
-        <details className="mt-auto pt-5"><summary className="cursor-pointer text-xs font-medium text-fg-muted">Requirements</summary>
+        <details className="mt-auto pt-5"><summary className="index cursor-pointer text-fg-muted hover:text-fg-strong">Requirements</summary>
         {reasonDetails.length > 0 && <p className="mt-3 text-xs leading-5 text-fg-muted">{reasonDetails.join(' ')}</p>}
         <p className="mt-3 text-xs leading-5 text-fg-muted">Policy #{policy.id} · {policy.frozen ? 'Fixed requirements' : 'Requirements may change'} · {policy.requireRoster ? 'Current roster required' : 'Direct credential'}</p>
         <p className="mt-2 text-xs leading-5 text-fg-muted">Minimum assurance: {policy.minAssurance} · Regime: {policy.requiredRegime || 'Any'} · Maximum age: {policy.maxAge ? `${Math.round(policy.maxAge / 86400)} days` : 'No limit'}</p>
@@ -241,17 +241,17 @@ export function DemoJourney() {
 
   return (
     <>
-      <PageHeader title="Explore Proofmark" lede="See how identity checks become application access." aside={<Tag tone="mint">Interactive demo</Tag>} />
+      <PageHeader eyebrow="Interactive demo" title="Explore Proofmark" lede="See how identity checks become application access." aside={<Tag tone="mint">Sample data</Tag>} />
       <p className="mb-5 flex items-start gap-2 text-xs leading-5 text-fg-muted"><Icon name="info" size={15} className="mt-0.5 shrink-0" />Demo uses sample identities and a separate testnet credential. It does not verify your identity or grant access.</p>
       {!started && (
         <section className="panel overflow-hidden" aria-labelledby="demo-start-title">
           <div className="grid md:grid-cols-[1.05fr_1fr]">
-            <div className="flex flex-col justify-between bg-mint-tint p-8 sm:p-10"><div className="flex size-14 items-center justify-center rounded-xl bg-mint text-white"><Icon name="shield" size={29} /></div><div className="mt-12"><h2 id="demo-start-title" className="max-w-sm text-[32px] font-semibold leading-[1.15] tracking-tight text-fg-strong">One credential.<br /><span className="text-mint">Clear decisions.</span></h2><p className="mt-4 max-w-xs text-sm leading-6 text-fg-muted">Try a screening. Explore a credential. Compare access requirements.</p></div></div>
+            <div className="relative flex flex-col justify-between overflow-hidden border-b border-line bg-canvas-2 p-8 sm:p-10 md:border-b-0 md:border-r"><div className="eyebrow">Walkthrough</div><div className="mt-12"><h2 id="demo-start-title" className="display max-w-sm text-[36px] leading-[1.05] sm:text-[40px]">One credential.<br /><span className="glow">Clear decisions.</span></h2><p className="mt-4 max-w-xs text-sm leading-6 text-fg-muted">Try a screening. Explore a credential. Compare access requirements.</p></div></div>
             <div className="flex flex-col justify-center p-8 sm:p-10"><ol className="space-y-7">{[
               ['1', 'Try a sample identity', 'Compare a full match, a similar name, and a different birth date.'],
               ['2', 'Explore a credential', 'See which verification checks have been completed.'],
               ['3', 'Compare application access', 'Understand why the same credential can produce different results.'],
-            ].map(([number, title, copy]) => <li key={number} className="flex gap-4"><span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold text-mint">{number}</span><div><h3 className="text-sm font-semibold text-fg-strong">{title}</h3><p className="mt-1 text-[13px] leading-5 text-fg-muted">{copy}</p></div></li>)}</ol><Button onClick={() => run()} disabled={busy} className="mt-8 w-full">Start demo<Icon name="arrow" size={16} /></Button><p className="mt-3 text-center text-xs text-fg-muted">No wallet connection needed</p></div>
+            ].map(([number, title, copy]) => <li key={number} className="flex gap-4"><span className="index mt-0.5 w-7 shrink-0 text-mint">0{number}</span><div><h3 className="text-sm font-semibold text-fg-strong">{title}</h3><p className="mt-1 text-[13px] leading-5 text-fg-muted">{copy}</p></div></li>)}</ol><Button onClick={() => run()} disabled={busy} className="mt-8 w-full">Start demo<Icon name="arrow" size={16} /></Button><p className="mt-3 text-center text-xs text-fg-muted">No wallet connection needed</p></div>
           </div>
         </section>
       )}
@@ -262,8 +262,8 @@ export function DemoJourney() {
       </div>
       {chain && (
         <>
-          <Section title="Application access" lede="Each application sets its own verification requirements."><div className="grid gap-4 lg:grid-cols-2">{chain.policies.map(policy => <PolicyCard key={policy.id} policy={policy} />)}</div></Section>
-          <details className="panel mt-5 overflow-hidden"><summary className="cursor-pointer px-6 py-4 text-sm font-medium text-fg-muted">Network details</summary><div className="space-y-4 border-t border-line p-5"><EvidenceTimeline data={chain} /><Freshness data={chain} /><p className="flex flex-wrap items-center gap-2 text-xs text-fg-muted">Block reference <Hash value={chain.observation.blockHash} head={8} tail={6} /></p></div></details>
+          <Section index="03" title="Application access" lede="Each application sets its own verification requirements."><div className="grid gap-4 lg:grid-cols-2">{chain.policies.map(policy => <PolicyCard key={policy.id} policy={policy} />)}</div></Section>
+          <details className="panel mt-5 overflow-hidden"><summary className="index cursor-pointer px-6 py-4 text-fg-muted hover:text-fg-strong">Network details</summary><div className="space-y-4 border-t border-line p-5"><EvidenceTimeline data={chain} /><Freshness data={chain} /><p className="flex flex-wrap items-center gap-2 text-xs text-fg-muted">Block reference <Hash value={chain.observation.blockHash} head={8} tail={6} /></p></div></details>
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
             <Button variant="ghost" onClick={() => run(scenario)} disabled={busy}><Icon name="block" size={15} />Refresh results</Button>
             <div className="flex flex-wrap gap-2"><LinkButton href="/onchain">View credentials<Icon name="arrow" size={15} /></LinkButton>{/* Full navigation: provider CSP/camera permissions are document scoped. */}<LinkButton href="/verify/provider" variant="primary">Verify your identity<Icon name="arrow" size={15} /></LinkButton></div>

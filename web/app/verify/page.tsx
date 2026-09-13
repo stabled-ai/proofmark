@@ -344,7 +344,7 @@ export default function Verify() {
       </Band>
       {sampleMode && (
         <section aria-label="Synthetic sample scenarios" className="panel mb-6 p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-fg-strong">Choose a sample profile</h2>
+          <h2 className="display text-[20px] leading-7">Choose a sample profile</h2>
           <p className="mt-1.5 text-sm text-fg-muted">Explore the process without an ID or a bank account.</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {([['success', 'Matching details', 'Document and account details match.'], ['document-rejected', 'Rejected document', 'See what happens when an ID is declined.'], ['holder-mismatch', 'Account mismatch', 'Try an account with a different holder.']] as const).map(([scenario, label, description]) => (
@@ -618,10 +618,10 @@ function Step({ n, title, state, tag, children }: { n: number; title: string; st
     <section aria-labelledby={`verify-step-${n}`} className={`panel ${state === 'active' ? 'border-mint/40' : ''}`}>
       <details open={state !== 'locked'}>
       <summary className="flex min-h-20 cursor-pointer list-none flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 [&::-webkit-details-marker]:hidden sm:px-6">
-        <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${state === 'done' ? 'bg-ok-tint text-ok' : state === 'active' ? 'bg-mint text-mint-fg' : 'bg-surface-2 text-fg-muted'}`}>
-          {state === 'done' ? <Icon name="check" size={17} /> : n + 1}
+        <span className={`mono inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${state === 'done' ? 'bg-mint text-mint-fg' : state === 'active' ? 'border border-mint text-mint shadow-[0_0_12px_var(--mint-glow)]' : 'border border-line-strong text-fg-subtle'}`}>
+          {state === 'done' ? <Icon name="check" size={15} /> : `0${n + 1}`}
         </span>
-        <h2 id={`verify-step-${n}`} className="text-base font-semibold text-fg-strong">{title}</h2>
+        <h2 id={`verify-step-${n}`} className="display text-[17px] leading-6">{title}</h2>
         <span className="sr-only">{state === 'done' ? 'Completed' : state === 'active' ? 'Ready' : 'Waiting for previous steps'}</span>
         <span className="ml-auto flex items-center gap-2">
           {state === 'locked' && <Status tone={tone}>Up next</Status>}

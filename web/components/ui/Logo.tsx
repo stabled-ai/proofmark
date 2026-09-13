@@ -8,12 +8,11 @@ export function Mark({ size = 28, className }: { size?: number; className?: stri
   );
 }
 
-/** Wordmark inherits its context so it works on light and navy surfaces. */
-export function Wordmark({ compact: _compact = false }: { compact?: boolean }) {
-  void _compact;
+/** Wordmark in the display face, sized by its cap line. Inherits colour so it works on any surface. */
+export function Wordmark({ size = 20 }: { size?: number }) {
   return (
-    <span className="inline-flex items-baseline gap-1.5">
-      <span className="text-[23px] font-bold leading-none tracking-[-0.055em]">proofmark<span className="ml-0.5 text-[26px]">.</span></span>
+    <span className="display inline-block leading-none" style={{ fontSize: size, letterSpacing: '-0.04em' }}>
+      proofmark<span className="text-mint">.</span>
     </span>
   );
 }

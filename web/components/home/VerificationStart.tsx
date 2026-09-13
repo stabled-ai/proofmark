@@ -14,7 +14,7 @@ export function VerificationStart() {
   const selected = METHODS.find(item => item.id === method)!;
   return (
     <div className="verification-start">
-      <div className="verification-start-label"><Icon name="user" size={16} /> IDENTITY VERIFICATION</div>
+      <div className="eyebrow">Identity verification</div>
       <h2>Let’s get you verified.</h2>
       <p className="verification-start-intro">Choose your verification method to begin.</p>
       <fieldset className="verification-methods">
@@ -22,15 +22,15 @@ export function VerificationStart() {
         {METHODS.map(item => (
           <label key={item.id} className={`verification-method ${method === item.id ? 'selected' : ''}`}>
             <input type="radio" name="verification-method" value={item.id} checked={method === item.id} onChange={() => setMethod(item.id)} />
-            <Icon name={item.icon} size={23} className="method-icon" />
+            <Icon name={item.icon} size={20} className="method-icon" />
             <span className="flex-1"><span className="method-title">{item.title}</span><span className="method-description">{item.description}</span></span>
             <span className="method-radio" aria-hidden>{method === item.id && <span />}</span>
           </label>
         ))}
       </fieldset>
       {/* Full navigation loads the hosted provider's document-scoped permissions. */}
-      <LinkButton href={selected.href} variant="primary" className="w-full">Start verification <Icon name="arrow" size={17} /></LinkButton>
-      <p className="verification-start-footnote"><Icon name="wallet" size={14} /> Have your wallet and ID ready.</p>
+      <LinkButton href={selected.href} variant="primary" className="w-full">Start verification <Icon name="arrow" size={15} /></LinkButton>
+      <p className="verification-start-footnote"><Icon name="wallet" size={13} /> Have your wallet and ID ready</p>
     </div>
   );
 }

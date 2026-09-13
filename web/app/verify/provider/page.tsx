@@ -165,7 +165,7 @@ export default function ProviderVerification() {
         const current = bound.current; if (!current) throw new Error('Session expired');
         try { return await sdkToken(current); }
         catch { clear('Provider session renewal failed. Reconnect before continuing.'); throw new Error('Session unavailable'); }
-      }).withConf({ lang: 'en', theme: 'light' }).withOptions({ addViewportTag: false, adaptIframeHeight: true })
+      }).withConf({ lang: 'en', theme: 'dark' }).withOptions({ addViewportTag: false, adaptIframeHeight: true })
         .on('idCheck.onError', () => { setObservation(null); setError('Verification could not continue. Follow the instructions below or reconnect your wallet.'); }).build();
       sdk.current.launch('#sumsub-websdk-container');
     } catch { clear('The hosted SDK could not start. Reload this page and reconnect.'); }
@@ -178,11 +178,11 @@ export default function ProviderVerification() {
 
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
       <section aria-label="Identity verification" className="panel overflow-hidden">
-        <ol aria-label="Verification progress" className="grid grid-cols-3 border-b border-line bg-sunk/60 px-4 py-5 sm:px-7">
+        <ol aria-label="Verification progress" className="grid grid-cols-3 border-b border-line bg-canvas-2 px-4 py-5 sm:px-7">
           {['Connect wallet', 'Review consent', 'Verify identity'].map((label, index) => {
             const current = holder ? 2 : challenge ? 1 : 0;
-            return <li key={label} aria-current={index === current ? 'step' : undefined} className="flex items-center gap-2.5 text-xs font-medium sm:text-sm">
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs ${index <= current ? 'bg-mint text-mint-fg' : 'border border-line bg-surface text-fg-subtle'}`}>{index < current ? <Icon name="check" size={14} /> : index + 1}</span>
+            return <li key={label} aria-current={index === current ? 'step' : undefined} className="flex items-center gap-3 text-xs font-medium sm:text-[13px]">
+              <span className={`mono flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${index < current ? 'bg-mint text-mint-fg' : index === current ? 'border border-mint text-mint shadow-[0_0_12px_var(--mint-glow)]' : 'border border-line-strong text-fg-subtle'}`}>{index < current ? <Icon name="check" size={14} /> : `0${index + 1}`}</span>
               <span className={index === current ? 'text-fg-strong' : 'text-fg-muted'}>{label}</span>
             </li>;
           })}
@@ -191,21 +191,21 @@ export default function ProviderVerification() {
           <div role="status" aria-live="polite">{error && <Band tone="bad" className="mb-5">{error}</Band>}{busy && <p className="mb-5 text-sm text-fg-muted">Waiting for your wallet…</p>}</div>
           {!readiness ? <div className="py-14 text-center text-sm text-fg-muted">Checking availability…</div> : !readiness.configured ?
             <div className="py-8 sm:py-12">
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2 text-fg-muted"><Icon name="clock" size={27} /></div>
-              <h2 className="text-2xl font-semibold tracking-tight text-fg-strong">Verification is temporarily unavailable</h2>
+              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-md border border-line bg-canvas-2 text-fg-muted"><Icon name="clock" size={22} /></div>
+              <h2 className="display text-[26px] leading-8">Verification is temporarily unavailable</h2>
               <p className="mt-3 max-w-lg text-sm leading-6 text-fg-muted">Please try again later. You can explore the verification process with a sample profile in the meantime.</p>
               <div className="mt-7 flex flex-wrap gap-3"><LinkButton href="/demo" variant="primary">Explore the demo <Icon name="arrow" size={16} /></LinkButton><LinkButton href="/verify/provider">Try again</LinkButton></div>
             </div> : <>
               {readiness.testOnly && <Band tone="warn" className="mb-6">Use official Sumsub test documents only. Do not submit a real ID, selfie, or other personal data in this sandbox.</Band>}
               {!challenge && !accessToken && <div className="py-6 sm:py-10">
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-mint-tint text-mint"><Icon name="wallet" size={30} /></div>
-                <h2 className="text-2xl font-semibold tracking-tight text-fg-strong">Start with your wallet</h2>
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-md border border-mint/25 bg-mint-tint text-mint"><Icon name="wallet" size={22} /></div>
+                <h2 className="display text-[26px] leading-8">Start with your wallet</h2>
                 <p className="mt-3 max-w-md text-sm leading-6 text-fg-muted">Choose the wallet you want to verify. You will review and sign a consent message before sharing your documents.</p>
                 <Button className="mt-7 min-w-48" onClick={() => void act(connect)} disabled={busy}><Icon name="wallet" size={18} />Connect wallet</Button>
                 <p className="mt-3 text-xs text-fg-muted">Signing the message does not move funds or cost gas.</p>
               </div>}
               {challenge && <>
-                <h2 className="text-xl font-semibold text-fg-strong">Review and consent</h2>
+                <h2 className="display text-[22px] leading-7">Review and consent</h2>
                 <p className="mb-5 mt-2 text-sm text-fg-muted">Your wallet will sign the message below.</p>
                 <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-lg border border-line bg-sunk p-4 text-xs leading-5 text-fg" data-provider-consent>{challenge.message}</pre>
                 <label className="mt-5 flex items-start gap-3 rounded-lg border border-line p-4 text-sm leading-6 text-fg"><input type="checkbox" checked={consent} disabled={busy} onChange={event => setConsent(event.target.checked)} className="mt-1" /><span>I have reviewed the processing and retention notice in this message and agree to this verification flow.</span></label>
@@ -220,7 +220,7 @@ export default function ProviderVerification() {
 
       <aside className="grid gap-5">
         <div className="panel p-6">
-          <div className="mb-4 flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint-tint text-mint"><Icon name="shield" size={22} /></span><h2 className="font-semibold text-fg-strong">Before you begin</h2></div>
+          <div className="mb-4 flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-md border border-mint/25 bg-mint-tint text-mint"><Icon name="shield" size={18} /></span><h2 className="display text-[17px] leading-6">Before you begin</h2></div>
           <ul className="space-y-4 text-sm leading-6 text-fg-muted">
             <li className="flex gap-3"><Icon name="wallet" size={18} className="mt-1 shrink-0" /><span>Use a browser wallet such as MetaMask.</span></li>
             <li className="flex gap-3"><Icon name="user" size={18} className="mt-1 shrink-0" /><span>{readiness?.testOnly ? 'Have an official Sumsub test document ready.' : 'Follow Sumsub’s instructions for your document and identity check.'}</span></li>

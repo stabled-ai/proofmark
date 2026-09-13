@@ -19,8 +19,8 @@ export function Header() {
         {/* Full document navigation applies and removes provider-only camera permissions and CSP. */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/" className="brand-link" aria-label="Proofmark home">
-          <Mark size={30} />
-          <Wordmark />
+          <Mark size={26} />
+          <Wordmark size={20} />
         </a>
         <nav className="primary-nav" aria-label="Main navigation">
           {NAV.map(item => {
@@ -28,8 +28,8 @@ export function Header() {
             return <a key={item.href} href={item.href} aria-current={active ? 'page' : undefined}>{item.label}</a>;
           })}
         </nav>
-        <a href="/demo" className="header-demo" aria-current={path === '/demo' ? 'page' : undefined}>
-          Try the demo <Icon name="arrow" size={15} />
+        <a href="/demo" className="btn btn-sm btn-secondary header-demo" aria-current={path === '/demo' ? 'page' : undefined}>
+          Try the demo <Icon name="arrow" size={13} />
         </a>
       </div>
     </header>

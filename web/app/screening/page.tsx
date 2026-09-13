@@ -138,20 +138,21 @@ export default function Screening() {
   return (
     <>
       <PageHeader
+        eyebrow="Sanctions lists"
         title="Sanctions screening"
         lede="Check a person against global sanctions lists."
         aside={<LinkButton href="/verify">Verify identity<Icon name="arrow" size={15} /></LinkButton>}
       />
 
-      <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-fg-muted">
-        {Object.entries(LIST).map(([key, list]) => <span key={key} className="inline-flex items-center gap-1.5"><Icon name="shield" size={13} className="text-mint" />{list.label}</span>)}
-        {totalEntries ? <span className="sm:ml-auto">{totalEntries.toLocaleString()} records</span> : null}
+      <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2">
+        {Object.entries(LIST).map(([key, list]) => <span key={key} className="index inline-flex items-center gap-2.5 text-fg-muted"><span className="dot" />{list.label}</span>)}
+        {totalEntries ? <span className="mono text-fg-muted sm:ml-auto">{totalEntries.toLocaleString()} records</span> : null}
       </div>
 
       <div className="grid items-start gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
         <div>
           <form className="panel p-5 sm:p-6" onSubmit={event => { event.preventDefault(); if (!busy) void screen(); }}>
-            <h2 className="mb-5 text-base font-semibold text-fg-strong">New screening</h2>
+            <h2 className="display mb-5 text-[19px] leading-7">New screening</h2>
             <div className="grid grid-cols-2 gap-x-3 gap-y-4">
               {FIELDS.map(([k, label, hint]) => (
                 <div key={k} className={k === 'fullName' || k === 'dateOfBirth' ? 'col-span-2' : ''}>
@@ -172,7 +173,7 @@ export default function Screening() {
           </form>
 
           <details className="panel mt-4 overflow-hidden">
-            <summary className="cursor-pointer px-5 py-4 text-sm font-medium text-fg-muted">Use an example</summary>
+            <summary className="index cursor-pointer px-5 py-4 text-fg-muted hover:text-fg-strong">Use an example</summary>
             {PRESETS.map(p => (
               <button key={p.label} type="button" onClick={() => { setForm(p.v); screen(p.v); }} disabled={busy}
                 className="group flex w-full items-start gap-3 border-t border-divider px-5 py-3 text-left transition-colors hover:bg-surface-2 disabled:opacity-60">
@@ -189,8 +190,8 @@ export default function Screening() {
         <div className="min-w-0" aria-live="polite" aria-busy={busy}>
           {!res && (
             <div className="panel flex min-h-[460px] flex-col items-center justify-center px-6 text-center">
-              <div className={`flex size-16 items-center justify-center rounded-full bg-mint-tint text-mint ${busy ? 'animate-pulse' : ''}`}><Icon name="search" size={27} /></div>
-              <div className="mt-5 text-lg font-semibold text-fg-strong">{busy ? 'Checking for matches' : 'Your results will appear here'}</div>
+              <div className={`flex size-14 items-center justify-center rounded-md border border-mint/25 bg-mint-tint text-mint ${busy ? 'animate-pulse' : ''}`}><Icon name="search" size={24} /></div>
+              <div className="display mt-5 text-[20px] leading-7">{busy ? 'Checking for matches' : 'Your results will appear here'}</div>
               <p className="mt-1 max-w-xs text-[13px] leading-5 text-fg-muted">
                 {busy ? 'Searching the selected sanctions lists.' : 'Enter a full name to begin. Add a birth date or wallet address for a more precise search.'}
               </p>
@@ -200,7 +201,7 @@ export default function Screening() {
           {res && (
             <>
               <div data-screening-decision={res.decision} className={`panel border-l-[3px] p-6 ${DECISION[res.decision].edge}`}>
-                <div className="flex items-center justify-between gap-3"><Status tone={DECISION[res.decision].tone} className="text-xl leading-7">{DECISION[res.decision].label}</Status><span className="text-xs text-fg-muted">{res.elapsedMs} ms</span></div>
+                <div className="flex items-center justify-between gap-3"><Status tone={DECISION[res.decision].tone} className="display text-[22px] leading-7">{DECISION[res.decision].label}</Status><span className="mono text-fg-muted">{res.elapsedMs} ms</span></div>
                 <p className="mt-2 text-sm leading-6 text-fg-muted">{DECISION[res.decision].text}</p>
               </div>
 
@@ -236,9 +237,9 @@ export default function Screening() {
               </Section>
 
               <details className="panel mt-5 overflow-hidden">
-                <summary className="cursor-pointer px-5 py-4 text-sm font-medium text-fg-muted">Screening details</summary>
+                <summary className="index cursor-pointer px-5 py-4 text-fg-muted hover:text-fg-strong">Screening details</summary>
                 <div className="border-t border-line p-5">
-                <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-fg-muted"><span>Risk level {res.riskBand}/5</span>{res.reviewReason && <Tag tone="gray">{res.reviewReason.replaceAll('_', ' ').toLowerCase()}</Tag>}<Tag tone="gray" mono>{res.methodsHex}</Tag></div>
+                <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-fg-muted"><span className="index text-fg-muted">Risk level {res.riskBand}/5</span>{res.reviewReason && <Tag tone="gray">{res.reviewReason.replaceAll('_', ' ').toLowerCase()}</Tag>}<Tag tone="gray" mono>{res.methodsHex}</Tag></div>
                 <div className="mb-5 overflow-x-auto"><table className="tbl"><thead><tr><th>Check</th><th className="w-32">Status</th></tr></thead><tbody>{res.methodGroups.map(g => <Group key={g.group} group={g} />)}</tbody></table></div>
                 <DetailList>
                   <DetailRow label="Reference"><Hash value={res.evidenceDigest} full /></DetailRow>
