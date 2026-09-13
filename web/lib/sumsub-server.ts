@@ -78,9 +78,14 @@ function required(name: string): string {
 
 export function sumsubRuntime(): { client: SumsubClient; store: SumsubStateStore } {
   if (built) return built;
-  if (env('KYC_DEMO') === '1') throw new ConfigError('real Sumsub processing is disabled while KYC_DEMO is enabled', ['KYC_DEMO']);
   const environment = required('SUMSUB_ENVIRONMENT');
   if (environment !== 'sandbox' && environment !== 'production') throw new ConfigError('SUMSUB_ENVIRONMENT must be sandbox or production', ['SUMSUB_ENVIRONMENT']);
+  // The public demo may expose both fictional guided samples and Sumsub's official Sandbox test
+  // documents. Never let KYC_DEMO weaken the boundary around production Sumsub processing.
+  if (env('KYC_DEMO') === '1' && (environment !== 'sandbox' || env('SUMSUB_SANDBOX_TEST_MODE') !== '1')) {
+    throw new ConfigError('Sumsub production processing is disabled while KYC_DEMO is enabled',
+      ['KYC_DEMO', 'SUMSUB_ENVIRONMENT', 'SUMSUB_SANDBOX_TEST_MODE']);
+  }
   const prefix = environment === 'sandbox' ? 'SUMSUB_SANDBOX' : 'SUMSUB_PRODUCTION';
   const appToken = required(`${prefix}_APP_TOKEN`), secretKey = required(`${prefix}_SECRET_KEY`);
   const webhookSecret = required(`${prefix}_WEBHOOK_SECRET`), levelName = required(`${prefix}_LEVEL_NAME`);
