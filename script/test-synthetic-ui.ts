@@ -17,7 +17,7 @@ test('rendered synthetic samples fill the API flow, distinguish rejection, reset
   t.after(async () => { if (app.exitCode === null) { app.kill('SIGTERM'); await new Promise(r => app.once('exit', r)); } });
   const base = `http://127.0.0.1:${port}`;
   for (let n = 0; ; n++) {
-    try { if ((await fetch(base + '/verify')).ok) break; throw new Error('not ready'); }
+    try { if ((await fetch(base + '/verify/sandbox')).ok) break; throw new Error('not ready'); }
     catch { if (app.exitCode !== null || n >= 100) throw new Error('local Next build did not start'); await delay(100); }
   }
   const browser = await chromium.launch({ headless: true }); t.after(() => browser.close());
@@ -114,7 +114,7 @@ test('rendered synthetic samples fill the API flow, distinguish rejection, reset
     }
     throw new Error('unexpected API action ' + path);
   });
-  await page.goto(base + '/verify'); const samples = page.getByRole('region', { name: 'Synthetic sample scenarios' });
+  await page.goto(base + '/verify/sandbox'); const samples = page.getByRole('region', { name: 'Synthetic sample scenarios' });
   await samples.waitFor(); assert.match(await page.locator('body').innerText(), /do not enter real personal information/);
   const connect = page.getByRole('button', { name: 'Connect and sign', exact: true });
   assert.equal(await connect.isDisabled(), true);
@@ -310,7 +310,7 @@ test('rendered synthetic samples fill the API flow, distinguish rejection, reset
       return reply({ address: wallet, walletProof: 'synthetic-proof', requestId: walletRequestId,
         serverTime, walletExpiresAt: serverTime + 1800000 });
     });
-    await waitingPage.goto(base + '/verify');
+    await waitingPage.goto(base + '/verify/sandbox');
     await waitingPage.getByRole('button', { name: 'Matching details' }).click();
     await waitingPage.getByRole('status').filter({ hasText: 'Profile loaded.' }).waitFor();
     await waitingPage.getByRole('checkbox').check(); await waitingPage.getByRole('button', { name: 'Connect and sign', exact: true }).click();
