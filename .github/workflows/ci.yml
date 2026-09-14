@@ -121,6 +121,10 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@908c540300062bd5a7e473851cdb4282204cee09 # v1
         with:
           version: v1.7.1
+      - run: bash aml/fetch-lists.sh
+        working-directory: .
+      - run: npx tsx aml/build-index.ts
+        working-directory: .
       - run: npm run build
         env:
           NEXT_PUBLIC_CC3_RPC: https://rpc.cc3-testnet.creditcoin.network
