@@ -1,0 +1,158 @@
+{
+  "sourceSnapshot": {
+    "version": 2,
+    "method": "receipt-trie-verified-independent-headers-and-getLogs",
+    "trust": "independent-finalized-header-rpc-plus-cryptographic-receipts-root",
+    "chainId": "11155111",
+    "source": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+    "deploymentTx": "0x1eb9cfb389f42294c68812a7377aaed4e4506231ea51b6e4781a1a06a059e34a",
+    "deploymentBlock": 11698674,
+    "deploymentBlockHash": "0xdde0f734bd150bc5bcf6dccaa1badfda5bb5cb969a235aede14187c1d381b178",
+    "cutoffBlock": 11699149,
+    "cutoffBlockHash": "0xf820b0a53f7fc77735c2f03f83fe130d727d78c75cd4ce01cd551060f259b59d",
+    "cutoffTimestamp": 1789342560,
+    "confirmations": 12,
+    "blocks": 476,
+    "receipts": 56123,
+    "sourceLogs": 11,
+    "headersDigest": "0xfcb6981944681bb66a96fd510812d94756d3dbcfa76e753954d3a24680f5cf14",
+    "blocksDigest": "0x1067f5440ff5f707ea132adf1796d75bca18e25745d1341739dd8eeaf83d832b",
+    "logsDigest": "0xc0f9c4299399711461b5e0cc95cba248ac1d1ef3f93e6c461f3cb458a76c3343",
+    "entriesDigest": "0xd1a5e2070dfafbb9c05734ebd0189d0ad0ff2303d6a8edd3271762614c31a398",
+    "root": "0xda906e635e6f61cab7c00984c4c701bf00ff0f24951e877bdcde1570d591250c"
+  },
+  "rosterAuthVersion": 1,
+  "approvedIssuers": [
+    "0x5097627b6ec96a30b473c94cb05c1c21d36fd2f8"
+  ],
+  "epochSchemaVersion": 2,
+  "sourceCutoff": 1789342560,
+  "snapshotId": "0x047d73eae38718fc4e28a2b15f0fb323c1cfcb55785f500587077ccd11921ebe",
+  "publishedAt": 1789343736,
+  "rosterFormatVersion": 2,
+  "epoch": 2,
+  "root": "0xda906e635e6f61cab7c00984c4c701bf00ff0f24951e877bdcde1570d591250c",
+  "listVersion": 75330538,
+  "validUntil": 1789428960,
+  "validUntilIso": "2026-09-14T23:36:00Z",
+  "validDays": 1,
+  "entryCount": 4,
+  "entries": [
+    {
+      "subject": "0x4816B6e3Acb775f65Da888f185f708E2C8D7a3e2",
+      "attrs": "0x01030002019a00090027006aa71db8006c885138000000000000000000000000",
+      "claimsRoot": "0xd2cfdc133ad35c3de73947ed9a0e4d76d67da48d5d5e5da154ff340d14d6e194",
+      "evidenceHash": "0x7c7751e8f457fa5152fb86da5245f72a1d12c5df445e80c1892d174cb69dc437",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    },
+    {
+      "subject": "0xaAbBc92d9580d15bAEe4035f2315eF92ad0A119b",
+      "attrs": "0x01030002019a00090027006aa7302b006c8863ab000000000000000000000000",
+      "claimsRoot": "0xcc64f0c2a8ff689ad7af4e1f222b9bb91da9435b3c9077198a7a72b01d7fac91",
+      "evidenceHash": "0x7bd0d5fb7dabe9525a7a8814fb17f427e8d043cb94fea4297dbdd34ffe388dc8",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    },
+    {
+      "subject": "0x77858131d1E0eAaAe2c38c2cce508c358C9b58ee",
+      "attrs": "0x01030002019a00090027006aa71db8006c885138000000000000000000000000",
+      "claimsRoot": "0xc75305a36ae0e3a300a996f079ddfd97114072cf7cc1e8aead8340d6f8894490",
+      "evidenceHash": "0x0a75c925ff72fd7c560d8dd6e007757c1f75b1c6ce90868f763286009a568bc3",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    },
+    {
+      "subject": "0xFD539431338f097B40Bd7E346BA3630AcFabCc63",
+      "attrs": "0x01030002019a00090027006aa72782006c885b02000000000000000000000000",
+      "claimsRoot": "0x084f06ebfbbebf013dc80c0abc6cdbbdadc2c4078f87a8a428bc86e91bf9f5eb",
+      "evidenceHash": "0x6ccac8259f75599dfce3db5b188eec6701520f8ba41518d14285f77cd56bb77e",
+      "issuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8"
+    }
+  ],
+  "excluded": [],
+  "setEpochPublisherTx": null,
+  "publishEpochTx": "0x6e169b4b25d842e9cdbc10b5d237fa04c1148352b17f9273853e548883f3ae64",
+  "sepoliaBlock": 11699245,
+  "sepoliaConfirmedAt": "2026-09-13T23:55:36Z",
+  "proofAvailability": {
+    "version": 1,
+    "seedHash": "76d81d5a551d5010bed16f6435edac35f6596496c214fa309393f64f8a1a1c13",
+    "contentHash": "af889fd6c882f62121ecb85b30adb3b7a4517ea6136d790ac083b63bad0ea6f4",
+    "replicaCount": 2,
+    "prepublicationBound": true
+  },
+  "hubObservation": {
+    "chainId": 102031,
+    "blockNumber": 5483642,
+    "blockHash": "0x7f14c91df6af6d4c3983028f401e886648df26f4c713d80dd51cbe9e8a9642ac",
+    "timestamp": 1789346055
+  },
+  "policyObservation": {
+    "expectedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+    "policies": [
+      {
+        "id": 1,
+        "requireAll": 65572,
+        "minAssurance": 2,
+        "maxAge": 2592000,
+        "requiredRegime": 1,
+        "requiredJurisdiction": 410,
+        "trustedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+        "requireRoster": true,
+        "exists": true,
+        "frozen": true,
+        "kind": 1
+      },
+      {
+        "id": 2,
+        "requireAll": 65572,
+        "minAssurance": 2,
+        "maxAge": 604800,
+        "requiredRegime": 2,
+        "requiredJurisdiction": 410,
+        "trustedIssuer": "0x5097627B6ec96a30B473c94Cb05c1C21d36Fd2f8",
+        "requireRoster": true,
+        "exists": true,
+        "frozen": true,
+        "kind": 1
+      }
+    ]
+  },
+  "runtimeObservation": {
+    "source": {
+      "address": "0xfb46D722CD70F1ed399616a9B4745E60B9220609",
+      "codeHash": "0xdc89731efb953a3221ac1cdf56dc9e80274632b0a3af0396dfc1b2221fe2b58f",
+      "blockNumber": 11699430,
+      "blockHash": "0xd7c0683d0b81524f0ba78660c8f41d935fe3529c7d53797905352c0fb8eb7a7b"
+    },
+    "asc": {
+      "address": "0x8c29A966a30d9083B760451245aECEbBE1E2d2F4",
+      "codeHash": "0xbb050e54df8659016e5d7601e867246c3c49395bb9d07c0956cd1cff3ba0aa7b",
+      "blockNumber": 5483642,
+      "blockHash": "0x7f14c91df6af6d4c3983028f401e886648df26f4c713d80dd51cbe9e8a9642ac"
+    },
+    "registry": {
+      "address": "0x5752897b1edaD4fe50908B38c4ddA5f376a43110",
+      "codeHash": "0xfdce0cf90663141196349cb16656d9569bca7adf4155abe383dbac5e4e7f4d84",
+      "blockNumber": 5483642,
+      "blockHash": "0x7f14c91df6af6d4c3983028f401e886648df26f4c713d80dd51cbe9e8a9642ac"
+    }
+  },
+  "registryProofMode": true,
+  "checks": [
+    {
+      "label": "verifyWithRoster(0x4816B6e3…, policy 2 KR pilot)",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "label": "verifyWithRoster(0x4816B6e3…, policy 1 KR VASP production)",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "label": "proveNotInRoster(0x00000000…, never issued)",
+      "expected": true,
+      "actual": true
+    }
+  ],
+  "checkedAt": "2026-09-14T00:41:37.907Z"
+}

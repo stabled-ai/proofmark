@@ -61,21 +61,23 @@
       "sourceConfirmations": 12
     },
     "epoch": {
-      "number": 1,
-      "root": "0x784b4fc80ff1476db3966559536fb0b61c01a6ebde2ad05c17668d45734584d1",
-      "listVersion": 3877549429,
-      "snapshotId": "0xe71eb575e32c1b86456c48b35ad46d3c0a73871606ba44402afa8dc96c3b4e42",
-      "sourceCutoffBlock": 11698717,
-      "validUntil": 1789423584,
-      "sourceTransactionHash": "0x06a61a43f40b1ebc56cb48482f411d08d38dd97f7365cd4ae08057135da6e23c",
-      "sourceBlockNumber": 11698933,
-      "queryId": "0x6d4fbe16e47ea855c6d30922f88f591fc3e44b4efbc49655fe9e5dd7d7efbf64",
-      "relayTransactionHash": "0xf2bda1c6faeb881885f3f6f91851a1bb72f9db41ea7b3d3b5cf2de8cb2e37741",
-      "relayBlockNumber": 5483309
+      "number": 2,
+      "root": "0xda906e635e6f61cab7c00984c4c701bf00ff0f24951e877bdcde1570d591250c",
+      "listVersion": 75330538,
+      "snapshotId": "0x047d73eae38718fc4e28a2b15f0fb323c1cfcb55785f500587077ccd11921ebe",
+      "sourceCutoffBlock": 11699149,
+      "validUntil": 1789428960,
+      "sourceTransactionHash": "0x6e169b4b25d842e9cdbc10b5d237fa04c1148352b17f9273853e548883f3ae64",
+      "sourceBlockNumber": 11699245,
+      "queryId": "0x37af9c836ff08b77645d076cd1f0e801514736deddca4067f71ea445a1255081",
+      "relayTransactionHash": "0xe1f84dbe05fe96270923294bacc5f6293a62cdeb11eec9f57326eaac79acb425",
+      "relayBlockNumber": 5483564
     },
     "witnessTransactions": [
-      "0x2f6ac3c9c4c53089d847ebd6b5d469eeaedb3d82851ce5fa664c32f18662073e",
-      "0x6936f733a03ba21b2c96859c1e728b5e57db6a74b90d9f1618af91b8bdfc1428"
+      "0xcfafbc7c248e2e906542816a99df639d5251c1408b981fb3612be5eaf0fce84b",
+      "0x100351c9876a7f46385e5d2060013ac7f830353cd5d8f187ff2ed6e12c84d353",
+      "0xefd8c3cb3e24669729450c9e757cb8db901824ade1e33c0cb181ef029f7293ad",
+      "0x1c34daad0bff074f765baa2cb1a51142552b531be3564826f448ec80332e8c54"
     ],
     "mintTransactionHash": "0xdad2f501d047affcad7620b02aaec04a6e40a579d433f707edcd81e4fa1b4e11",
     "transferTransactionHash": "0x9a93786c134f38364ece73589d1d739e946ac93441bc08ae6d8e0ef1a0a49f29",

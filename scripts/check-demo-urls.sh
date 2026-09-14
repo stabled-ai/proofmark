@@ -19,8 +19,9 @@
 #
 # Six checks per base URL: the three pages a judge clicks, and the three API routes behind them.
 # A check passes only if curl itself exits 0 (so a dead TLS certificate fails rather than being
-# reported as a pass) and the HTTP status is 200. The two JSON routes are also checked for a
-# field that is always present in their response, so an empty 200 cannot pass.
+# reported as a pass) and the final HTTP status is 200. Page checks follow a bounded redirect so
+# canonical entry routes such as /verify can select their current first step. The two JSON routes
+# are also checked for a field that is always present in their response, so an empty 200 cannot pass.
 #
 # Needs no secrets and no environment variables.
 
@@ -57,7 +58,7 @@ check() {
       -X POST "$url" -H 'content-type: application/json' --data "$SCREEN_BODY" 2>"$tmp_err")"
     rc=$?
   else
-    status="$(curl -sS -o "$tmp_body" -w '%{http_code}' --max-time "$TIMEOUT" "$url" 2>"$tmp_err")"
+    status="$(curl -sS -L --max-redirs 5 -o "$tmp_body" -w '%{http_code}' --max-time "$TIMEOUT" "$url" 2>"$tmp_err")"
     rc=$?
   fi
 
