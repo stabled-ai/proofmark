@@ -2,7 +2,7 @@
 
 > Verify once. Let every chain READ it. Let every asset enforce it.
 
-[Live product](https://attest-kyc.stabled.ai) · [Onchain state](https://attest-kyc.stabled.ai/onchain) · [Guided verification](https://attest-kyc.stabled.ai/verify) · [Pitch deck](docs/deck/proofmark-deck.pdf)
+[Live product](https://attest-kyc.stabled.ai) · [Onchain state](https://attest-kyc.stabled.ai/onchain) · [Global verification](https://attest-kyc.stabled.ai/verify/provider) · [Pitch deck](docs/deck/proofmark-deck.pdf)
 
 Proofmark is the compliance READ layer for onchain finance. A KYC/AML lifecycle event is issued on one chain, verified on Creditcoin through Universal Smart Contracts (USC), and exposed as one policy-aware call:
 

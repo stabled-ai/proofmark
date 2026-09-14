@@ -28,6 +28,12 @@ test('wallet connection refuses stale permission results and providers without e
   p.emit('accountsChanged', [b]); assert.throws(() => session.bind(revision, [a]), WalletSessionChanged);
   assert.throws(() => session.attach({ request: async () => [a] }, () => {}), /account-change notifications/);
 });
+test('wallet connection accepts a pre-authorization empty account event superseded by the permission result', async () => {
+  const p = provider(), notices: string[] = [], session = new WalletSession();
+  session.attach(p, reason => notices.push(reason)); const revision = session.revision;
+  p.emit('accountsChanged', []); assert.equal(session.bind(revision, [a]), a);
+  await session.check(revision, () => p); assert.deepEqual(notices, []);
+});
 test('account rechecks reject silent account changes and replacement during an outstanding request', async () => {
   const p = provider(), session = new WalletSession(); session.attach(p, () => {}); session.bind(session.revision, [a]);
   p.accounts = [b]; await assert.rejects(session.check(session.revision, () => p), WalletSessionChanged);

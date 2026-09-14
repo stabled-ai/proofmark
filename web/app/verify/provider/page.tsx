@@ -89,8 +89,13 @@ export default function ProviderVerification() {
   async function act(action: () => Promise<void>) {
     if (locked.current) return;
     locked.current = true; setBusy(true); setError(null);
-    try { await action(); }
-    catch (failure) { setError(failure instanceof Error ? failure.message : 'Verification could not be confirmed.'); }
+    let revision = session.revision;
+    try { const pending = action(); revision = session.revision; await pending; }
+    catch (failure) {
+      // Session invalidation already reports its specific, privacy-safe reason.
+      // Do not replace it with the generic WalletSessionChanged rejection.
+      if (revision === session.revision) setError(failure instanceof Error ? failure.message : 'Verification could not be confirmed.');
+    }
     finally { locked.current = false; setBusy(false); }
   }
 

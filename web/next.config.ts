@@ -18,6 +18,9 @@ const providerContentSecurityPolicy = contentSecurityPolicy.replace(
  * share the source as-is. We do not copy the files: a copy drifts from the original.
  */
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [{ source: '/verify', destination: '/verify/provider', permanent: false }];
+  },
   async headers() {
     return [{ source: '/(.*)', headers: [
       { key: 'Content-Security-Policy', value: contentSecurityPolicy },

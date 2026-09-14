@@ -141,7 +141,7 @@ export default function Screening() {
         eyebrow="Sanctions lists"
         title="Sanctions screening"
         lede="Check a person against global sanctions lists."
-        aside={<LinkButton href="/verify">Verify identity<Icon name="arrow" size={15} /></LinkButton>}
+        aside={<LinkButton href="/verify/provider">Verify identity<Icon name="arrow" size={15} /></LinkButton>}
       />
 
       <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2">

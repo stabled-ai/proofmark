@@ -11,10 +11,9 @@ import { chromium } from 'playwright';
 
 const args = process.argv.slice(2);
 const providerSession = args.includes('--provider-session');
-const guidedKyc = args.includes('--guided-kyc');
 const positional = args.filter(value => !value.startsWith('--'));
 if (positional.length !== 1) {
-  console.error('usage: node web/scripts/test-live-demo.mjs <https-origin> [--provider-session] [--guided-kyc]');
+  console.error('usage: node web/scripts/test-live-demo.mjs <https-origin> [--provider-session]');
   process.exit(2);
 }
 const BASE = positional[0].replace(/\/+$/, '');
@@ -61,20 +60,21 @@ const control = '0x00000000000000000000000000000000DeaDBeef';
 
 console.log(`Live demo target: ${BASE}`);
 console.log(`Provider session: ${providerSession ? 'enabled; creates one disposable sandbox session' : 'disabled; read-only run'}`);
-console.log(`Guided KYC: ${guidedKyc ? 'enabled; creates one disposable Sepolia test issuance' : 'disabled; no issuance'}`);
 console.log('');
 
 let liveChain;
-let kycStatus;
 let providerStatus;
 
 await check('public pages', async () => {
-  for (const path of ['/', '/demo', '/screening', '/onchain', '/verify', '/verify/provider']) {
+  for (const path of ['/', '/demo', '/screening', '/onchain', '/verify/provider']) {
     const result = await response(path);
     assert.equal(result.status, 200, `${path} returned ${result.status}`);
     assert.match(result.headers.get('content-type') ?? '', /^text\/html/);
   }
-  return '6/6 pages returned HTML 200';
+  const legacy = await response('/verify');
+  assert.equal(legacy.status, 307);
+  assert.equal(new URL(legacy.headers.get('location'), BASE).pathname, '/verify/provider');
+  return '5/5 pages returned HTML 200 and /verify redirects to global verification';
 });
 
 for (const [scenario, expected] of trainingCases) {
@@ -164,7 +164,6 @@ await check('verification configuration', async () => {
   const { result, body } = await json('/api/kyc/status');
   assert.equal(result.status, 200);
   assert.ok(object(body));
-  kycStatus = body;
   return `demo=${body.demo}; id=${body.id?.vendor ?? 'unconfigured'}; bank=${body.bank?.vendor ?? 'unconfigured'}`;
 });
 
@@ -249,121 +248,17 @@ try {
   await check('browser verification availability', async () => {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto(`${BASE}/verify`, { waitUntil: 'domcontentloaded' });
-    if (kycStatus.demo && kycStatus.id?.demo && kycStatus.bank?.demo) {
-      await page.getByRole('button', { name: /^Matching details/ }).waitFor();
-      assert.equal(await page.getByRole('button', { name: /^Matching details/ }).count(), 1);
+    assert.equal(new URL(page.url()).pathname, '/verify/provider');
+    if (providerStatus?.configured) {
+      await page.getByRole('button', { name: 'Connect wallet', exact: true }).waitFor();
+      assert.equal(await page.getByRole('button', { name: 'Connect wallet', exact: true }).count(), 1);
     } else {
-      await page.getByText('Identity verification is temporarily unavailable. Please try again later.', { exact: true }).waitFor();
-      assert.equal(await page.getByRole('button', { name: 'Matching details', exact: true }).count(), 0);
+      await page.getByRole('heading', { name: 'Verification is temporarily unavailable', exact: true }).waitFor();
+      assert.equal(await page.getByRole('button', { name: 'Connect wallet', exact: true }).count(), 0);
     }
     await page.close();
-    return kycStatus.demo ? 'synthetic profiles are visible' : 'unavailable state is rendered without accepting sample data';
+    return providerStatus?.configured ? 'global provider is the only verification entry point' : 'global provider unavailable state is rendered';
   });
-
-  const guidedCase = async (label, expected) => {
-    const wallet = Wallet.createRandom();
-    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
-    const page = await context.newPage(); const errors = [];
-    page.setDefaultTimeout(45_000);
-    page.on('pageerror', error => errors.push(error.message));
-    await page.exposeFunction('__proofmarkGuidedSign', async hexMessage => wallet.signMessage(Buffer.from(hexMessage.slice(2), 'hex')));
-    await page.addInitScript(address => {
-      const listeners = new Map();
-      window.ethereum = {
-        on(event, listener) { if (!listeners.has(event)) listeners.set(event, new Set()); listeners.get(event).add(listener); },
-        removeListener(event, listener) { listeners.get(event)?.delete(listener); },
-        async request(request) {
-          if (request.method === 'eth_requestAccounts' || request.method === 'eth_accounts') return [address];
-          if (request.method === 'personal_sign') return window.__proofmarkGuidedSign(request.params[0]);
-          throw new Error(`unsupported disposable wallet method ${request.method}`);
-        },
-      };
-    }, wallet.address);
-    try {
-      await page.goto(`${BASE}/verify`, { waitUntil: 'domcontentloaded' });
-      const sampleButton = page.getByRole('button', { name: new RegExp(`^${label}`) });
-      await sampleButton.click();
-      await page.getByRole('button', { name: new RegExp(`^${label}`), pressed: true }).waitFor();
-      const walletStep = page.getByRole('region', { name: 'Connect your wallet', exact: true });
-      await walletStep.getByRole('checkbox').check();
-      await walletStep.getByRole('button', { name: 'Connect and sign', exact: true }).click();
-      await walletStep.getByText('Connected', { exact: true }).waitFor();
-      await page.getByRole('img', { name: 'Synthetic training sample — not an identity document', exact: true }).waitFor();
-
-      const idReply = page.waitForResponse(result => result.request().method() === 'POST'
-        && new URL(result.url()).pathname === '/api/kyc/id');
-      await page.getByRole('button', { name: 'Check sample document', exact: true }).click();
-      const idResponse = await idReply; const idBody = await idResponse.json();
-      assert.equal(idResponse.status(), 200);
-      if (expected === 'document-rejected') {
-        assert.equal(idBody.status, 'rejected');
-        await page.getByText('This document could not be verified.', { exact: false }).waitFor();
-        assert.deepEqual(errors, []);
-        return 'document rejection rendered from the production API';
-      }
-      assert.equal(idBody.status, 'verified');
-      await page.getByText('Verified', { exact: true }).first().waitFor();
-
-      const bankReply = page.waitForResponse(result => result.request().method() === 'POST'
-        && new URL(result.url()).pathname === '/api/kyc/bank');
-      await page.getByRole('button', { name: 'Check sample account', exact: true }).click();
-      const bankResponse = await bankReply; const bankBody = await bankResponse.json();
-      if (expected === 'holder-mismatch') {
-        assert.equal(bankResponse.status(), 422);
-        assert.equal(bankBody.code, 'HOLDER_MISMATCH');
-        await page.getByText('The bank account holder does not match the declared identity.', { exact: true }).waitFor();
-        assert.deepEqual(errors, []);
-        return 'account-holder mismatch rendered from the production API';
-      }
-      assert.equal(bankResponse.status(), 200);
-      assert.match(bankBody.demoCode, /^\d{4}$/);
-      await page.getByLabel(/^Code/).fill(bankBody.demoCode);
-      const confirmReply = page.waitForResponse(result => result.request().method() === 'POST'
-        && new URL(result.url()).pathname === '/api/kyc/bank');
-      await page.getByRole('button', { name: 'Confirm', exact: true }).click();
-      assert.equal((await confirmReply).status(), 200);
-      await page.getByText('Sample checked', { exact: true }).waitFor();
-
-      const issueReply = page.waitForResponse(result => result.request().method() === 'POST'
-        && new URL(result.url()).pathname === '/api/kyc/issue', { timeout: 120_000 });
-      await page.getByRole('button', { name: 'Submit verification', exact: true }).click();
-      let issueResponse = await issueReply; let issueBody = await issueResponse.json();
-      for (let attempt = 0; attempt < 3 && issueResponse.status() === 200
-        && issueBody.issuance?.phase === 'prepared' && !issueBody.onchain?.txHash; attempt++) {
-        const resumeReply = page.waitForResponse(result => result.request().method() === 'POST'
-          && new URL(result.url()).pathname === '/api/kyc/issue', { timeout: 120_000 });
-        await page.getByRole('button', { name: 'Resume original request', exact: true }).click();
-        issueResponse = await resumeReply;
-        issueBody = await issueResponse.json();
-      }
-      for (let attempt = 0; attempt < 12 && issueResponse.status() === 200
-        && issueBody.issuance?.phase === 'submitted'; attempt++) {
-        await page.waitForTimeout(10_000);
-        const resumeReply = page.waitForResponse(result => result.request().method() === 'POST'
-          && new URL(result.url()).pathname === '/api/kyc/issue', { timeout: 120_000 });
-        await page.getByRole('button', { name: 'Resume original request', exact: true }).click();
-        issueResponse = await resumeReply;
-        issueBody = await issueResponse.json();
-      }
-      assert.equal(issueResponse.status(), 200,
-        `issuance HTTP ${issueResponse.status()}; code=${issueBody.code ?? issueBody.error ?? 'none'}; resumable=${String(issueBody.resumable)}`);
-      assert.match(issueBody.requestId, /^0x[0-9a-f]{64}$/i);
-      assert.match(issueBody.onchain?.txHash, /^0x[0-9a-f]{64}$/i,
-        `issuance phase=${issueBody.issuance?.phase ?? 'missing'}; status=${issueBody.status ?? 'missing'}; sent=${String(issueBody.onchain?.sent)}; error=${issueBody.reason ?? issueBody.issuance?.lastError ?? 'none'}`);
-      assert.equal(issueBody.onchain?.sent, true);
-      assert.ok(['source-confirmed', 'materialized'].includes(issueBody.issuance?.phase));
-      assert.deepEqual(errors, []);
-      return `${issueBody.issuance.phase}; Sepolia transaction ${issueBody.onchain.txHash}`;
-    } finally { await context.close(); }
-  };
-
-  if (guidedKyc && kycStatus?.demo && kycStatus.id?.demo && kycStatus.bank?.demo) {
-    await check('guided KYC rejected document', () => guidedCase('Rejected document', 'document-rejected'));
-    await check('guided KYC account mismatch', () => guidedCase('Account mismatch', 'holder-mismatch'));
-    await check('guided KYC matching details', () => guidedCase('Matching details', 'success'));
-  } else if (!guidedKyc) {
-    block('guided KYC production cases', 'rerun with --guided-kyc to execute all three cases and create one testnet issuance');
-  }
 
   if (providerSession && providerStatus?.configured) {
     await check('browser Sumsub sandbox session', async () => {
@@ -422,13 +317,6 @@ try {
   }
 } finally {
   await browser.close();
-}
-
-if (!(kycStatus?.demo && kycStatus.id?.demo && kycStatus.bank?.demo)) {
-  const reason = `KYC_DEMO=${String(kycStatus?.demo)}; id=${kycStatus?.id?.vendor ?? 'unconfigured'}; bank=${kycStatus?.bank?.vendor ?? 'unconfigured'}`;
-  block('guided KYC matching details', reason);
-  block('guided KYC rejected document', reason);
-  block('guided KYC account mismatch', reason);
 }
 
 console.log('');

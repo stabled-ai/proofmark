@@ -56,7 +56,10 @@ export class WalletSession {
     const accounts = (value: unknown) => {
       if (this.revision !== revision || this.provider !== provider) return;
       this.observed = first(value);
-      if (!this.observed || (this.address && this.address !== this.observed)) invalidate('Wallet account changed or became unavailable.');
+      // Some injected wallets report the still-unapproved empty account list while
+      // eth_requestAccounts is opening. Its eventual result is the authoritative
+      // first binding; empty or changed notifications remain fatal after that.
+      if (this.address && (!this.observed || this.address !== this.observed)) invalidate('Wallet account changed or became unavailable.');
     };
     const chain = () => invalidate('Wallet network changed.');
     const disconnected = () => invalidate('Wallet disconnected.');
@@ -69,10 +72,10 @@ export class WalletSession {
   bind(revision: number, accounts: unknown) {
     this.assertCurrent(revision);
     const address = first(accounts);
-    if (!address || (this.observed !== undefined && this.observed !== address)) {
+    if (!address || (typeof this.observed === 'string' && this.observed !== address)) {
       this.invalidate('Wallet account changed while connecting.'); throw new WalletSessionChanged();
     }
-    this.address = address; return address;
+    this.address = address; this.observed = address; return address;
   }
   request(revision: number, args: { method: 'eth_accounts' | 'eth_requestAccounts' | 'personal_sign'; params?: unknown[] },
     getCurrent: () => WalletProvider | undefined): Promise<unknown> {

@@ -120,6 +120,14 @@ test('winning UI fails closed and keeps provider approval separate from eligibil
   assert.ok(await demoPage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'demo must not overflow at 390px');
   assert.deepEqual(demoErrors, []);
 
+  const homePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await homePage.goto(base);
+  const verificationCard = homePage.locator('.verification-start');
+  await verificationCard.getByText('Global verification', { exact: true }).waitFor();
+  assert.equal(await verificationCard.getByText('South Korea', { exact: true }).count(), 0);
+  assert.equal(await verificationCard.getByRole('link', { name: 'Start verification', exact: true }).getAttribute('href'), '/verify/provider');
+  await homePage.close();
+
   // Screening: unavailable metadata must leave a usable form; malformed verdicts cannot appear as successful results.
   const screeningPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const screeningErrors = []; let metadataMode = 'unavailable', screeningMode = 'malformed';
@@ -166,6 +174,10 @@ test('winning UI fails closed and keeps provider approval separate from eligibil
   assert.deepEqual(screeningErrors, []);
   await screeningPage.close();
 
+  const verificationEntry = await fetch(base + '/verify', { redirect: 'manual' });
+  assert.equal(verificationEntry.status, 307);
+  assert.equal(new URL(verificationEntry.headers.get('location'), base).pathname, '/verify/provider');
+
   // Provider unavailable: readiness check only, no external SDK fetch and no fallback success.
   const unavailablePage = await browser.newPage(); const unavailableExternal = [];
   await unavailablePage.route('**/*', route => {
@@ -188,11 +200,11 @@ test('winning UI fails closed and keeps provider approval separate from eligibil
   const providerPage = await browser.newPage({ viewport: { width: 390, height: 844 } }); const providerErrors = [], external = [], apiCalls = [];
   providerPage.on('pageerror', error => providerErrors.push(error.message));
   await providerPage.addInitScript({ content: `
-    const listeners = new Map(); window.__walletCalls = []; window.__sdk = { initialized: 0, launched: 0, destroyed: 0 };
+    const listeners = new Map(); window.__walletCalls = []; window.__walletRejectOnce = false; window.__sdk = { initialized: 0, launched: 0, destroyed: 0 };
     window.ethereum = {
       on(event, fn) { if (!listeners.has(event)) listeners.set(event, new Set()); listeners.get(event).add(fn); },
       removeListener(event, fn) { listeners.get(event)?.delete(fn); },
-      async request(args) { window.__walletCalls.push(args); if (args.method === 'eth_requestAccounts' || args.method === 'eth_accounts') return [${JSON.stringify(ADDRESS)}]; if (args.method === 'personal_sign') return 'fixture-signature'; throw new Error('unexpected wallet request'); }
+      async request(args) { window.__walletCalls.push(args); if (args.method === 'eth_requestAccounts') { if (window.__walletRejectOnce) { window.__walletRejectOnce = false; throw new Error('PRIVATE_WALLET_DIAGNOSTIC'); } window.__emitWallet('accountsChanged', []); return [${JSON.stringify(ADDRESS)}]; } if (args.method === 'eth_accounts') return [${JSON.stringify(ADDRESS)}]; if (args.method === 'personal_sign') return 'fixture-signature'; throw new Error('unexpected wallet request'); }
     };
     window.__emitWallet = (event, value) => { for (const fn of [...(listeners.get(event) || [])]) fn(value); };
     window.snsWebSdk = { init(token) { if (token !== 'fixture-access-token') throw new Error('wrong token'); window.__sdk.initialized++; const builder = {
@@ -227,7 +239,12 @@ test('winning UI fails closed and keeps provider approval separate from eligibil
     }
     throw new Error(`unexpected provider API ${request.method()} ${path}`);
   });
-  await providerPage.goto(base + '/verify/provider'); await providerPage.getByRole('button', { name: 'Connect wallet', exact: true }).click();
+  await providerPage.goto(base + '/verify/provider');
+  await providerPage.evaluate(() => { window.__walletRejectOnce = true; });
+  await providerPage.getByRole('button', { name: 'Connect wallet', exact: true }).click();
+  await providerPage.getByText('Wallet request was declined or unavailable. Review or dismiss any open wallet prompt before reconnecting.', { exact: true }).waitFor();
+  assert.doesNotMatch(await providerPage.locator('body').innerText(), /PRIVATE_WALLET_DIAGNOSTIC|Wallet session changed/);
+  await providerPage.getByRole('button', { name: 'Connect wallet', exact: true }).click();
   const consent = providerPage.locator('[data-provider-consent]'); await consent.waitFor(); assert.equal(await consent.innerText(), NOTICE);
   const sign = providerPage.getByRole('button', { name: 'Sign and continue', exact: true }); assert.equal(await sign.isDisabled(), true);
   await providerPage.getByRole('checkbox').check(); await sign.click();
