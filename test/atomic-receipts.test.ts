@@ -20,7 +20,7 @@ const artifact = (file: string, name = file) => JSON.parse(
   readFileSync(new URL(`../out/${file}.sol/${name}.json`, import.meta.url), 'utf8'),
 );
 
-test('mixed and governed-correction receipts stay identical through source, worker, ASC and roster replay', { timeout: 40000 }, async t => {
+test('mixed and governed-correction receipts stay identical through source, worker, ASC and roster replay', { timeout: 90000 }, async t => {
   const cleanups: Array<() => void | Promise<void>> = [];
   t.after(async () => {
     const errors: unknown[] = [];

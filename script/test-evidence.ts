@@ -36,7 +36,10 @@ function run(program: string, args: string[]): string {
 }
 console.log('Running complete Foundry and root TypeScript/ABI test suites; no network deployment.');
 const solidity = foundrySummary(run('forge', ['test', '--json']));
-const typescript = nodeSummary(run(process.execPath, ['--import', 'tsx', '--test', '--test-reporter=./script/test-summary-reporter.mjs', ...files]));
+// Several integration files launch isolated Anvil or worker processes. Bounding file-level
+// concurrency keeps the complete suite deterministic on small CI runners without reducing coverage.
+const typescript = nodeSummary(run(process.execPath, ['--import', 'tsx', '--test', '--test-concurrency=2',
+  '--test-reporter=./script/test-summary-reporter.mjs', ...files]));
 if (testSourceFingerprint(repo) !== fingerprint) throw new Error('source changed while tests ran; evidence discarded');
 const evidence: TestEvidence = { version: 1, sourceFingerprint: fingerprint, startedAt, completedAt: Date.now(),
   nodeVersion: process.version, forgeVersion: execFileSync('forge', ['--version'], { encoding: 'utf8' }).trim(), solidity, typescript, testFiles: files };
