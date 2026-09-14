@@ -57,7 +57,8 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
   // visitor's actual issuance request and the epoch bound to the resulting roster.
   const activatedRaw = readFileSync(join(currentGeneration(join(cwd, '..', 'data', 'raw')), 'sanctions-index.json.gz'));
   const bakedWeb = readFileSync(join(cwd, 'data', 'sanctions-index.json.gz'));
-  assert.deepEqual(bakedWeb, activatedRaw, 'CLI and built web must use the same activated sanctions artifact');
+  assert.equal(ethers.sha256(bakedWeb), ethers.sha256(activatedRaw),
+    'CLI and built web must use the same activated sanctions artifact');
   const official = readIndex(bakedWeb, now).meta;
   assert.ok(official.counts.OFAC_SDN > 10_000 && official.counts.UN_CONSOLIDATED > 500 && official.counts.EU_FSF > 5_000,
     `activated corpus is not the complete three-source fixture: ${JSON.stringify(official.counts)}`);
@@ -129,7 +130,7 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
       const path = new URL(req.url!, 'http://localhost').pathname;
       if (!path.startsWith('/api/')) {
         // Only built page/assets; API requests NEVER enter the Next process or use canned responses.
-        assert.equal(req.method, 'GET'); assert.ok(['/', '/verify', '/onchain', '/design', '/icon.svg', '/favicon.ico'].includes(path) || path.startsWith('/_next/'), path);
+        assert.equal(req.method, 'GET'); assert.ok(['/', '/verify/sandbox', '/onchain', '/design', '/icon.svg', '/favicon.ico'].includes(path) || path.startsWith('/_next/'), path);
         const response = await nativeFetch(frontend + req.url, { redirect: 'error', signal: AbortSignal.timeout(10000) });
         const headers = new Headers(response.headers); headers.delete('content-encoding'); headers.delete('content-length');
         res.writeHead(response.status, Object.fromEntries(headers)); res.end(Buffer.from(await response.arrayBuffer())); return;
@@ -176,13 +177,13 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
     if (signed) flowRequests.set(walletProof, signed.requestId);
     let payload: { walletProof: string; declared: { fullName: string; dateOfBirth: string; nationality: string; residence: string }; idProof: string; bankProof: string };
     if (ui) {
-      await ui.page.getByRole('button', { name: 'Run simulated document check', exact: true }).click();
+      await ui.page.getByRole('button', { name: 'Check sample document', exact: true }).click();
       const bankResponse = ui.page.waitForResponse(r => new URL(r.url()).pathname === '/api/kyc/bank' && r.request().postDataJSON()?.action === 'start');
-      await ui.page.getByRole('button', { name: 'Simulate holder and deposit code', exact: true }).click();
+      await ui.page.getByRole('button', { name: 'Check sample account', exact: true }).click();
       const actualBank = await bankResponse; assert.equal(actualBank.status(), 200); const bank = await actualBank.json();
       assert.match(bank.demoCode, /^\d{4}$/);
       await ui.page.getByRole('region', { name: 'Bank account', exact: true }).getByText(bank.demoCode, { exact: true }).waitFor();
-      await ui.page.getByLabel('Code', { exact: false }).fill(bank.demoCode);
+      await ui.page.getByRole('region', { name: 'Bank account', exact: true }).getByLabel('Code', { exact: false }).fill(bank.demoCode);
       await ui.page.getByRole('button', { name: 'Confirm', exact: true }).click();
       await ui.page.getByText('one-won code', { exact: true }).waitFor();
       assert.equal(ui.signatures(), 1); assert.equal(await ui.recoveryId(), null);
@@ -215,7 +216,7 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
       loseIssueResponse = true;
       assert.ok(ui);
       const sent = ui.page.waitForRequest(r => new URL(r.url()).pathname === '/api/kyc/issue');
-      await ui.page.getByRole('button', { name: 'Screen and issue the mark', exact: true }).click();
+      await ui.page.getByRole('button', { name: 'Submit verification', exact: true }).click();
       payload = (await sent).postDataJSON(); assert.equal(payload.walletProof, walletProof);
       try { await ui.page.getByRole('alert').filter({ hasText: 'Failed to fetch' }).waitFor(); }
       catch { throw new Error(JSON.stringify({ alerts: await ui.page.getByRole('alert').allTextContents(), lostHttpResponses,
@@ -248,7 +249,8 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
       assert.notEqual(refreshed, walletProof); assert.equal(ui.signatures(), 2);
       assert.equal(ui.calls.filter(c => c.path === '/api/kyc/issue').length, count, 'reload/signing must not recover automatically');
       assert.equal(await ui.recoveryId(), recoveryId);
-      assert.equal(await ui.page.getByRole('button', { name: 'Screen and issue the mark', exact: true }).isDisabled(), true);
+      const review = ui.page.getByRole('region', { name: 'Review and submit', exact: true });
+      assert.equal(await review.getByRole('button', { name: 'Submit verification', exact: true, includeHidden: true }).isDisabled(), true);
     } else refreshed = await proof(wallet);
     assert.notEqual(flowRequests.get(refreshed), recoveryId, 'new signature creates a different flow, not a different recovery target');
     const observed = ui ? await ui.recover('status') : await post('/api/kyc/status', { action: 'resume', requestId: recoveryId, walletProof: refreshed });
@@ -258,7 +260,8 @@ test('PM-T35-02 real browser/API uses the activated official AML snapshot and tw
     if (ui) {
       assert.deepEqual(ui.calls.filter(c => c.action !== undefined).map(c => c.action), ['issue', 'status', 'resume']);
       assert.deepEqual(ui.errors, []);
-      await ui.page.getByRole('region', { name: 'Screen and issue', exact: true }).getByText(issued.onchain.txHash, { exact: true }).waitFor();
+      await ui.page.getByRole('region', { name: 'Review and submit', exact: true })
+        .getByText(issued.onchain.txHash, { exact: true }).waitFor({ state: 'attached' });
       console.log(`Connected browser: ${lostHttpResponses} source-confirmed replies lost; explicit issue/status/resume, two signatures, one source nonce.`);
       await ui.page.close();
     }

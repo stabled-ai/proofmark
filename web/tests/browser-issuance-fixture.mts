@@ -10,12 +10,20 @@ export async function builtFrontend(t: TestContext, cwd: string, fetch: typeof g
   const probe = createServer(); await new Promise<void>(r => probe.listen(0, '127.0.0.1', r));
   const port = (probe.address() as { port: number }).port; await new Promise<void>(r => probe.close(() => r()));
   const app = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', String(port)],
-    { cwd, stdio: 'ignore' });
+    { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+  let startupOutput = '';
+  const remember = (chunk: Buffer) => { startupOutput = (startupOutput + chunk.toString('utf8')).slice(-4000); };
+  app.stdout.on('data', remember); app.stderr.on('data', remember);
   t.after(async () => { if (app.exitCode === null) { app.kill('SIGTERM'); await new Promise(r => app.once('exit', r)); } });
   const base = `http://127.0.0.1:${port}`;
   for (let n = 0; ; n++) {
-    try { assert.equal((await fetch(base + '/verify', { signal: AbortSignal.timeout(2000), redirect: 'error' })).status, 200); return base; }
-    catch { if (app.exitCode !== null || n >= 50) throw new Error('Build web before the connected browser integration'); await delay(100); }
+    try { assert.equal((await fetch(base + '/verify/sandbox', { signal: AbortSignal.timeout(2000), redirect: 'error' })).status, 200); return base; }
+    catch {
+      if (app.exitCode !== null || n >= 50) {
+        throw new Error(`Build web before the connected browser integration (exit ${app.exitCode ?? 'running'}): ${startupOutput}`);
+      }
+      await delay(100);
+    }
   }
 }
 
@@ -54,8 +62,8 @@ export async function browserIssuance(t: TestContext, base: string,
     };
   }, wallet.address);
   const sign = async () => {
-    await page.getByRole('button', { name: 'Load matching sample', exact: true }).click();
-    await page.getByRole('status').filter({ hasText: 'Loaded: success.' }).waitFor();
+    await page.getByRole('button', { name: /^Matching details/ }).click();
+    await page.getByRole('status').filter({ hasText: 'Profile loaded.' }).waitFor();
     await page.getByRole('checkbox').check();
     const response = page.waitForResponse(r => new URL(r.url()).pathname === '/api/kyc/wallet' && r.request().method() === 'POST');
     await page.getByRole('button', { name: 'Connect and sign', exact: true }).click();
@@ -70,10 +78,11 @@ export async function browserIssuance(t: TestContext, base: string,
     const actual = await response; assert.equal(actual.status(), 200);
     const request = actual.request().postDataJSON(); assert.equal(request.idProof, undefined); assert.equal(request.bankProof, undefined);
     const body = await actual.json();
-    await page.getByRole('region', { name: 'Screen and issue', exact: true }).getByText(body.issuance.phase, { exact: true }).waitFor();
+    await page.getByRole('region', { name: 'Review and submit', exact: true })
+      .getByText(body.onchain.txHash, { exact: true }).waitFor({ state: 'attached' });
     return body;
   };
-  await page.goto(base + '/verify');
+  await page.goto(base + '/verify/sandbox');
   return { page, calls, errors, sign, recover, signatures: () => signatures,
     recoveryId: () => page.evaluate(address => sessionStorage.getItem(`proofmark-request:${address.toLowerCase()}`), wallet.address) };
 }
