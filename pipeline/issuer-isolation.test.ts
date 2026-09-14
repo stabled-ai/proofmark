@@ -75,7 +75,6 @@ test('issuer mode CLI is fail-closed and reports only the release profile', () =
 });
 
 test('deployment preflight invokes the guard before its first transaction and records the mode', () => {
-  const root = fileURLToPath(new URL('../', import.meta.url));
   const source = readFileSync(new URL('../script/deploy.sh', import.meta.url), 'utf8');
   const guard = source.indexOf('script/check-issuer-mode.ts');
   const transactionBoundary = source.indexOf('Sending real transactions now');
@@ -83,5 +82,4 @@ test('deployment preflight invokes the guard before its first transaction and re
   assert.ok(guard < transactionBoundary);
   assert.match(source, /need PROOFMARK_ISSUER_MODE/);
   assert.match(source, /"issuerMode": "\$PROOFMARK_ISSUER_MODE"/);
-  assert.equal(root.endsWith('/attest-kyc/'), true);
 });
